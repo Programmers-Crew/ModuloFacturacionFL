@@ -1,2 +1,2 @@
-# ModuloFacturacionFL
-Modulo de facturación de ferretería la luz.
+# ModuloFacturacion
+repositorio para el software del modulo de facturacion
