@@ -70,6 +70,8 @@ public class InventarioViewController implements Initializable {
     @FXML
     private JFXButton btnAgregarInventario1;
 
+
+
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, SUMAR};
     public Operacion cancelar = Operacion.NINGUNO;
     
@@ -97,8 +99,6 @@ public class InventarioViewController implements Initializable {
     @FXML
     private AnchorPane anchor;
     @FXML
-    private JFXTextField txtCantidadInventario;
-    @FXML
     private JFXButton btnAgregarInventario;
     @FXML
     private JFXButton btnEditarInventario;
@@ -107,9 +107,13 @@ public class InventarioViewController implements Initializable {
     @FXML
     private ComboBox<String> cmbNombreEstado;
     @FXML
+    private JFXTextField txtCantidadInventario;
+    @FXML
     private JFXTextField txtProveedorInventario;
     @FXML
     private JFXTextField txtProductoInventario;
+    @FXML
+    private JFXTextField txtPrecioInventario;
     @FXML
     private ComboBox<String> cmbCodigoProductoInventario;
     @FXML
@@ -124,6 +128,8 @@ public class InventarioViewController implements Initializable {
     private TableColumn<InventarioProductos, String> colProductoInventario;
     @FXML
     private TableColumn<InventarioProductos, String> colEstadoInventario;
+    @FXML
+    private TableColumn<InventarioProductos, Double> colPrecioInventario;
     @FXML
     private JFXButton btnBuscarInventario;
     @FXML
@@ -162,12 +168,14 @@ public class InventarioViewController implements Initializable {
         txtCantidadInventario.setText("");
         txtProveedorInventario.setText("");
         txtProductoInventario.setText("");
+        txtPrecioInventario.setText("");
         cmbNombreEstado.setValue("");
+
     }
     
     public void desactivarControlesInventario(){    
-        btnEditarInventario.setDisable(true);
-        btnEliminarInventario.setDisable(true);
+        btnEditarInventario.setDisable(false);
+        btnEliminarInventario.setDisable(false);
     }
     
     public void activarControles(){    
@@ -177,17 +185,18 @@ public class InventarioViewController implements Initializable {
     
         public void desactivarTextInventario(){
         cmbCodigoProductoInventario.setDisable(true);
-        txtCantidadInventario.setEditable(false);
         txtProveedorInventario.setEditable(false);
         txtProductoInventario.setEditable(false);
+        txtPrecioInventario.setEditable(false);
         cmbNombreEstado.setDisable(true);
+                btnEditarInventario.setDisable(false);
+        btnEliminarInventario.setDisable(false);
 
     }
     
     public void activarTextInventario(){
         cmbCodigoProductoInventario.setDisable(false);
         txtCantidadInventario.setEditable(true);
-        
         cmbNombreEstado.setDisable(false);
     }
     
@@ -196,7 +205,8 @@ public class InventarioViewController implements Initializable {
     private void cargarProductos(Event event) {
         iniciarInventario();
         llenarComboProducto();
-        btnAgregarInventario1.setDisable(true);
+        activarControles();
+        activarTextInventario();
         animacion.animacion(anchor1, anchor2);
     }
     
@@ -214,9 +224,10 @@ public class InventarioViewController implements Initializable {
                 lista.add(new InventarioProductos(
                             rs.getString("productoId"),
                             rs.getInt("inventarioProductoCant"),
+                            rs.getString("proveedorNombre"),
                             rs.getString("productoDesc"),
                             rs.getString("estadoProductoDesc"),
-                            rs.getString("proveedorNombre")
+                            rs.getDouble("precioCosto")
                 ));
                 comboCodigoFiltro.add(x, rs.getString("productoId"));
                 x++;
@@ -263,18 +274,23 @@ public class InventarioViewController implements Initializable {
      
      public void cargarDatos(){
         tblInventario.setItems(getInventario());
+        activarControles();
+        activarTextInventario();
         colCodigoProductoInventario.setCellValueFactory(new PropertyValueFactory("productoId"));
         colCantidadInventario.setCellValueFactory(new PropertyValueFactory("inventarioProductoCant"));
         colProductoInventario.setCellValueFactory(new PropertyValueFactory("productoDesc"));
         colProveedorInventario.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
         colEstadoInventario.setCellValueFactory(new PropertyValueFactory("estadoProductoDesc"));
+        colEstadoInventario.setCellValueFactory(new PropertyValueFactory("estadoProductoDesc"));
+        colPrecioInventario.setCellValueFactory(new PropertyValueFactory("precioCosto"));
         limpiarText();
-        desactivarControlesInventario();
-        desactivarTextInventario();
+       
         llenarComboEstado();
         cmbNombreEstado.setValue("");
         new AutoCompleteComboBoxListener(cmbFiltroCodigo);
         new AutoCompleteComboBoxListener(cmbNombreEstado);
+        activarControles();
+        activarTextInventario();
     }
      
      
@@ -283,24 +299,20 @@ public class InventarioViewController implements Initializable {
     private void seleccionarElementosProductos(MouseEvent event) {
         int index = tblInventario.getSelectionModel().getSelectedIndex();
         try{
-            tipoOperacionInventario = Operacion.CANCELAR;
-            accionInventario();
-            cmbCodigoProductoInventario.setValue(colCodigoProductoInventario.getCellData(index).toString());
+            cmbCodigoProductoInventario.setValue(colCodigoProductoInventario.getCellData(index));
             txtCantidadInventario.setText(colCantidadInventario.getCellData(index).toString());
             txtProveedorInventario.setText(colProveedorInventario.getCellData(index));
             txtProductoInventario.setText(colProductoInventario.getCellData(index));
             cmbNombreEstado.setValue(colEstadoInventario.getCellData(index));
+            txtPrecioInventario.setText(colPrecioInventario.getCellData(index).toString());
 
             codigoProducto = colCodigoProductoInventario.getCellData(index);
-            
-            activarTextInventario();
             cmbNombreEstado.setDisable(false);
-            btnAgregarInventario1.setDisable(false);
             
             activarControles();
+            activarTextInventario();
         }catch(Exception ex){
-            
-           
+             ex.printStackTrace();
         }
     }
     
@@ -365,7 +377,6 @@ public class InventarioViewController implements Initializable {
                 
                 activarTextInventario();
                 limpiarText();
-                btnAgregarInventario1.setDisable(true);
                 break;
             case CANCELAR:
                 tipoOperacionInventario = Operacion.NINGUNO;
@@ -376,7 +387,6 @@ public class InventarioViewController implements Initializable {
                 btnEliminarInventario.setText("ELIMINAR");
                 limpiarText();
                 cmbFiltroCodigo.setDisable(false);
-                btnAgregarInventario1.setDisable(true);
                 break;
         }
     }
@@ -550,6 +560,7 @@ public class InventarioViewController implements Initializable {
                         txtProveedorInventario.setText(rs.getString("proveedorNombre"));
                         txtProductoInventario.setText(rs.getString("productoDesc"));
                         cmbNombreEstado.setValue(rs.getString("estadoProductoDesc"));
+                        txtPrecioInventario.setText(rs.getString("precioCosto"));
 
                         codigoProducto = rs.getString("productoId");
                         
@@ -571,7 +582,6 @@ public class InventarioViewController implements Initializable {
                         noti.show();
                         cmbNombreEstado.setDisable(false);
                         activarTextInventario();
-                        btnAgregarInventario1.setDisable(false);
                         
                     }else{
                          
@@ -687,7 +697,7 @@ public class InventarioViewController implements Initializable {
                    nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
                    nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
 
-                   String sql = "{call SpAgregarInventarioProductos('"+nuevoInventario.getInventarioProductoCant()+"','"+ nuevoInventario.getProductoId()+"','"+ buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc()) +"')}";
+                   String sql = "{call SpAgregarInventarioProductos('"+nuevoInventario.getInventarioProductoCant()+"','"+ nuevoInventario.getProductoId()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
                    tipoOperacionInventario = Operacion.GUARDAR;
                    accion(sql);                   
                }
@@ -711,7 +721,7 @@ public class InventarioViewController implements Initializable {
                     noti.show();
            }else{
                    InventarioProductos nuevoInventario = new InventarioProductos();
-                   nuevoInventario.setProductoId(codigoProducto);
+                   nuevoInventario.setProductoId(cmbCodigoProductoInventario.getValue());
                    nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
 
                    String sql = "{call SpSumaProductos('"+nuevoInventario.getProductoId()+"','"+ nuevoInventario.getInventarioProductoCant()+"')}";
@@ -727,11 +737,12 @@ public class InventarioViewController implements Initializable {
         if(cmbCodigoProductoInventario.getValue()!= ""){
                 try{
                      PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarProductos(?)}");
-                     sp.setInt(1, Integer.parseInt(cmbCodigoProductoInventario.getValue()));
+                     sp.setString(1, cmbCodigoProductoInventario.getValue());
                      ResultSet resultado = sp.executeQuery(); 
                         while(resultado.next()){
                             txtProductoInventario.setText(resultado.getString("productoDesc"));
                             txtProveedorInventario.setText(resultado.getString("proveedorNombre"));
+                            txtPrecioInventario.setText(resultado.getString("precioCosto"));
                             btnAgregarInventario.setDisable(false);
                         }  
                 }catch(Exception e){
@@ -923,6 +934,7 @@ public class InventarioViewController implements Initializable {
         try{
             txtCodigoEstadoProducto.setText(colCodigoEstadoCodigo.getCellData(index).toString());
             txtDescEstadoProducto.setText(colDescEstadoProductos.getCellData(index));
+                  
             btnEliminarEstadoProductos.setDisable(false);
             btnEditarEstadoProductos.setDisable(false);
             cmbNombreEstado.setDisable(false);

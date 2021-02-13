@@ -86,6 +86,10 @@ public class ProductosViewController implements Initializable {
     @FXML
     private TableColumn<Productos, Double> colPrecioProductos;
     @FXML
+    private JFXTextField txtCostoProducto;
+    @FXML
+    private TableColumn<Productos, Double> colCostoProductos;
+    @FXML
     private JFXButton btnBuscar;
     @FXML
     private TableColumn<Productos, String> colProveedorProductos;
@@ -110,9 +114,13 @@ public class ProductosViewController implements Initializable {
     private ComboBox<String> cmbFiltroCategoriaProducto;
     @FXML
     private ComboBox<String> cmbBuscarCategoria;
+    @FXML
+    private ComboBox<String> cmbFiltrar;
+    @FXML
+    private JFXButton btnFiltrar;
 
    
-    public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO};
+    public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO,FILTRAR};
     
     public Operacion tipoOperacionCategoria= Operacion.NINGUNO;
     public Operacion cancelar = Operacion.NINGUNO;
@@ -220,6 +228,7 @@ public class ProductosViewController implements Initializable {
          cmbCategoriaProducto.setValue("");
          cmbProveedorProducto.setValue("");
          txtPrecioProducto.setText("");
+         txtCostoProducto.setText("");
          cmbFiltroProductos.setValue("");
          cmbBuscar.setValue("");
     }
@@ -238,6 +247,7 @@ public class ProductosViewController implements Initializable {
         txtCodigoProducto.setEditable(false);
         txtNombreProducto.setEditable(false);
         txtPrecioProducto.setEditable(false);
+        txtCostoProducto.setEditable(false);
         cmbCategoriaProducto.setDisable(true);
         cmbProveedorProducto.setDisable(true);
         
@@ -245,6 +255,7 @@ public class ProductosViewController implements Initializable {
     
     public void activarText(){
         txtPrecioProducto.setEditable(true);
+        txtCostoProducto.setEditable(true);
         txtCodigoProducto.setEditable(true);
         txtNombreProducto.setEditable(true);
         cmbCategoriaProducto.setDisable(false);
@@ -267,6 +278,7 @@ public class ProductosViewController implements Initializable {
                             rs.getString("productoDesc"),
                             rs.getString("proveedorNombre"),
                             rs.getString("categoriaNombre"),
+                            rs.getDouble("precioCosto"),
                             rs.getDouble("productoPrecio")
                 ));
                 comboCodigo.add(x, rs.getString("productoId"));
@@ -285,6 +297,7 @@ public class ProductosViewController implements Initializable {
         colNombreProductos.setCellValueFactory(new PropertyValueFactory("productoDesc"));
         colCategoriaProductos.setCellValueFactory(new PropertyValueFactory("categoriaNombre"));
         colProveedorProductos.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
+        colCostoProductos.setCellValueFactory(new PropertyValueFactory("precioCosto"));
         colPrecioProductos.setCellValueFactory(new PropertyValueFactory("productoPrecio"));
         limpiarText();
         desactivarControles();
@@ -297,7 +310,107 @@ public class ProductosViewController implements Initializable {
         new AutoCompleteComboBoxListener(cmbProveedorProducto);
     }
     
-    
+    public ObservableList<Productos> getProductosPorProveedor(){
+        ArrayList<Productos> lista = new ArrayList();
+        ArrayList<String> comboCodigo = new ArrayList();
+        String sql = "{call SpListarProductosPorProveedor('"+cmbFiltrar.getValue()+"')}";
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Productos(
+                            rs.getString("productoId"),
+                            rs.getString("productoDesc"),
+                            rs.getString("proveedorNombre"),
+                            rs.getString("categoriaNombre"),
+                            rs.getDouble("precioCosto"),
+                            rs.getDouble("productoPrecio")
+                ));
+                comboCodigo.add(x, rs.getString("productoId"));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        listaCodigoProductos = FXCollections.observableList(comboCodigo);
+        return listaProductos = FXCollections.observableList(lista);
+    }
+        
+        public void cargarDatosPorProveedor(){
+        tableProductos.setItems(getProductosPorProveedor());
+        colCodigoProductos.setCellValueFactory(new PropertyValueFactory("productoId"));
+        colNombreProductos.setCellValueFactory(new PropertyValueFactory("productoDesc"));
+        colCategoriaProductos.setCellValueFactory(new PropertyValueFactory("categoriaNombre"));
+        colProveedorProductos.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
+        colCostoProductos.setCellValueFactory(new PropertyValueFactory("precioCosto"));
+        colPrecioProductos.setCellValueFactory(new PropertyValueFactory("productoPrecio"));
+        limpiarText();
+        desactivarControles();
+        desactivarText();
+        llenarComboCategoria();
+        llenarComboProveedores();
+        cmbCategoriaProducto.setValue("");
+        cmbProveedorProducto.setValue("");
+        new AutoCompleteComboBoxListener(cmbCategoriaProducto);
+        new AutoCompleteComboBoxListener(cmbProveedorProducto);
+    }
+        
+        
+        public void buscarProducto(){
+
+            String sql = "{call SpListarProductosPorProveedor('"+cmbFiltrar.getValue()+"')}";
+            accion(sql);
+            PreparedStatement ps;
+            ResultSet rs;
+            try{
+                    ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                    rs = ps.executeQuery();
+                    int numero=0;
+                    while(rs.next()){
+                        txtCodigoProducto.setText(rs.getString("productoId"));
+                        txtNombreProducto.setText(rs.getString("productoDesc"));
+                        cmbCategoriaProducto.setValue(rs.getString("categoriaNombre"));
+                        cmbProveedorProducto.setValue(rs.getString("proveedorNombre"));
+                        txtCostoProducto.setText(rs.getString("precioCosto"));
+                        txtPrecioProducto.setText(rs.getString("productoPrecio"));
+                        codigoProducto = rs.getString("productoId");
+                        
+                    }    
+                    cargarDatosPorProveedor();
+                    if(rs.first()){
+                        for(int i=0; i<tableProductos.getItems().size(); i++){
+                            if(colCodigoProductos.getCellData(i) == codigoProducto){
+                                tableProductos.getSelectionModel().select(i);
+                                break;
+                            }
+                        }
+                    }else{
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR AL BUSCAR");
+                        noti.text("NO SE HA ENCONTRADO EN LA BASE DE DATOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        tipoOperacionProducto = Operacion.CANCELAR;
+                    }
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                    Notifications noti = Notifications.create();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR AL BUSCAR");
+                    noti.text("HA OCURRIDO UN ERROR EN LA BASE DE DATOS");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                    tipoOperacionProducto = Operacion.CANCELAR;
+                }
+        } 
+        
      @FXML
     private void seleccionarElementosProductos(MouseEvent event) {
         int index = tableProductos.getSelectionModel().getSelectedIndex();
@@ -306,6 +419,7 @@ public class ProductosViewController implements Initializable {
             txtNombreProducto.setText(colNombreProductos.getCellData(index));
             cmbCategoriaProducto.setValue(colCategoriaProductos.getCellData(index));
             cmbProveedorProducto.setValue(colProveedorProductos.getCellData(index));
+            txtCostoProducto.setText(colCostoProductos.getCellData(index).toString());
             txtPrecioProducto.setText(colPrecioProductos.getCellData(index).toString());
             codigoProducto = colCodigoProductos.getCellData(index);
             activarControles();
@@ -382,7 +496,7 @@ public class ProductosViewController implements Initializable {
         }
         listaProveedoresProductos = FXCollections.observableList(lista);
         cmbProveedorProducto.setItems(listaProveedoresProductos);
-        
+        cmbFiltrar.setItems(listaProveedoresProductos);
     }
 
     public void accion(){
@@ -583,6 +697,7 @@ public class ProductosViewController implements Initializable {
                         txtNombreProducto.setText(rs.getString("productoDesc"));
                         cmbCategoriaProducto.setValue(rs.getString("categoriaNombre"));
                         cmbProveedorProducto.setValue(rs.getString("proveedorNombre"));
+                        txtCostoProducto.setText(rs.getString("precioCosto"));
                         txtPrecioProducto.setText(rs.getString("productoPrecio"));
                         codigoProducto = rs.getString("productoId");
                         
@@ -630,11 +745,73 @@ public class ProductosViewController implements Initializable {
                     accion();
                 }
                 break;
-                
+            case FILTRAR:
+                 try{
+                    ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                    rs = ps.executeQuery();
+                    int numero=0;
+                                     
+                    if(rs.first()){
+                       for(int i=0; i<tableProductos.getItems().size(); i++){
+                            if(colCodigoProductos.getCellData(i) == codigoProducto){
+                                tableProductos.getSelectionModel().select(i);
+                                break;
+                            }
+                        }
+                        noti.graphic(new ImageView(imgCorrecto));
+                        noti.title("OPERACIÓN EXITOSA");
+                        noti.text("SU OPERACIÓN SE HA REALIZADO CON EXITO");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                    }else{
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR AL BUSCAR");
+                        noti.text("NO SE HA ENCONTRADO EN LA BASE DE DATOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        tipoOperacionProducto = Operacion.CANCELAR;
+                    }
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR AL BUSCAR");
+                    noti.text("HA OCURRIDO UN ERROR EN LA BASE DE DATOS");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                    tipoOperacionProducto = Operacion.CANCELAR;
+                }
+                break; 
         }
     }
     
-    @FXML
+        @FXML
+    public void buscarPorProveedor(){
+        try{
+            if(cmbFiltrar.getValue() == null){
+                          Notifications noti = Notifications.create();
+                          noti.graphic(new ImageView(imgError));
+                          noti.title("ERROR");
+                          noti.text("SELECCIONE UN PROVEEDOR PARA PODER FILTRAR");
+                          noti.position(Pos.BOTTOM_RIGHT);
+                          noti.hideAfter(Duration.seconds(4));
+                          noti.darkStyle();   
+                          noti.show();
+              }else{
+                  tipoOperacionProducto = Operacion.FILTRAR;
+                  cargarDatosPorProveedor();
+
+                }  
+            }catch(Exception e){
+               e.printStackTrace();
+            }
+    }
+    
     private void validarCodigoProducto(KeyEvent event) {
         if(tipoOperacionProducto == Operacion.GUARDAR){
             
@@ -712,14 +889,14 @@ public class ProductosViewController implements Initializable {
         }
     }
 
-    public int verficarCategoria(String categoria){
+    public String verficarCategoria(String categoria){
         String sql = "{call spVerificarCategoria('"+categoria+"')}";
-        int codigoCategoria=0;
+        String codigoCategoria="";
         try{
             PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                codigoCategoria = rs.getInt("categoriaId");
+                codigoCategoria = rs.getString("categoriaId");
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -727,20 +904,20 @@ public class ProductosViewController implements Initializable {
         
         return codigoCategoria;
     }
-    public int verificarProveedores(String proveedor){
+    
+    public String verificarProveedores(String proveedor){
         
         String sql = "{call spVerificarProveedores('"+proveedor+"')}";
-        int codigoProveedor=0;
+        String codigoProveedor="";
         try{
             PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                codigoProveedor = rs.getInt("proveedorId");
+                codigoProveedor = rs.getString("proveedorId");
             }
         }catch(SQLException ex){
             ex.printStackTrace();
         }
-        
         return codigoProveedor;
         
     }
@@ -768,17 +945,39 @@ public class ProductosViewController implements Initializable {
                     noti.darkStyle();   
                     noti.show();
                }else{
+                   if(txtCodigoProducto.getText().length()<7){
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR");
+                        noti.text("El CAMPO DE CÓDIGO NO PUEDE SER MENOR A 7 DÍGITOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();   
+                        noti.show();
+                        tipoOperacionProducto = Operacion.GUARDAR;
+                   }else if(txtCodigoProducto.getText().length()>7){
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR");
+                        noti.text("El CAMPO DE CÓDIGO NO PUEDE SER MAYOR A 7 DÍGITOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();   
+                        noti.show();
+                        tipoOperacionProducto = Operacion.GUARDAR;
+                   }else{
                    Productos nuevoProducto = new Productos();
                    nuevoProducto.setProductoId(txtCodigoProducto.getText());
                    nuevoProducto.setProductoDesc(txtNombreProducto.getText());
                    nuevoProducto.setCategoriaNombre(cmbCategoriaProducto.getValue());
                    nuevoProducto.setProveedorNombre(cmbProveedorProducto.getValue());
                    nuevoProducto.setProductoPrecio(Double.parseDouble(txtPrecioProducto.getText()));
+                   nuevoProducto.setPrecioCosto(Double.parseDouble(txtCostoProducto.getText()));
                    
-                   String sql = "{call SpAgregarProductos('"+nuevoProducto.getProductoId()+"','"+nuevoProducto.getProductoDesc()+"','"+verificarProveedores(nuevoProducto.getProveedorNombre())+"'"
-                           + ",'"+verficarCategoria(nuevoProducto.getCategoriaNombre())+"','"+nuevoProducto.getProductoPrecio()+"')}";
+                   String sql = "{call SpAgregarProductos('"+nuevoProducto.getProductoId()+"','"+nuevoProducto.getProductoDesc()+"','"+verificarProveedores(nuevoProducto.getProveedorNombre())+"'"+ ",'"+verficarCategoria(nuevoProducto.getCategoriaNombre())+"','"+nuevoProducto.getPrecioCosto()+"','"+nuevoProducto.getProductoPrecio()+"')}";
                    tipoOperacionProducto = Operacion.GUARDAR;
-                   accion(sql);                   
+                   accion(sql);   
+                   }
                }
            }
         }else{
@@ -802,15 +1001,39 @@ public class ProductosViewController implements Initializable {
 
     @FXML
     private void btnEditar(MouseEvent event) {
-        Productos nuevoProducto = new Productos();
-       nuevoProducto.setProductoId(txtCodigoProducto.getText());
-       nuevoProducto.setProductoDesc(txtNombreProducto.getText());
-       nuevoProducto.setProductoPrecio(Double.parseDouble(txtPrecioProducto.getText()));
+        
+        if(txtCodigoProducto.getText().length()<7){
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR");
+                        noti.text("El CAMPO DE CÓDIGO NO PUEDE SER MENOR A 7 DÍGITOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();   
+                        noti.show();
+                        tipoOperacionProducto = Operacion.GUARDAR;
+                   }else if(txtCodigoProducto.getText().length()>7){
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR");
+                        noti.text("El CAMPO DE CÓDIGO NO PUEDE SER MAYOR A 7 DÍGITOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();   
+                        noti.show();
+                        tipoOperacionProducto = Operacion.GUARDAR;
+                   }else{
+                        Productos nuevoProducto = new Productos();
+                        nuevoProducto.setProductoId(txtCodigoProducto.getText());
+                        nuevoProducto.setProductoDesc(txtNombreProducto.getText());
+                        nuevoProducto.setProductoPrecio(Double.parseDouble(txtPrecioProducto.getText()));
+                        nuevoProducto.setPrecioCosto(Double.parseDouble(txtCostoProducto.getText()));
 
-       String sql = "{call SpActualizarProductos('"+codigoProducto+"','"+nuevoProducto.getProductoId()+"','"+nuevoProducto.getProductoDesc()+"'"
-               + ",'"+nuevoProducto.getProductoPrecio()+"')}";
-       tipoOperacionProducto = Operacion.ACTUALIZAR;
-       accion(sql);                   
+                        String sql = "{call SpActualizarProductos('"+codigoProducto+"','"+nuevoProducto.getProductoId()+"','"+nuevoProducto.getProductoDesc()+"','"+nuevoProducto.getPrecioCosto()+"'"+",'"+nuevoProducto.getProductoPrecio()+"')}";
+                        tipoOperacionProducto = Operacion.ACTUALIZAR;
+                        accion(sql);      
+                   }
+             
     }
     
     @FXML
@@ -827,8 +1050,7 @@ public class ProductosViewController implements Initializable {
         ArrayList<String>lista = new ArrayList();
         
         lista.add(0,"CÓDIGO");
-        lista.add(1,"NOMBRE");
-        
+        lista.add(1,"NOMBRE");        
         listaFiltro = FXCollections.observableList(lista);
         
         cmbFiltroProductos.setItems(listaFiltro);
@@ -841,9 +1063,8 @@ public class ProductosViewController implements Initializable {
         String sql ="{call SpListarProductos()}";
         int x=0;
         try{
-            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-            ResultSet rs = ps.executeQuery();
-            
+              PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+              ResultSet rs = ps.executeQuery();
             while(rs.next()){
                  if(cmbFiltroProductos.getValue().equals("CÓDIGO")){
                      lista.add(x, rs.getString("productoId"));
@@ -1267,14 +1488,36 @@ public class ProductosViewController implements Initializable {
                 noti.hideAfter(Duration.seconds(4));
                 noti.darkStyle();   
                 noti.show();
-            
             }else{
                 if(txtNombreCategoria.getText().length()<50){
+                    
+                    if(txtCodigoCategoria.getText().length()<7){
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR");
+                        noti.text("El CAMPO DE CÓDIGO NO PUEDE SER MENOR A 7 DÍGITOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();   
+                        noti.show();
+                        tipoOperacionCategoria = Operacion.GUARDAR;
+                    }else if(txtCodigoCategoria.getText().length()>7){
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR");
+                        noti.text("El CAMPO DE CÓDIGO NO PUEDE SER MAYOR A 7 DÍGITOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();   
+                        noti.show();
+                        tipoOperacionCategoria = Operacion.GUARDAR;
+                    }else{                  
                     CategoriaProducto nuevaCategoria = new CategoriaProducto();
                     nuevaCategoria.setCategoriaId(txtCodigoCategoria.getText());
                     nuevaCategoria.setCategoriaNombre(txtNombreCategoria.getText());
                     String sql = "{call SpAgregarCategoriaProductos('"+nuevaCategoria.getCategoriaId()+"','"+nuevaCategoria.getCategoriaNombre()+"')}";
                     accionCategoria(sql);
+                    }
                 }else{
                     Notifications noti = Notifications.create();
                     noti.graphic(new ImageView(imgError));
@@ -1286,7 +1529,6 @@ public class ProductosViewController implements Initializable {
                     noti.show();
                 }
             }
-        
         }else{
              tipoOperacionCategoria = Operacion.AGREGAR;
                 accionCategoria();
@@ -1295,13 +1537,35 @@ public class ProductosViewController implements Initializable {
 
     @FXML
     private void btnEditarCategoria(MouseEvent event) {
-        CategoriaProducto nuevaCategoria = new CategoriaProducto();
-        nuevaCategoria.setCategoriaId(txtCodigoCategoria.getText());
-        nuevaCategoria.setCategoriaNombre(txtNombreCategoria.getText());
         
-        tipoOperacionCategoria = Operacion.ACTUALIZAR;
-        String sql = "{call SpActualizarCategoriaProductos('"+codigo+"','"+nuevaCategoria.getCategoriaId()+"','"+nuevaCategoria.getCategoriaNombre()+"')}";
-        accionCategoria(sql);
+       if(txtCodigoCategoria.getText().length()<7){
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR");
+                        noti.text("El CAMPO DE CÓDIGO NO PUEDE SER MENOR A 7 DÍGITOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();   
+                        noti.show();
+                        tipoOperacionCategoria = Operacion.GUARDAR;
+                    }else if(txtCodigoCategoria.getText().length()>7){
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR");
+                        noti.text("El CAMPO DE CÓDIGO NO PUEDE SER MAYOR A 7 DÍGITOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();   
+                        noti.show();
+                        tipoOperacionCategoria = Operacion.GUARDAR;
+                    }else{  
+                            CategoriaProducto nuevaCategoria = new CategoriaProducto();
+                            nuevaCategoria.setCategoriaId(txtCodigoCategoria.getText());
+                            nuevaCategoria.setCategoriaNombre(txtNombreCategoria.getText());
+                            tipoOperacionCategoria = Operacion.ACTUALIZAR;
+                            String sql = "{call SpActualizarCategoriaProductos('"+codigo+"','"+nuevaCategoria.getCategoriaId()+"','"+nuevaCategoria.getCategoriaNombre()+"')}";
+                            accionCategoria(sql);
+                    }
     }
 
     @FXML
@@ -1379,13 +1643,11 @@ public class ProductosViewController implements Initializable {
         buscarCategoria();
     }
 
-    @FXML
     private void codigoBuscadoCategoria(MouseEvent event) {
         limpiarTextCategoria();
         desactivarControlesCategoria();
     }
     
-    @FXML
     private void validarCodigoCategoria(KeyEvent event) {
          if(tipoOperacionCategoria == Operacion.GUARDAR){
             

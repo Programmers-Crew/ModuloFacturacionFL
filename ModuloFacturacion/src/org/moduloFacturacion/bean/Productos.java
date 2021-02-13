@@ -5,14 +5,24 @@ public class Productos {
     String productoDesc;
     String proveedorNombre;
     String categoriaNombre;
+    Double precioCosto;
     Double productoPrecio;
 
-    public Productos(String productoId, String productoDesc, String proveedorNombre, String categoriaNombre, Double productoPrecio) {
+    public Productos(String productoId, String productoDesc, String proveedorNombre, String categoriaNombre, Double precioCosto, Double productoPrecio) {
         this.productoId = productoId;
         this.productoDesc = productoDesc;
         this.proveedorNombre = proveedorNombre;
         this.categoriaNombre = categoriaNombre;
+        this.precioCosto = precioCosto;
         this.productoPrecio = productoPrecio;
+    }
+
+    public Double getPrecioCosto() {
+        return precioCosto;
+    }
+
+    public void setPrecioCosto(Double precioCosto) {
+        this.precioCosto = precioCosto;
     }
 
     public Productos() {
