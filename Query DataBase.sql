@@ -1,5 +1,5 @@
 create database ProgrammersBilling;
-
+use ProgrammersBilling;
 create table Clientes(
 	clienteId	int(5)  UNSIGNED ZEROFILL primary key auto_increment,
 	clienteNit	varchar(9) unique not null,

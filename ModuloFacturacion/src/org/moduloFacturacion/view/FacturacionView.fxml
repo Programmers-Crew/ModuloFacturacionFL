@@ -57,17 +57,18 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="386.0" prefWidth="197.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <AnchorPane prefHeight="79.0" prefWidth="329.0">
+                                          <AnchorPane prefHeight="94.0" prefWidth="268.0">
                                              <children>
-                                                <Label layoutX="29.0" layoutY="14.0" prefHeight="20.0" prefWidth="179.0" text="NÚMERO DE FACTURA" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="60.0">
+                                                <Label layoutX="39.0" layoutY="14.0" prefHeight="20.0" prefWidth="135.0" text="Número de factura:" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="94.0" AnchorPane.topAnchor="1.0">
                                                    <font>
-                                                      <Font name="System Bold Italic" size="14.0" />
+                                                      <Font size="13.0" />
                                                    </font>
                                                 </Label>
-                                                <JFXTextField fx:id="txtFacturaId" layoutX="29.0" layoutY="34.0" onKeyTyped="#validarLetras" prefHeight="27.0" prefWidth="288.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="13.399999999999977" />
+                                                <JFXTextField fx:id="txtFacturaId" layoutX="21.0" layoutY="34.0" onKeyTyped="#validarLetras" prefHeight="27.0" prefWidth="239.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="17.0" />
+                                                <ComboBox fx:id="ordenCompracombo" editable="true" layoutX="16.0" layoutY="62.0" onAction="#buscarCliente" prefHeight="26.0" prefWidth="240.0" promptText="ÓRDEN DE COMPRA O FACTURA" styleClass="comboOscuro" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="62.0" />
                                              </children>
                                           </AnchorPane>
-                                          <AnchorPane onKeyReleased="#AtajoCliente" prefHeight="217.0" prefWidth="268.0">
+                                          <AnchorPane onKeyReleased="#AtajoCliente" prefHeight="196.0" prefWidth="268.0">
                                              <children>
                                                 <HBox alignment="CENTER" layoutX="3.0" prefHeight="27.0" prefWidth="247.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0">
                                                    <children>
@@ -89,9 +90,9 @@
                                                 <Insets left="5.0" />
                                              </padding>
                                           </AnchorPane>
-                                          <AnchorPane onKeyReleased="#atajoProducto" prefHeight="251.0" prefWidth="329.0">
+                                          <AnchorPane onKeyReleased="#atajoProducto" prefHeight="174.0" prefWidth="268.0">
                                              <children>
-                                                <HBox alignment="CENTER" layoutX="7.0" layoutY="-1.0" prefHeight="27.0" prefWidth="198.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="-1.0">
+                                                <HBox alignment="CENTER" layoutX="10.0" prefHeight="27.0" prefWidth="198.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="6.0">
                                                    <children>
                                                       <Label text="FACTURA">
                                                          <font>
@@ -106,8 +107,8 @@
                                                 <ComboBox fx:id="cmbNombreProducto" editable="true" layoutX="26.0" layoutY="51.0" onAction="#buscarPrecio" prefHeight="26.0" prefWidth="256.0" styleClass="comboOscuro" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="45.0" />
                                                 <JFXTextField fx:id="txtPrecioProducto" editable="false" layoutX="33.0" layoutY="102.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="99.0" />
                                                 <JFXTextField fx:id="txtCantidadProducto" layoutX="32.0" layoutY="155.0" onKeyTyped="#validarLetras" prefHeight="26.0" prefWidth="222.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="149.0" />
-                                                <JFXButton fx:id="btnEditar" buttonType="RAISED" layoutX="106.0" layoutY="176.0" onMouseClicked="#btnEditar" prefHeight="50.0" prefWidth="72.0" styleClass="boton" text="EDITAR" textFill="WHITE" AnchorPane.leftAnchor="96.0" AnchorPane.topAnchor="188.0" />
-                                                <JFXButton fx:id="btnVender" buttonType="RAISED" layoutX="23.0" layoutY="182.0" onMouseClicked="#btnAgregarFacturaBackUp" prefHeight="50.0" prefWidth="72.0" styleClass="boton" text="VENDER" textFill="WHITE" AnchorPane.leftAnchor="19.0" AnchorPane.topAnchor="188.0">
+                                                <JFXButton fx:id="btnEditar" buttonType="RAISED" layoutX="108.0" layoutY="191.0" onMouseClicked="#btnEditar" prefHeight="36.0" prefWidth="72.0" styleClass="boton" text="EDITAR" textFill="WHITE" AnchorPane.leftAnchor="108.0" AnchorPane.topAnchor="191.0" />
+                                                <JFXButton fx:id="btnVender" buttonType="RAISED" layoutX="26.0" layoutY="191.0" onMouseClicked="#btnAgregarFacturaBackUp" prefHeight="36.0" prefWidth="72.0" styleClass="boton" text="VENDER" textFill="WHITE" AnchorPane.leftAnchor="26.0" AnchorPane.topAnchor="191.0">
                                                    <font>
                                                       <Font size="11.0" />
                                                    </font>

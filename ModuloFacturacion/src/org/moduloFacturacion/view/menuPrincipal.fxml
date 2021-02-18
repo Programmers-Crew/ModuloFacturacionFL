@@ -384,11 +384,12 @@
         <menus>
           <Menu id="menuItem" mnemonicParsing="false" text="Modulos">
             <items>
-              <MenuItem mnemonicParsing="false" text="Modulo de Facturación                    F1" />
+              <MenuItem mnemonicParsing="false" onAction="#facturasView" text="Modulo de Facturación                    F1" />
                   <MenuItem mnemonicParsing="false" onAction="#productosView" text="Modulo de Productos                       F2" />
                   <MenuItem fx:id="itemInventario" mnemonicParsing="false" onAction="#inventarioView" text="Modulo de Inventario                       F3" />
-                  <MenuItem mnemonicParsing="false" text="Modulo de clientes                           F4" />
+                  <MenuItem mnemonicParsing="false" onAction="#Clientesview" text="Modulo de clientes                           F4" />
                   <MenuItem mnemonicParsing="false" onAction="#proveedoresView" text="Modulo de proveedores                   F5" />
+                  <MenuItem mnemonicParsing="false" onAction="#chequesView" text="Modulo de Cheques                        F6" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Reportes">
