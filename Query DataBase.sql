@@ -1,5 +1,9 @@
 create database ProgrammersBilling;
 use ProgrammersBilling;
+<<<<<<< HEAD
+=======
+
+>>>>>>> Diego-Gonzalez
 create table Clientes(
 	clienteId	int(5)  UNSIGNED ZEROFILL primary key auto_increment,
 	clienteNit	varchar(9) unique not null,
@@ -78,6 +82,13 @@ create table FacturaDetalleBackUp(
 	CONSTRAINT FK_productoFacDetalleBackup FOREIGN KEY (productoIdBackup) REFERENCES Productos(productoId)
 );
 
+
+create table TipoFactua(
+	tipoFactura int not null,
+    tipoFacturaDesc varchar(25),
+    PRIMARY KEY (tipoFactura) 
+);
+
 create table Facturas(
 	codigo int(5) UNSIGNED ZEROFILL PRIMARY KEY auto_increment,
 	facturaId int(5) UNSIGNED ZEROFILL,
@@ -88,10 +99,42 @@ create table Facturas(
     facturaTotalNeto decimal(10,2) not null,
     facturaTotalIva decimal(10,2) not null,
     facturaTotal decimal(10,2) not null,
-    
+	facturaTipo int not null,
 	CONSTRAINT FK_facturaDetalle FOREIGN KEY (facturaDetalleId) REFERENCES facturadetalle(facturaDetalleId),
 	CONSTRAINT FK_clienteFactura FOREIGN KEY (clienteId) REFERENCES Clientes(clienteId),
-	CONSTRAINT FK_usuarioFactura FOREIGN KEY (usuarioId) REFERENCES Usuarios(usuarioId)
+	CONSTRAINT FK_usuarioFactura FOREIGN KEY (usuarioId) REFERENCES Usuarios(usuarioId),
+	CONSTRAINT FK_tipoFactura FOREIGN KEY (facturaTipo) REFERENCES TipoFactua(tipoFactura)
+);
+
+create table ChequeDetalle(
+	chequeDetalleNo int(100) UNSIGNED ZEROFILL,
+    chequeDetalleCuenta int(100) not null,
+    chequeDetalleDesc varchar(100) not null, 
+    chequeDetalleValor int not null,
+    PRIMARY KEY (chequeDetalleNo)
+);
+
+create table Cheque(
+	chequeNo int(10)  UNSIGNED ZEROFILL,
+    chequeLugar varchar(100) not null,
+    chequeFecha date not null,
+    chequePagoAlaOrdenDe varchar(50) not null,
+    chequeMonto double not null,
+	chequeDetalle int(100) UNSIGNED ZEROFILL not null,
+    chequeUsuario int(5) UNSIGNED ZEROFILL not null,
+	PRIMARY KEY (chequeNo),
+	CONSTRAINT FK_usuarioCheque FOREIGN KEY (chequeUsuario) REFERENCES Usuarios(usuarioId),
+	CONSTRAINT FK_ChequeDetalle FOREIGN KEY (chequeDetalle) REFERENCES ChequeDetalle(chequeDetalleNo)
 );
 
 
+create table Creditos(
+	idCredito int not null,
+    creaditoFechaInicio date not null,
+    creditoFechaFinal date not null,
+	creditoDesc varchar(50) not null,
+    creditoProveedor varchar(50) not null,
+    creditoMonto double not null,
+	PRIMARY KEY (idCredito),
+    CONSTRAINT FK_CreditosProveedor FOREIGN KEY (creditoProveedor) REFERENCES Proveedores(proveedorId)
+);
