@@ -511,22 +511,24 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpListarFacturas()
 		BEGIN
-			select f.facturaId, c.clienteNombre, f.facturaFecha, u.usuarioNombre, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal
+			select f.facturaId, c.clienteNombre, f.facturaFecha, u.usuarioNombre, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, tf.tipoFacturaDesc
 				from Facturas as f
 					inner join Clientes as c
 						on  f.clienteId = c.clienteId
 							inner join Usuarios as u 
 								on f.usuarioId = u.usuarioId
+									inner join TipoFactua as tf
+										on f.facturaTipo = tf.tipoFactura
 									order by f.facturaId asc;
         END $$
 DELIMITER ;
 
 
 DELIMITER $$
-	create procedure SpAgregarFacturas(id int(100), cliente int(100), fecha date, usuario int(100), neto decimal(10,2), iva decimal(10,2), total decimal(10,2))
+	create procedure SpAgregarFacturas(id int(100), cliente int(100), fecha date, usuario int(100), neto decimal(10,2), iva decimal(10,2), total decimal(10,2), tipo int)
 		BEGIN
-			insert into Facturas(facturaId, clienteId, facturaFecha, usuarioId, facturaTotalNeto, facturaTotalIva, facturaTotal)
-				values(id, cliente, fecha, usuario, neto, iva, total);
+			insert into Facturas(facturaId, clienteId, facturaFecha, usuarioId, facturaTotalNeto, facturaTotalIva, facturaTotal, facturaTipo)
+				values(id, cliente, fecha, usuario, neto, iva, total, tipo);
         END $$
 DELIMITER ;
 
@@ -552,14 +554,16 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpBuscarFacturas(idBuscado int(100))
 		BEGIN
-			select f.facturaId, c.clienteNombre, f.facturaFecha, u.usuarioNombre, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal
+			select f.facturaId, c.clienteNombre, f.facturaFecha, u.usuarioNombre, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, tf.tipoFacturaDesc
 				from Facturas as f
 					inner join Clientes as c
 						on  f.clienteId = c.clienteId
 							inner join Usuarios as u 
 								on f.usuarioId = u.usuarioId
-									where f.facturaId = idBuscado
-										order by f.facturaId asc;
+									inner join TipoFactua as tf
+										on f.facturaTipo = tf.tipoFactura
+											where f.facturaId = idBuscado
+											order by f.facturaId asc;
 		END $$
 DELIMITER ;
 
@@ -934,4 +938,138 @@ DELIMITER $$
 						on f.facturaDetalleId = fd.facturaDetalleId
 							where f.facturaFecha = fechaCorte;
         END $$
+DELIMITER ;
+
+
+-- ENTIDAD CHEQUE ENCABEZADO 
+DELIMITER $$
+	create  procedure SpListarChequeEncabezado()
+		begin
+			select 
+				cd.chequeDetalleNo,
+                cd.chequeDetalleCuenta, 
+                cd.chequeDetalleDesc,
+                cd.chequeDetalleValor 
+            from 
+				ChequeDetalle as cd;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarChequeEncabezado(idBuscado int)
+		begin
+			select 
+				cd.chequeDetalleNo,
+                cd.chequeDetalleCuenta, 
+                cd.chequeDetalleDesc,
+                cd.chequeDetalleValor 
+            from 
+				ChequeDetalle as cd
+			where 
+				cd.chequeDetalleNo = idBuscado;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpEliminarChequeEncabezado(idBuscado int)
+		begin
+			delete from
+				ChequeDetalle
+			where 
+                cd.chequeDetalleNo = idBuscado;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpEditarChequeEncabezado(idBuscado int,cuenta int, descripcion varchar(25), valor double)
+		begin
+			update 
+				ChequeDetalle as cd
+			set
+				cd.chequeDetalleCuenta = cuenta,
+                cd.chequeDetalleDesc = descripcion,
+                cd.chequeDetalleValor  = valor
+			where 
+				cd.chequeDetalleNo = idBuscado;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure  SpAgregarChequeEncabezado(numero int,cuenta int, descripcion varchar(25), valor double)
+		begin
+			insert into ChequeDetalle(chequeDetalleNo,chequeDetalleCuenta,chequeDetalleDesc,chequeDetalleValor)
+				values(numero,cuenta,descripcion,valor);
+        end $$
+DELIMITER ;
+
+
+-- Entidad Cheque
+DELIMITER $$
+	create procedure SpListarCheque()
+		begin
+			select 
+				c.chequeNo,
+                c.chequeLugar,
+                c.chequeFecha,
+                c.chequePagoAlaOrdenDe,
+                c.chequeMonto,
+                c.chequeDetalle,
+                c.chequeUsuario
+            from 
+				Cheque as c;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarCheque(idBuscado int)
+		begin
+			select 
+				c.chequeNo,
+                c.chequeLugar,
+                c.chequeFecha,
+                c.chequePagoAlaOrdenDe,
+                c.chequeMonto,
+                c.chequeDetalle,
+                c.chequeUsuario
+            from 
+				Cheque as c
+			where 
+				c.chequeNo = idBuscado;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpEliminarCheque(idBuscado int)
+		begin
+			delete from
+				Cheque
+			where 
+				c.chequeNo = idBuscado;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpAgregarCheque(numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, detalle int, usuario int)
+		begin
+			insert into Cheque(chequeNo,chequeLugar,chequeFecha,chequePagoAlaOrdenDe,chequeMonto,chequeDetalle,chequeUsuario) 
+				values(numero,lugar,fecha,ordenDe,monto,detalle,usuario);
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpEditarCheque( idBuscado int, numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, detalle int, usuario int)
+		begin
+			update
+				Cheque
+			set
+				chequeNo = numero,
+                chequeLugar = lugar,
+                chequeFecha = fecha,
+                chequePagoAlaOrdenDe = ordenDe,
+                chequeMonto = monto,
+                chequeDetalle = detalle,
+                chequeUsuario = usuario
+			where
+				chequeNo = idBuscado;
+        end $$
 DELIMITER ;
