@@ -1,9 +1,6 @@
 create database ProgrammersBilling;
 use ProgrammersBilling;
-<<<<<<< HEAD
-=======
 
->>>>>>> Diego-Gonzalez
 create table Clientes(
 	clienteId	int(5)  UNSIGNED ZEROFILL primary key auto_increment,
 	clienteNit	varchar(9) unique not null,
@@ -107,10 +104,10 @@ create table Facturas(
 );
 
 create table ChequeDetalle(
-	chequeDetalleNo int(100) UNSIGNED ZEROFILL,
-    chequeDetalleCuenta int(100) not null,
+	chequeDetalleNo int(100)  auto_increment,
+    chequeDetalleCuenta varchar(100) not null,
     chequeDetalleDesc varchar(100) not null, 
-    chequeDetalleValor int not null,
+    chequeDetalleValor double not null,
     PRIMARY KEY (chequeDetalleNo)
 );
 
@@ -120,7 +117,7 @@ create table Cheque(
     chequeFecha date not null,
     chequePagoAlaOrdenDe varchar(50) not null,
     chequeMonto double not null,
-	chequeDetalle int(100) UNSIGNED ZEROFILL not null,
+	chequeDetalle int(100)  not null,
     chequeUsuario int(5) UNSIGNED ZEROFILL not null,
 	PRIMARY KEY (chequeNo),
 	CONSTRAINT FK_usuarioCheque FOREIGN KEY (chequeUsuario) REFERENCES Usuarios(usuarioId),
