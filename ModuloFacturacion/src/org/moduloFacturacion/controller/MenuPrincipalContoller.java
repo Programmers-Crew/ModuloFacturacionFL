@@ -89,6 +89,8 @@ public class MenuPrincipalContoller implements Initializable {
     @FXML
     private JFXButton btnSiguiente;
 
+    
+
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO};
     public Operacion tipoOperacion= Operacion.NINGUNO;
     public Operacion cancelar = Operacion.NINGUNO;
@@ -548,6 +550,12 @@ public class MenuPrincipalContoller implements Initializable {
         String inventarioUrl = "org/moduloFacturacion/view/InventarioView.fxml";
         cambioScene.Cambio(inventarioUrl,(Stage) anchor.getScene().getWindow());
     }
+    
+    @FXML
+    private void chequesView(ActionEvent event) throws IOException {
+        String chequesUrl = "org/moduloFacturacion/view/chequesView.fxml";
+        cambioScene.Cambio(chequesUrl,(Stage) anchor.getScene().getWindow());
+    }
         @FXML
     private void inventarioView(ActionEvent event) throws IOException {
         inventario();
@@ -568,7 +576,6 @@ public class MenuPrincipalContoller implements Initializable {
         factura();
     }
     
-    @FXML
     private void facturaAtajo(MouseEvent event) throws IOException {
         factura();
     }
@@ -583,7 +590,6 @@ public class MenuPrincipalContoller implements Initializable {
         clientes();
     }
     
-     @FXML
     private void ClientesAtajo(MouseEvent event) throws IOException {
         clientes();
     }
@@ -607,6 +613,10 @@ public class MenuPrincipalContoller implements Initializable {
     private void proveedoresView(ActionEvent event) throws IOException {
         proveedores();
     }
+    
+   
+   
+
     
      //atajos de menu de bienvenida
     @FXML
@@ -645,7 +655,9 @@ public class MenuPrincipalContoller implements Initializable {
                    }
                }
            }
-       }    
+       }
+       
+        
     }
 
     public void accion(){
@@ -1174,7 +1186,6 @@ public class MenuPrincipalContoller implements Initializable {
              }
     }
     
-      @FXML
     private void cierreCaja(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("CIERRE DE CAJA");
@@ -1201,7 +1212,6 @@ public class MenuPrincipalContoller implements Initializable {
         
     }
 
-    @FXML
     private void reporteVentas(ActionEvent event) {
          TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("REPORTE DE VENTAS");

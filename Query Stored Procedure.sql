@@ -995,10 +995,10 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure  SpAgregarChequeEncabezado(numero int,cuenta int, descripcion varchar(25), valor double)
+	create procedure  SpAgregarChequeEncabezado(cuenta varchar(100), descripcion varchar(25), valor double)
 		begin
-			insert into ChequeDetalle(chequeDetalleNo,chequeDetalleCuenta,chequeDetalleDesc,chequeDetalleValor)
-				values(numero,cuenta,descripcion,valor);
+			insert into ChequeDetalle(chequeDetalleCuenta,chequeDetalleDesc,chequeDetalleValor)
+				values(cuenta,descripcion,valor);
         end $$
 DELIMITER ;
 

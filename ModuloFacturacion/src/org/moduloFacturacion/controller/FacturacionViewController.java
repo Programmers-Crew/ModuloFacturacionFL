@@ -532,7 +532,7 @@ public int buscarCodigoProducto(String precioProductos){
     }
     
     
-     public ObservableList<FacturacionDetalleBackup> getBackUp(){
+    public ObservableList<FacturacionDetalleBackup> getBackUp(){
         ArrayList<FacturacionDetalleBackup> lista = new ArrayList();
         String sql = "{call SpListarBackup()}";
         int x=0;
