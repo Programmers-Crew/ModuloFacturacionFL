@@ -9,17 +9,28 @@ public class FacturasBuscadas {
     private double facturaTotalIva;
     private double facturaTotal;
     private Date facturaFecha;
+    private String tipoFacturaDesc;
 
     public FacturasBuscadas() {
     }
 
-    public FacturasBuscadas(String facturaId, double facturaTotalNeto, double facturaTotalIva, double facturaTotal, Date facturaFecha) {
+    public FacturasBuscadas(String facturaId, double facturaTotalNeto, double facturaTotalIva, double facturaTotal, Date facturaFecha, String tipoFacturaDesc) {
         this.facturaId = facturaId;
         this.facturaTotalNeto = facturaTotalNeto;
         this.facturaTotalIva = facturaTotalIva;
         this.facturaTotal = facturaTotal;
         this.facturaFecha = facturaFecha;
+        this.tipoFacturaDesc = tipoFacturaDesc;
     }
+
+    public String getTipoFacturaDesc() {
+        return tipoFacturaDesc;
+    }
+
+    public void setTipoFacturaDesc(String tipoFacturaDesc) {
+        this.tipoFacturaDesc = tipoFacturaDesc;
+    }
+    
 
     public String getFacturaId() {
         return facturaId;

@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="560.0" prefWidth="947.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.FacturacionViewController">
+<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="560.0" prefWidth="947.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.FacturacionViewController">
    <children>
       <Pane layoutX="5.0" prefHeight="36.0" prefWidth="600.0" styleClass="bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -65,7 +65,7 @@
                                                    </font>
                                                 </Label>
                                                 <JFXTextField fx:id="txtFacturaId" layoutX="21.0" layoutY="34.0" onKeyTyped="#validarLetras" prefHeight="27.0" prefWidth="239.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="17.0" />
-                                                <ComboBox fx:id="ordenCompracombo" editable="true" layoutX="16.0" layoutY="62.0" onAction="#buscarCliente" prefHeight="26.0" prefWidth="240.0" promptText="ÓRDEN DE COMPRA O FACTURA" styleClass="comboOscuro" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="62.0" />
+                                                <ComboBox fx:id="cmbTipoFactura" editable="true" layoutX="16.0" layoutY="62.0" onAction="#buscarCliente" prefHeight="26.0" prefWidth="240.0" promptText="ÓRDEN DE COMPRA O FACTURA" styleClass="comboOscuro" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="62.0" />
                                              </children>
                                           </AnchorPane>
                                           <AnchorPane onKeyReleased="#AtajoCliente" prefHeight="196.0" prefWidth="268.0">
@@ -224,11 +224,12 @@
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
                                       <columns>
-                                        <TableColumn fx:id="colNumeroFacBuscado" prefWidth="85.59997940063477" text="NO. FACTURA" />
+                                        <TableColumn fx:id="colNumeroFacBuscado" prefWidth="85.59997940063477" text="NO." />
                                         <TableColumn fx:id="colTotlalNeto" prefWidth="86.39996337890625" text="PRECIO NETO" />
                                           <TableColumn fx:id="colTotalIva" prefWidth="75.0" text="IVA" />
                                           <TableColumn fx:id="colTotalBuscado" prefWidth="75.0" text="TOTAL" />
                                           <TableColumn fx:id="colFechaBuscada" prefWidth="75.0" text="FECHA" />
+                                          <TableColumn fx:id="colTipoFactura" prefWidth="75.0" text="TIPO" />
                                       </columns>
                                     </TableView>
                                     <JFXComboBox fx:id="txtBusquedaCodigoFac" editable="true" layoutX="19.0" layoutY="113.0" prefHeight="26.0" prefWidth="333.0" promptText="Ingrese el No. Factura para buscar" styleClass="comboOscuro" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="91.0" AnchorPane.topAnchor="113.0" />
@@ -266,6 +267,11 @@
                                     </JFXButton>
                                     <JFXDatePicker fx:id="txtFechaFinal" layoutX="122.0" layoutY="78.0" prefHeight="28.0" prefWidth="236.0" AnchorPane.leftAnchor="122.0" AnchorPane.rightAnchor="85.0" />
                                     <JFXDatePicker fx:id="txtFechaInicio" layoutX="123.0" layoutY="48.0" onAction="#fechaInicio" prefHeight="28.0" prefWidth="235.0" AnchorPane.leftAnchor="123.0" AnchorPane.rightAnchor="85.0" />
+                                    <JFXButton fx:id="btnMarcarDevolucion" buttonType="RAISED" layoutX="256.0" layoutY="496.0" onMouseClicked="#btnDevolucion" styleClass="boton" text="MARCAR COMO DEVOLUCIÒN" textFill="WHITE" AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="17.0">
+                                       <font>
+                                          <Font size="11.0" />
+                                       </font>
+                                    </JFXButton>
                                  </children>
                               </AnchorPane>
                             <AnchorPane fx:id="anchor4" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="anchorOscuro">
