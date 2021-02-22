@@ -803,9 +803,6 @@ public int buscarCodigoProducto(String precioProductos){
            
            PreparedStatement psFactura = Conexion.getIntance().getConexion().prepareCall(sqlFactura);
                psFactura.execute();
-           
-
-               
            PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
            psEliminar.execute();
            
