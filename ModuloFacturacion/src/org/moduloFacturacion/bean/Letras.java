@@ -47,9 +47,9 @@ public class Letras {
             }
             //de da formato al numero decimal
             if(Integer.parseInt(Num[1]) == 0){
-                parte_decimal = " Quetzales.";
+                parte_decimal = "";
             }else{
-                parte_decimal = "con " + literalDecimal + " Quetzales.";
+                parte_decimal = "con " + literalDecimal + "";
             }
             
             //se convierte el numero a literal

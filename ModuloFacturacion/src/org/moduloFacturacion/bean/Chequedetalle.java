@@ -5,17 +5,12 @@ package org.moduloFacturacion.bean;
  * @author davis
  */
 public class Chequedetalle {
+    int chequeDetalleNo;
     String chequeDetalleCuenta;
     String chequeDetalleDesc;
     double chequeDetalleValor;
 
-    public Chequedetalle(String chequeDetalleCuenta, String chequeDetalleDesc, double chequeDetalleValor) {
-        this.chequeDetalleCuenta = chequeDetalleCuenta;
-        this.chequeDetalleDesc = chequeDetalleDesc;
-        this.chequeDetalleValor = chequeDetalleValor;
-    }
 
-   
 
     public Chequedetalle() {
     }
@@ -24,15 +19,26 @@ public class Chequedetalle {
         return chequeDetalleCuenta;
     }
 
+    public Chequedetalle(int chequeDetalleNo, String chequeDetalleCuenta, String chequeDetalleDesc, double chequeDetalleValor) {
+        this.chequeDetalleNo = chequeDetalleNo;
+        this.chequeDetalleCuenta = chequeDetalleCuenta;
+        this.chequeDetalleDesc = chequeDetalleDesc;
+        this.chequeDetalleValor = chequeDetalleValor;
+    }
+
     public void setChequeDetalleCuenta(String chequeDetalleCuenta) {
         this.chequeDetalleCuenta = chequeDetalleCuenta;
     }
 
+    public int getChequeDetalleNo() {
+        return chequeDetalleNo;
+    }
+
+    public void setChequeDetalleNo(int chequeDetalleNo) {
+        this.chequeDetalleNo = chequeDetalleNo;
+    }
+
     
-
-
-    
-
     public String getChequeDetalleDesc() {
         return chequeDetalleDesc;
     }

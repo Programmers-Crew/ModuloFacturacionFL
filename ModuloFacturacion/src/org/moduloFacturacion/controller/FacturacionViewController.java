@@ -850,12 +850,16 @@ public String buscarCodigoProducto(String precioProductos){
            
            PreparedStatement psFactura = Conexion.getIntance().getConexion().prepareCall(sqlFactura);
                psFactura.execute();
+<<<<<<< HEAD
+           PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
+=======
 
            PreparedStatement psTipo = Conexion.getIntance().getConexion().prepareCall(sqlTipo);
                psTipo.execute();
 
                
                PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
+>>>>>>> Diego-Gonzalez
            psEliminar.execute();
            
             Notifications noti = Notifications.create();
