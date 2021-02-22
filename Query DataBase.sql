@@ -86,6 +86,12 @@ create table TipoFactua(
     PRIMARY KEY (tipoFactura) 
 );
 
+create table EstadoFactura(
+	estadoFactura int not null,
+    estadoFacturaDesc varchar(25),
+    PRIMARY KEY (estadoFactura) 
+);
+
 create table Facturas(
 	codigo int(5) UNSIGNED ZEROFILL PRIMARY KEY auto_increment,
 	facturaId int(5) UNSIGNED ZEROFILL,
@@ -96,11 +102,13 @@ create table Facturas(
     facturaTotalNeto decimal(10,2) not null,
     facturaTotalIva decimal(10,2) not null,
     facturaTotal decimal(10,2) not null,
-	facturaTipo int not null,
+	facturaTipo int,
+    estadoFactura int default 1,
 	CONSTRAINT FK_facturaDetalle FOREIGN KEY (facturaDetalleId) REFERENCES facturadetalle(facturaDetalleId),
 	CONSTRAINT FK_clienteFactura FOREIGN KEY (clienteId) REFERENCES Clientes(clienteId),
 	CONSTRAINT FK_usuarioFactura FOREIGN KEY (usuarioId) REFERENCES Usuarios(usuarioId),
-	CONSTRAINT FK_tipoFactura FOREIGN KEY (facturaTipo) REFERENCES TipoFactua(tipoFactura)
+	CONSTRAINT FK_tipoFactura FOREIGN KEY (facturaTipo) REFERENCES TipoFactua(tipoFactura),
+    CONSTRAINT FK_estadoFactura FOREIGN KEY (estadoFactura) REFERENCES EstadoFactura(estadoFactura)
 );
 
 create table ChequeDetalle(

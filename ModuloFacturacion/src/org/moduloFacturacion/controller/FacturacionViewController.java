@@ -98,6 +98,11 @@ public class FacturacionViewController implements Initializable {
     private JFXTextField txtLetrasPrecio;
     @FXML
     private JFXButton btnReporteVentas;
+    @FXML
+    private ComboBox<String> cmbTipoFactura;
+    
+    @FXML
+    private JFXButton btnMarcarDevolucion;
     
     private void cargarEstado(Event event) {
         animacion.animacion(anchor3, anchor4);
@@ -123,7 +128,7 @@ public class FacturacionViewController implements Initializable {
 
 
 
-    public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, VENDER,FILTRAR,CARGAR};
+    public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, VENDER,FILTRAR,CARGAR, DEVOLUCION};
 
 
 
@@ -137,11 +142,12 @@ public class FacturacionViewController implements Initializable {
 
     ObservableList<String> listaComboCliente;
     ObservableList<String> listaComboProductos;
+    ObservableList<String> listaComboTipo;
     ObservableList<FacturacionDetalleBackup> listaBackUp;
 
     boolean comprobarCliente = false;
     Notifications noti = Notifications.create();
-    int codigoProducto;
+    String codigoProducto;
     
     // ================= VARIABLES PRA BUSCAR FACTURAS
         public Operacion tipoOperacionBusquedaFacturas = Operacion.NINGUNO; 
@@ -208,6 +214,8 @@ public class FacturacionViewController implements Initializable {
     @FXML
     private TableColumn<FacturasBuscadas, Date> colFechaBuscada;
     @FXML
+    private TableColumn<FacturasBuscadas, String> colTipoFactura;
+    @FXML
     private JFXComboBox<String> txtBusquedaCodigoFac;
     @FXML
     private JFXButton btnBuscarFactura;
@@ -259,6 +267,7 @@ public class FacturacionViewController implements Initializable {
          validar.validarView(menu.prefs.get("dark", "root"), anchor);
         llenarComboNit();
         llenarComboProdcutos();
+        llenarComboTipoFactura();
         cargarDatos();
         btnEditar.setDisable(true);
         valorTotalFactura();
@@ -284,6 +293,7 @@ public class FacturacionViewController implements Initializable {
         txtNitCliente.setValue("");
         txtNombreCliente.setText("");
         txtDireccionCliente.setText("");
+            cmbTipoFactura.setValue("");
     }
     public void limpiarTextEfectivo(){
         txtNombreCliente.setText("");
@@ -398,7 +408,7 @@ public class FacturacionViewController implements Initializable {
                
                 try{
                      PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarProductos(?)}");
-                    sp.setInt(1, buscarCodigoProducto(cmbNombreProducto.getValue()));
+                    sp.setString(1, buscarCodigoProducto(cmbNombreProducto.getValue()));
                      ResultSet resultado = sp.executeQuery(); 
                         while(resultado.next()){
                             txtPrecioProducto.setText(resultado.getString("productoPrecio"));
@@ -480,16 +490,45 @@ public class FacturacionViewController implements Initializable {
     }
     
     
+    public void llenarComboTipoFactura(){
+        ArrayList<String> lista = new ArrayList();
+        String sql= "{call Sp_ListarTipo()}";
+            int x =0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("tipoFacturaDesc"));
+                x++;
+            }
+            
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("ERROR AL CARGAR DATOS CMB");
+            noti.text("Error al cargar la base de datos");
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();
+            noti.show();
+        }
 
+        listaComboTipo = FXCollections.observableList(lista);
+        cmbTipoFactura.setItems(listaComboTipo);
+        new AutoCompleteComboBoxListener(cmbTipoFactura);
+    }
 
-public int buscarCodigoProducto(String precioProductos){    
+public String buscarCodigoProducto(String precioProductos){    
         try{
             PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarcodigoProducto(?)}");
             sp.setString(1, precioProductos);
             ResultSet resultado = sp.executeQuery(); 
             
             while(resultado.next()){
-            codigoProducto = resultado.getInt(1);
+            codigoProducto = resultado.getString(1);
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -632,7 +671,7 @@ public int buscarCodigoProducto(String precioProductos){
   }
   
   public boolean validarProducto(){
-       int codigoProducto1 = buscarCodigoProducto(cmbNombreProducto.getValue());
+       String codigoProducto1 = buscarCodigoProducto(cmbNombreProducto.getValue());
        String sql = "{call SpBuscarInventarioProductos('"+codigoProducto1+"')}";
        int cantidad=0;
        boolean valor=false;
@@ -792,10 +831,18 @@ public int buscarCodigoProducto(String precioProductos){
     public void guardarFactura(){
         double totalNeto = Double.parseDouble(txtTotalFactura.getText())/1.12;
        double totalIva = totalNeto*0.12;
+       int tipo = 0;
+       
+       if(cmbTipoFactura.getValue().equals("FACTURA")){
+           tipo = 1;
+       }else{
+             tipo = 2;
+        }
        
        String sql = "{call SpTransferirBackup()}";
        String sqlEliminar = "{call SpEliminarBackup()}";
        String sqlFactura = "{call SpAgregarFactura('"+txtFacturaId.getText()+"','"+getClienteId()+"','"+date2+"','"+getUsuarioId()+"','"+totalNeto+"','"+totalIva+"','"+txtTotalFactura.getText()+"')}";
+       String sqlTipo = "{call SpAgregarTipoDocumento('"+txtFacturaId.getText()+"','"+tipo+"')}";
        try{
 
            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
@@ -803,7 +850,16 @@ public int buscarCodigoProducto(String precioProductos){
            
            PreparedStatement psFactura = Conexion.getIntance().getConexion().prepareCall(sqlFactura);
                psFactura.execute();
+<<<<<<< HEAD
            PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
+=======
+
+           PreparedStatement psTipo = Conexion.getIntance().getConexion().prepareCall(sqlTipo);
+               psTipo.execute();
+
+               
+               PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
+>>>>>>> Diego-Gonzalez
            psEliminar.execute();
            
             Notifications noti = Notifications.create();
@@ -986,11 +1042,7 @@ public int buscarCodigoProducto(String precioProductos){
             
         }else{
         
-        }
-        
-        
-        
-            
+        }   
     }
   
 
@@ -1025,10 +1077,13 @@ public int buscarCodigoProducto(String precioProductos){
                             rs.getDouble("facturaTotalNeto"),
                             rs.getDouble("facturaTotalIva"),
                             rs.getDouble("facturaTotal"),
-                            rs.getDate("facturaFecha")
+                            rs.getDate("facturaFecha"),
+                            rs.getString("tipoFacturaDesc")
                 ));
                 comboNumeroFacturas.add(x, rs.getString("facturaId"));
                 x++;
+                
+
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -1042,12 +1097,12 @@ public int buscarCodigoProducto(String precioProductos){
     public void cargarFacturasBuscadas(){
         animacion.animacion(anchor3, anchor4);
         tblResultadoFactura.setItems(getFacturasBuscadas());
-        
         colNumeroFacBuscado.setCellValueFactory(new PropertyValueFactory("facturaId"));
         colTotlalNeto.setCellValueFactory(new PropertyValueFactory("facturaTotalNeto"));  
         colTotalIva.setCellValueFactory(new PropertyValueFactory("facturaTotalIva"));
         colTotalBuscado.setCellValueFactory(new PropertyValueFactory("facturaTotal"));
         colFechaBuscada.setCellValueFactory(new PropertyValueFactory("facturaFecha"));
+        colTipoFactura.setCellValueFactory(new PropertyValueFactory("tipoFacturaDesc"));
         new AutoCompleteComboBoxListener(txtBusquedaCodigoFac);
         txtBusquedaCodigoFac.setValue("");
         txtFechaInicio.setValue(null);
@@ -1075,7 +1130,8 @@ public int buscarCodigoProducto(String precioProductos){
                             rs.getDouble("facturaTotalNeto"),
                             rs.getDouble("facturaTotalIva"),
                             rs.getDouble("facturaTotal"),
-                            rs.getDate("facturaFecha")
+                            rs.getDate("facturaFecha"),
+                            rs.getString("tipoFacturaDesc")
                 ));
             }
         }catch(SQLException ex){
@@ -1092,6 +1148,7 @@ public int buscarCodigoProducto(String precioProductos){
         colTotalIva.setCellValueFactory(new PropertyValueFactory("facturaTotalIva"));
         colTotalBuscado.setCellValueFactory(new PropertyValueFactory("facturaTotal"));
         colFechaBuscada.setCellValueFactory(new PropertyValueFactory("facturaFecha"));
+        colTipoFactura.setCellValueFactory(new PropertyValueFactory("tipoFacturaDesc"));
         buscarProducto();
         txtBusquedaCodigoFac.setValue("");
     }  
@@ -1112,7 +1169,8 @@ public int buscarCodigoProducto(String precioProductos){
                             rs.getDouble("facturaTotalNeto"),
                             rs.getDouble("facturaTotalIva"),
                             rs.getDouble("facturaTotal"),
-                            rs.getDate("facturaFecha")
+                            rs.getDate("facturaFecha"),
+                            rs.getString("tipoFacturaDesc")
                 ));
             }
         }catch(SQLException ex){
@@ -1129,6 +1187,7 @@ public int buscarCodigoProducto(String precioProductos){
         colTotalIva.setCellValueFactory(new PropertyValueFactory("facturaTotalIva"));
         colTotalBuscado.setCellValueFactory(new PropertyValueFactory("facturaTotal"));
         colFechaBuscada.setCellValueFactory(new PropertyValueFactory("facturaFecha"));
+        colTipoFactura.setCellValueFactory(new PropertyValueFactory("tipoFacturaDesc"));
         
         txtBusquedaCodigoFac.setValue("");
     }   
@@ -1308,6 +1367,53 @@ public int buscarCodigoProducto(String precioProductos){
                         txtFechaInicio.setValue(null);
                         txtFechaFinal.setValue(null);
                 break; 
+            case DEVOLUCION:
+                alert.setTitle("CANCELAR DOCUMENTO");
+                alert.setHeaderText("CANCELAR DOCUMENTO");
+                alert.setContentText("¿Está seguro que desea canelar este documento?");
+               
+                alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
+                
+                Optional<ButtonType> resultEliminar = alert.showAndWait();
+                
+                if(resultEliminar.get() == buttonTypeSi){
+                    try {
+                        ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                        ps.execute();
+                        
+                        noti.graphic(new ImageView(imgCorrecto));
+                        noti.title("OPERACIÓN EXITOSA");
+                        noti.text("SE HA CANCELADO EXITOSAMENTE EL DOCUMENTO");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        cargarDatos();
+                        tipoOperacionBusquedaFacturas = Operacion.CANCELAR;                        
+                    }catch (SQLException ex) {
+                        ex.printStackTrace();
+                        
+                        
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR AL ELIMINAR");
+                        noti.text("HA OCURRIDO UN ERROR AL CANCELAR EL DOCUMENTO");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        tipoOperacionBusquedaFacturas = Operacion.CANCELAR;
+                    }
+                }else{
+                     noti.graphic(new ImageView(imgError));
+                    noti.title("OPERACIÓN CANCELADA");
+                    noti.text("NO SE HA CANCELADO EL DOCUMENTO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                    tipoOperacionBusquedaFacturas = Operacion.CANCELAR;
+                }
+                break;
                 
         }
     }
@@ -1352,6 +1458,32 @@ public int buscarCodigoProducto(String precioProductos){
             }
     }
 
+        @FXML
+    private void btnDevolucion(MouseEvent event) {
+        
+        if(txtBusquedaCodigoFac.getValue().equals("")){
+                        Notifications noti = Notifications.create();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR");
+                        noti.text("SELECCIONE UNA REGISTRO");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();   
+                        noti.show();
+                   }else{
+                        int codigoFac = Integer.parseInt(txtBusquedaCodigoFac.getValue());
+            
+            
+                        String sql = "{call Sp_DevolucionProductos('"+txtBusquedaCodigoFac.getValue()+"')}";
+                             
+                        String sql2 = "{call Sp_CancelarFac('"+txtBusquedaCodigoFac.getValue()+"')}";
+                        
+                        tipoOperacionBusquedaFacturas = Operacion.DEVOLUCION;
+                        accion(sql); 
+                        accion(sql2);
+                   }
+             
+    }
     
     public void buscarProducto(){
 

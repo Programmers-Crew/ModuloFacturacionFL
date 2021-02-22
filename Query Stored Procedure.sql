@@ -732,8 +732,10 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpBuscarDetalleFacturasFecha(fechaInicio date, FechaFinal date)
 		BEGIN
-			select distinct f.facturaId, f.facturaFecha, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal
+			select distinct f.facturaId, f.facturaFecha, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, ft.tipoFacturaDesc
 				from facturas as f
+					inner join tipofactua as ft
+						on f.facturaTipo = ft.tipoFactura
 					where f.facturaFecha between fechaInicio and FechaFinal
 						order by f.facturaId asc;
         END $$
@@ -756,23 +758,27 @@ DELIMITER $$
         END $$
 DELMITER ;
 
+
 DELIMITER $$
 	create procedure SpListarBusquedasFacturasPorId(idBuscado int(5))
 		BEGIN
-			select distinct f.facturaId, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, f.facturaFecha
+			select distinct f.facturaId, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, f.facturaFecha, ft.tipoFacturaDesc
 				from facturas as f
+                inner join tipofactua as ft
+						on f.facturaTipo = ft.tipoFactura
 					where f.facturaId = idBuscado
                      order by f.facturaId asc;
         END $$
 DELIMITER ;
 
-
-
+call SpListarBusquedasFacturas()
 DELIMITER $$
 	create procedure SpListarBusquedasFacturas()
 		BEGIN
-			select distinct f.facturaId, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, f.facturaFecha
+			select distinct f.facturaId, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, f.facturaFecha,ft.tipoFacturaDesc
 				from facturas as f
+					inner join tipofactua as ft
+						on f.facturaTipo = ft.tipoFactura
 					order by f.facturaId asc;
 		END $$
 DELIMITER ;
@@ -811,8 +817,9 @@ DELIMITER $$
 								on fdb.productoIdBackup = p.productoId;
         END $$
 DELIMITER ;
+
 DELIMITER $$
-	create procedure spEditarBackup(idBuscado INT(5),prodId INT(5), cantidad INT(5), totalParcial decimal(10,2) )
+	create procedure spEditarBackup(idBuscado INT(5),prodId varchar(7), cantidad INT(5), totalParcial decimal(10,2) )
 		BEGIN
 			update facturadetallebackup
 				set productoIdBackup = prodId, productoIdBackup = prodId, cantidadBackup = cantidad, totalParcialBackup = totalParcial
@@ -820,9 +827,8 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
-
 DELIMITER $$
-	create procedure SpAgregarBackup(productoId int(11), cantidad int(11), totalParcial decimal(10,2))
+	create procedure SpAgregarBackup(productoId varchar(7), cantidad int(11), totalParcial decimal(10,2))
 		BEGIN				
                 insert into facturadetallebackup(productoIdBackup,cantidadBackup,totalParcialBackup)
 				values(productoId, cantidad, totalParcial);
@@ -848,7 +854,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-	create procedure SpAgregarFactura(codigoFactura int(5),clienteId int(5), facturaFecha date, usuarioId int(5), facturaTotalNeto decimal(10,2), facturaTotalIva decimal(10,2), facturaTotal decimal(10,2))
+	create procedure SpAgregarFactura(codigoFactura int(5),clienteId int(5), facturaFecha date, usuarioId int(5), facturaTotalNeto decimal(10,2), facturaTotalIva decimal(10,2), facturaTotal decimal(10,2),tipo int)
 		BEGIN 
 			insert into facturas (facturaId, facturaDetalleId, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal)
 				select codigoFactura, fb.facturaDetalleIdBackup, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal
@@ -856,6 +862,15 @@ DELIMITER $$
 		END $$
 DELIMITER ;
 
+DELIMITER $$
+	create procedure SpAgregarTipoDocumento(idBuscado int,tipo int)
+		begin
+			update facturas
+				set facturaTipo = tipo
+                where 
+					facturaId = idBuscado;
+		end $$
+DELIMITER ;
 
 DELIMITER $$
 	CREATE PROCEDURE SpSumarBackup()
@@ -864,10 +879,7 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
-insert into tipousuario values(0,"Administrador"),(0,"Empleado");
 
-insert into usuarios values(0,"admin", "admin", 1);
-INSERT INTO clientes(clienteNit,clienteNombre) values("C/F","C/F");
 DELIMITER $$
 	create procedure SpBuscarCodigoEstado(nombre varchar(100))
 		BEGIN
@@ -1085,5 +1097,50 @@ DELIMITER $$
                 chequeUsuario = usuario
 			where
 				chequeNo = idBuscado;
+        end $$
+DELIMITER ;
+
+-- Tipo Documento
+
+DELIMITER $$
+	create procedure Sp_ListarTipo()
+		begin
+			select*from TipoFactua;
+        end $$
+DELIMITER ;
+
+-- inserts obligatorios
+insert into tipofactua(tipoFactura,tipoFacturaDesc)
+	values(1,"FACTURA"),(1,"ORDEN DE COMPRA");
+    
+insert into estadofactura(estadoFactura,estadoFacturaDesc)
+	values(1,"Activa"), (2,"Cancelada");
+    
+insert into tipousuario values(0,"Administrador"),(0,"Empleado");
+
+insert into usuarios values(0,"admin", "admin", 1);
+INSERT INTO clientes(clienteNit,clienteNombre) values("C/F","C/F");
+
+DELIMITER $$
+	create procedure Sp_DevolucionProductos(idBuscado int)
+		begin
+			update inventarioproductos as ip
+				inner join productos as p
+					on ip.productoId = p.productoId
+				inner join facturadetalle as fd
+					on fd.productoId = p.productoId
+				inner join facturas as f
+				  on f.facturaDetalleId = fd.facturaDetalleId
+					set ip.inventarioProductoCant = fd.cantidad + ip.inventarioProductoCant
+						where facturaId = idBuscado;
+        end $$
+DELIMITER ;
+
+
+DELIMITER $$
+	create procedure Sp_CancelarFac(idBuscado int)
+		begin 
+			update facturas 
+				set estadoFactura = 2;
         end $$
 DELIMITER ;
