@@ -372,7 +372,7 @@ public class chequesController implements Initializable {
            ps.execute();
            
            PreparedStatement psCheque = Conexion.getIntance().getConexion().prepareCall(sqlCheque);
-            psCheque.execute();
+           psCheque.execute();
            PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
            psEliminar.execute();
            
