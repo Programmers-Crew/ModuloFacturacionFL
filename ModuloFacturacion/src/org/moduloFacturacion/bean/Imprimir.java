@@ -1,30 +1,26 @@
-/*  
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.moduloFacturacion.bean;
 
+import java.awt.Font;
 import java.awt.print.*;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.time.LocalDate;
 import javafx.collections.ObservableList;
-/**
- *
- * @author Jorge Herrera Castillo
- */
+
 public class Imprimir implements Printable{
     PrinterJob printerJob;
     ObservableList<FacturacionDetalleBackup> mensaje;   
-    String Nit, nombreCliente, direccionCliente, fecha, totalLetras,totalFactura;
+    String Nit, nombreCliente, direccionCliente, totalLetras,totalFactura;
+    LocalDate fecha;
     public Imprimir(){
         super();
         printerJob=PrinterJob.getPrinterJob();
         printerJob.setPrintable(this);       
     }
-    // Método que lanza el cuadro de diálogos de la impresora e imprime
-    // imagen
-    public void imprima(ObservableList<FacturacionDetalleBackup> mensaje, String Nit, String nombreCliente, String direccionCliente,String fecha,String totalLetras, String totalFactura){
+    
+    public void imprima(ObservableList<FacturacionDetalleBackup> mensaje, String Nit, String nombreCliente, String direccionCliente,LocalDate fecha,String totalLetras, String totalFactura){
     this.mensaje=mensaje;
     this.Nit = Nit;
     this.nombreCliente = nombreCliente;
@@ -40,25 +36,30 @@ public class Imprimir implements Printable{
         }        
         } 
     }
-    // Método que traza la imagen para imprimir
-    public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){     
-        g2d.drawString(fecha, 370, 75);
-        g2d.drawString(nombreCliente, 65, 102);
-        g2d.drawString(direccionCliente,70, 120);
-        g2d.drawString(Nit,410 , 120);
-            int ancho =30;
-            int largo = 150;
-            int anchoDesc = 65;
-            int anchoValor = 480;
+    public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){   
+        Font font = new Font(null, Font.PLAIN, 0);    
+        AffineTransform affineTransform = new AffineTransform();
+        affineTransform.rotate(Math.toRadians(-270),0, 0);
+        Font rotatedFont = font.deriveFont(affineTransform);
+        g2d.setFont(rotatedFont);
+        g2d.drawString(String.valueOf(fecha.getDayOfMonth()), 400,28);
+        g2d.drawString(String.valueOf(fecha.getMonthValue()),400,68);
+        g2d.drawString(String.valueOf(fecha.getYear()),400,110);
+        g2d.drawString(nombreCliente, 377, 70);
+        g2d.drawString(direccionCliente,362, 70);
+        g2d.drawString(Nit,362 , 215);
+            int ancho =328;
+            int largo = 25;
+            int anchoDesc = 70;
+            int anchoValor = 218;
           for(int x=0; x< mensaje.size();x++){
               g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),ancho, largo);
-              g2d.drawString(mensaje.get(x).getProductoDesc()+"  "+String.valueOf(mensaje.get(x).getProductoPrecio()), anchoDesc, largo);
-              g2d.drawString(String.valueOf(mensaje.get(x).getTotalParcialBackup()), anchoValor, largo);
+              g2d.drawString(mensaje.get(x).getProductoDesc()+"  "+String.valueOf(mensaje.get(x).getProductoPrecio()), ancho , anchoDesc);
+              g2d.drawString(String.valueOf(mensaje.get(x).getTotalParcialBackup()), ancho, anchoValor);
               
-              largo = largo+17;
+              ancho = ancho-18;
           }
-         g2d.drawString(totalLetras, 30, 310);
-         g2d.drawString(totalFactura, 480, 310);
+         g2d.drawString(totalFactura, 68, 220);
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;

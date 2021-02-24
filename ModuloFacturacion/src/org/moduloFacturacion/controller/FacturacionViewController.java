@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -178,10 +179,8 @@ public class FacturacionViewController implements Initializable {
     @FXML
     private JFXTextField txtCantidadProducto;
     
-    java.util.Date d = new java.util.Date();  
-    SimpleDateFormat plantilla = new SimpleDateFormat("dd/MM/yyyy H:mm");
-    String tiempo = plantilla.format(d);
-    java.sql.Date date2 = new java.sql.Date(d.getTime());
+    LocalDate date2 = LocalDate.now();
+    
     MenuPrincipalContoller menu = new MenuPrincipalContoller();
     LoginViewController login = new LoginViewController();
     
@@ -850,16 +849,14 @@ public String buscarCodigoProducto(String precioProductos){
            
            PreparedStatement psFactura = Conexion.getIntance().getConexion().prepareCall(sqlFactura);
                psFactura.execute();
-<<<<<<< HEAD
+
            PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
-=======
 
            PreparedStatement psTipo = Conexion.getIntance().getConexion().prepareCall(sqlTipo);
                psTipo.execute();
 
                
-               PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
->>>>>>> Diego-Gonzalez
+               
            psEliminar.execute();
            
             Notifications noti = Notifications.create();
@@ -888,8 +885,9 @@ public String buscarCodigoProducto(String precioProductos){
     
     public void imprimir(){
         Imprimir imprimir = new Imprimir();
-        String fecha = String.valueOf(date2);
-        imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), fecha,txtLetrasPrecio.getText(), txtTotalFactura.getText());
+        
+        
+        imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
     }
     
     

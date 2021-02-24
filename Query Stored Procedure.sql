@@ -1111,7 +1111,7 @@ DELIMITER ;
 
 -- inserts obligatorios
 insert into tipofactua(tipoFactura,tipoFacturaDesc)
-	values(1,"FACTURA"),(1,"ORDEN DE COMPRA");
+	values(1,"FACTURA"),(2,"ORDEN DE COMPRA");
     
 insert into estadofactura(estadoFactura,estadoFacturaDesc)
 	values(1,"Activa"), (2,"Cancelada");
