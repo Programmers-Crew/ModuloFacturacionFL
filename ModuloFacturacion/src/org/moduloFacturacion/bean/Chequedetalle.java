@@ -1,9 +1,5 @@
 package org.moduloFacturacion.bean;
 
-/**
- *
- * @author davis
- */
 public class Chequedetalle {
     int chequeDetalleNo;
     String chequeDetalleCuenta;

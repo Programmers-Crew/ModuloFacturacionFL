@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.moduloFacturacion.controller;
 
 import com.jfoenix.controls.JFXButton;
@@ -11,6 +6,7 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,7 +40,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import org.moduloFacturacion.bean.Animations;
+import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
+import org.moduloFacturacion.bean.ChequeBuscado;
+import org.moduloFacturacion.bean.ChequeEncabezadoBuscado;
 import org.moduloFacturacion.bean.Chequedetalle;
 import org.moduloFacturacion.bean.Letras;
 import org.moduloFacturacion.bean.ValidarStyle;
@@ -52,11 +52,7 @@ import org.moduloFacturacion.bean.imprimirCheque;
 import org.moduloFacturacion.bean.imprimirCheque2;
 import org.moduloFacturacion.db.Conexion;
 
-/**
- * FXML Controller class
- *
- * @author davis
- */
+
 public class chequesController implements Initializable {
 
     int detalleEditarId =0;
@@ -70,10 +66,6 @@ public class chequesController implements Initializable {
     private JFXTextField recibitext;
     @FXML
     private JFXTextField nombretext;
-
-   
-    
-
     
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, VENDER,FILTRAR,CARGAR};
     public Operacion cancelar = Operacion.NINGUNO;
@@ -124,35 +116,38 @@ public class chequesController implements Initializable {
     @FXML
     private AnchorPane anchor3;
     @FXML
-    private TableView<?> tblResultadoFactura;
-    @FXML
-    private TableColumn<?, ?> colNumeroFacBuscado;
-    @FXML
-    private TableColumn<?, ?> colTotlalNeto;
-    @FXML
-    private TableColumn<?, ?> colTotalIva;
-    @FXML
-    private JFXComboBox<?> txtBusquedaCodigoFac;
-    @FXML
     private JFXButton btnBuscarFiltro;
     @FXML
     private JFXButton btnFiltrarCheque;
-    @FXML
-    private JFXButton btnCargarFactura;
     @FXML
     private JFXDatePicker txtFechaFinal;
     @FXML
     private JFXDatePicker txtFechaInicio;
     @FXML
     private AnchorPane anchor4;
+    
+    /* ENTIDADES DE CONTROL DE CHEQUES*/
     @FXML
-    private TableView<?> tblResultadoProducto;
+    private TableView<ChequeBuscado> tblResultadoCheque;
     @FXML
-    private TableColumn<?, ?> colProductoBuscado;
+    private TableColumn<ChequeBuscado, Integer> colNoChequeBuscado;
     @FXML
-    private TableColumn<?, ?> colCantidadBuscada;
+    private TableColumn<ChequeBuscado, Date> colFechaChequeBuscado;
     @FXML
-    private TableColumn<?, ?> colPrecioUnitBuscado;
+    private TableColumn<ChequeBuscado, Double> colTotalChequeBuscado;
+    @FXML
+    private TableColumn<ChequeBuscado, String> colReferenteChequeBuscado;
+    @FXML
+    private JFXComboBox<String> txtBusquedaCodigoChe;
+    @FXML
+    private TableView<ChequeEncabezadoBuscado> tblResultadoEncabezado;
+    @FXML
+    private TableColumn<ChequeEncabezadoBuscado, String> colCuentaBuscado;
+    @FXML
+    private TableColumn<ChequeEncabezadoBuscado, String> colDescBuscada;
+    @FXML
+    private TableColumn<ChequeEncabezadoBuscado, Double> colValorBuscado;
+
 
     double totalChequeDetalle=0;
     ObservableList<Chequedetalle> listaCheque;
@@ -542,17 +537,12 @@ public class chequesController implements Initializable {
     private void cargarProductos(Event event) {
     }
 
-    @FXML
-    private void seleccionarElementosFacturasBuscadas(MouseEvent event) {
-    }
 
     @FXML
     private void buscarCheque(MouseEvent event) {
     }
 
-    @FXML
-    private void btnFiltrarCheque(MouseEvent event) {
-    }
+
 
     @FXML
     private void btnCargarFiltro(MouseEvent event) {
@@ -566,4 +556,389 @@ public class chequesController implements Initializable {
     private void cargarCategoria(Event event) {
     }
     
+    
+    /* CODIGO CONTROL DE CHEQUES*/
+    
+    public Operacion tipoOperacionBusquedaCheques = Operacion.NINGUNO; 
+
+    ObservableList<String> listaNumeroCheque;
+    ObservableList<ChequeBuscado> listaChequeBuscadas;
+    ObservableList<ChequeEncabezadoBuscado> listaEncabezadoBuscado;
+
+     Animations animacion = new Animations();
+    
+    Integer noCheque = 0;
+    
+    /*OBTENER DATOS DE TABLA CHEQUES*/
+    
+    /*listar todos los cheques */
+        public ObservableList<ChequeBuscado> getControlCheque(){
+        ArrayList<ChequeBuscado> lista = new ArrayList();
+        ArrayList<String> comboNumeroCheques = new ArrayList();
+        String sql = "{call SpListarCheque()}";
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new ChequeBuscado(
+                            rs.getInt("chequeNo"),
+                            rs.getDate("chequeFecha"),
+                            rs.getDouble("chequeMonto"),
+                            rs.getString("chequePagoAlaOrdenDe")
+                ));
+                comboNumeroCheques.add(x, rs.getString("chequeNo"));
+                x++;
+                
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        listaNumeroCheque = FXCollections.observableList(comboNumeroCheques);
+        txtBusquedaCodigoChe.setItems(listaNumeroCheque);
+        return listaChequeBuscadas = FXCollections.observableList(lista);
+    }
+    
+        
+    public void cargarChequesBuscadas(){
+        animacion.animacion(anchor3, anchor4);
+        tblResultadoCheque.setItems(getControlCheque());
+        colNoChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeNo"));
+        colFechaChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeFecha"));  
+        colTotalChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeMonto"));
+        colReferenteChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequePagoAlaOrdenDe"));
+
+        new AutoCompleteComboBoxListener(txtBusquedaCodigoChe);
+        
+        txtBusquedaCodigoChe.setValue("");
+        txtFechaInicio.setValue(null);
+        txtFechaFinal.setValue(null);
+        tblResultadoEncabezado.setItems(null);
+    }  
+    
+    /*listar cheque buscados por id*/
+    
+        public ObservableList<ChequeBuscado> getChequeBuscadasPorId(){
+        ArrayList<ChequeBuscado> lista = new ArrayList();
+        String sql = "{call SpBuscarCheque('"+txtBusquedaCodigoChe.getValue()+"')}";
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new ChequeBuscado(
+                            rs.getInt("chequeNo"),
+                            rs.getDate("chequeFecha"),
+                            rs.getDouble("chequeMonto"),
+                            rs.getString("chequePagoAlaOrdenDe")
+                ));
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return listaChequeBuscadas = FXCollections.observableList(lista);
+    }
+        
+        public void cargarChequesBuscadasPorId(){
+        tblResultadoCheque.setItems(getChequeBuscadasPorId());
+        
+        colNoChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeNo"));
+        colFechaChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeFecha"));  
+        colTotalChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeMonto"));
+        colReferenteChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequePagoAlaOrdenDe"));
+        buscarEncabezado();
+        txtBusquedaCodigoChe.setValue("");
+    }  
+        
+   /* listar los cheques segun su fecha*/
+       
+        public ObservableList<ChequeBuscado> getChequeBuscadasPorFecha(){
+        ArrayList<ChequeBuscado> lista = new ArrayList();
+        String sql = "{call SpBuscarChequePorFecha('"+txtFechaInicio.getValue()+"','"+txtFechaFinal.getValue()+"')}";
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new ChequeBuscado(
+                            rs.getInt("chequeNo"),
+                            rs.getDate("chequeFecha"),
+                            rs.getDouble("chequeMonto"),
+                            rs.getString("chequePagoAlaOrdenDe")
+                ));
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return listaChequeBuscadas = FXCollections.observableList(lista);
+    }
+        
+       public void cargarChequesBuscadasPorFecha(){
+        tblResultadoCheque.setItems(getChequeBuscadasPorFecha());
+        
+        colNoChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeNo"));
+        colFechaChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeFecha"));  
+        colTotalChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeMonto"));
+        colReferenteChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequePagoAlaOrdenDe"));
+        
+        txtBusquedaCodigoChe.setValue("");
+    }  
+       
+    /*OBTENER INFORMACION DEL CHEQUE SEGUN ID */
+    public ObservableList<ChequeEncabezadoBuscado> getEncabezadoBuscado(){
+        ArrayList<ChequeEncabezadoBuscado> listaEnzacezado = new ArrayList();
+        
+        String sql = "{call SpBuscarDetalleCheque('"+txtBusquedaCodigoChe.getValue()+"')}";
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                listaEnzacezado.add(new ChequeEncabezadoBuscado(
+                            rs.getString("chequeDetalleCuenta"),
+                            rs.getString("chequeDetalleDesc"),
+                            rs.getDouble("chequeDetalleValor")
+                ));
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return listaEncabezadoBuscado = FXCollections.observableList(listaEnzacezado);
+    }
+    
+    public void cargarEnzabezadoBuscados(){
+        tblResultadoEncabezado.setItems(getEncabezadoBuscado());
+        
+        colCuentaBuscado.setCellValueFactory(new PropertyValueFactory("chequeDetalleCuenta"));
+        colDescBuscada.setCellValueFactory(new PropertyValueFactory("chequeDetalleDesc"));  
+        colValorBuscado.setCellValueFactory(new PropertyValueFactory("chequeDetalleValor"));
+    }  
+    
+     public void accionBusqueda(String sql){
+         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        PreparedStatement ps;
+        ResultSet rs;
+        Notifications noti = Notifications.create();
+        ButtonType buttonTypeSi = new ButtonType("Si");
+        ButtonType buttonTypeNo = new ButtonType("No");
+        switch(tipoOperacionBusquedaCheques){
+            case FILTRAR:
+                 try{
+                    ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                    rs = ps.executeQuery();
+                    int numero=0;
+                                     
+                    if(rs.first()){
+                        for(int i=0; i<tblResultadoCheque.getItems().size(); i++){
+                            if(colNoChequeBuscado.getCellData(i) == noCheque){
+                                tblResultadoCheque.getSelectionModel().select(i);
+                                break;
+                            }
+                        }
+                        noti.graphic(new ImageView(imgCorrecto));
+                        noti.title("OPERACIÓN EXITOSA");
+                        noti.text("SU OPERACIÓN SE HA REALIZADO CON EXITO");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                    }else{
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR AL BUSCAR");
+                        noti.text("NO SE HA ENCONTRADO EN LA BASE DE DATOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        tipoOperacionBusquedaCheques = Operacion.CANCELAR;
+                    }
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR AL BUSCAR");
+                    noti.text("HA OCURRIDO UN ERROR EN LA BASE DE DATOS");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                    tipoOperacionBusquedaCheques = Operacion.CANCELAR;
+                }
+                break;
+            case CARGAR:
+                 alert.setTitle("VOLVER A CARGAR DATOS");
+                alert.setHeaderText("VOLVER A CARGAR DATOS");
+                alert.setContentText("¿Está seguro que desea cargar todos los datos de nuevo?");
+               
+                alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
+                
+                Optional<ButtonType> resultactualizar = alert.showAndWait();
+                if(resultactualizar.get() == buttonTypeSi ){
+                    try {
+                        ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                        ps.execute();
+                        
+                        noti.graphic(new ImageView(imgCorrecto));
+                        noti.title("OPERACIÓN EXITOSA");
+                        noti.text("SE HAN CARGADO EXITOSAMENTE SUS REGISTROS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        tipoOperacionBusquedaCheques = Operacion.CANCELAR;
+                        cargarChequesBuscadas();
+                        txtFechaInicio.setValue(null);
+                        txtFechaFinal.setValue(null);
+                    }catch (SQLException ex) {
+                        ex.printStackTrace();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR AL CARGAR SUS REGISTROS");
+                        noti.text("HA OCURRIDO UN ERROR AL MOMENTO DE CARGAR TODOS LOS REGISTROS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        tipoOperacionBusquedaCheques = Operacion.CANCELAR;
+
+                    }
+                }else{  
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("OPERACIÓN CANCELADA");
+                    noti.text("NO SE HAN PODIDO CARGAR TODOS LOS REGISTROS");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                    tipoOperacionBusquedaCheques = Operacion.CANCELAR;
+                }
+                break;
+            case BUSCAR:
+                try{
+                    ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                    rs = ps.executeQuery();
+                    int numero=0;
+                                        
+                    if(rs.first()){
+                        for(int i=0; i<tblResultadoCheque.getItems().size(); i++){
+                            if(colNoChequeBuscado.getCellData(i) == noCheque){
+                                tblResultadoCheque.getSelectionModel().select(i);
+                                break;
+                            }
+                        }
+                        noti.graphic(new ImageView(imgCorrecto));
+                        noti.title("OPERACIÓN EXITOSA");
+                        noti.text("SU OPERACIÓN SE HA REALIZADO CON EXITO");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                    }else{
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR AL BUSCAR");
+                        noti.text("NO SE HA ENCONTRADO EN LA BASE DE DATOS");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        tipoOperacionBusquedaCheques = Operacion.CANCELAR;
+                    }
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR AL BUSCAR");
+                    noti.text("HA OCURRIDO UN ERROR EN LA BASE DE DATOS");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                    tipoOperacionBusquedaCheques = Operacion.CANCELAR;
+                }
+                        txtFechaInicio.setValue(null);
+                        txtFechaFinal.setValue(null);
+                break;     
+        }
+    }
+    
+     /* Proceso para buscar cheque id*/
+    @FXML
+     public void buscarPorId(){
+      if(txtBusquedaCodigoChe.getValue().equals("")){
+                    Notifications noti = Notifications.create();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR");
+                    noti.text("El CAMPO DE BUSQUEDA ESTA VACÍO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();   
+                    noti.show();
+        }else{
+            tipoOperacionBusquedaCheques = Operacion.BUSCAR;
+            cargarChequesBuscadasPorId();
+        }  
+    }
+    
+    /* proceso para buscar cheque por fechas*/
+    @FXML
+    public void buscarPorFechas(){
+        try{
+            if(txtFechaInicio.getValue() == null || txtFechaFinal.getValue()==null){
+                          Notifications noti = Notifications.create();
+                          noti.graphic(new ImageView(imgError));
+                          noti.title("ERROR");
+                          noti.text("SELECCIONE FECHAS PARA PODER FILTRAR");
+                          noti.position(Pos.BOTTOM_RIGHT);
+                          noti.hideAfter(Duration.seconds(4));
+                          noti.darkStyle();   
+                          noti.show();
+              }else{
+                  tipoOperacionBusquedaCheques = Operacion.FILTRAR;
+                  cargarChequesBuscadasPorFecha();
+                }  
+            }catch(Exception e){
+               e.printStackTrace();
+            }
+    }
+    
+   
+    public void buscarEncabezado(){
+        for(int i=0; i<tblResultadoCheque.getItems().size(); i++){
+            if(colNoChequeBuscado.getCellData(i) == noCheque){
+                tblResultadoCheque.getSelectionModel().select(i);
+                 break;
+             }
+        }
+        cargarEnzabezadoBuscados();
+    }      
+               
+    
+        @FXML
+    private void seleccionarElementosChequeBuscadas(MouseEvent event) {
+        int index = tblResultadoCheque.getSelectionModel().getSelectedIndex();
+        try{
+
+            txtBusquedaCodigoChe.setValue(colNoChequeBuscado.getCellData(index).toString());
+            
+            cargarEnzabezadoBuscados();
+            
+        }catch(Exception ex){
+              ex.printStackTrace();
+        }
+    }
+    
+    private void btnBuscarCheque(MouseEvent event) {
+        buscarPorId();
+    }
+    
+    
+    private void btnFiltrarCheque(MouseEvent event) {
+        buscarPorFechas();
+    }
+    
+    @FXML
+    private void btnCargarCheque(MouseEvent event) {
+        cargarChequesBuscadas();
+    }
+        
 }

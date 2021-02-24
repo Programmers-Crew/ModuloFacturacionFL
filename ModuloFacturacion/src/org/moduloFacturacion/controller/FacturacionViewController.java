@@ -875,6 +875,7 @@ public String buscarCodigoProducto(String precioProductos){
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
             noti.text("HUBO UN ERROR AL REGISTRAR EN LA BASE DE DATOS");
+            System.out.println(sqlFactura);
             noti.position(Pos.BOTTOM_RIGHT);
             noti.hideAfter(Duration.seconds(4));
             noti.darkStyle();
@@ -1649,6 +1650,7 @@ public String buscarCodigoProducto(String precioProductos){
          }
               
     }
+    
         @FXML
     private void fechaInicio(ActionEvent event) {
         btnReporteVentas.setDisable(false);

@@ -20,7 +20,13 @@ public class InventarioProductos {
         this.precioCosto = precioCosto;
     }
 
+    public Double getPrecioCosto() {
+        return precioCosto;
+    }
 
+    public void setPrecioCosto(Double precioCosto) {
+        this.precioCosto = precioCosto;
+    }
 
     public Double getProductoPrecio() {
         return precioCosto;

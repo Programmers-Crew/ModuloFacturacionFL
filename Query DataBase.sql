@@ -125,7 +125,9 @@ create table ChequeDetallebackup(
     chequeDetalleValor double not null,
     PRIMARY KEY (chequeDetalleNo)
 );
+
 create table Cheque(
+	chequeCodigo int not null auto_increment,
 	chequeNo int(10)  UNSIGNED ZEROFILL,
     chequeLugar varchar(100) not null,
     chequeFecha date not null,
@@ -133,11 +135,16 @@ create table Cheque(
     chequeMonto double not null,
 	chequeDetalle int(100)  not null,
     chequeUsuario int(5) UNSIGNED ZEROFILL not null,
-	PRIMARY KEY (chequeNo),
+	PRIMARY KEY (chequeCodigo),
 	CONSTRAINT FK_usuarioCheque FOREIGN KEY (chequeUsuario) REFERENCES Usuarios(usuarioId),
 	CONSTRAINT FK_ChequeDetalle FOREIGN KEY (chequeDetalle) REFERENCES ChequeDetalle(chequeDetalleNo)
 );
 
+create table EstadoCredito(
+	estadoCreditoId int not null,
+    estadoCreditoDesc varchar(25) not null unique,
+	PRIMARY KEY (estadoCreditoId)
+);
 
 create table Creditos(
 	idCredito int not null,
@@ -146,6 +153,8 @@ create table Creditos(
 	creditoDesc varchar(50) not null,
     creditoProveedor varchar(50) not null,
     creditoMonto double not null,
+    creditoEstado int not null,
 	PRIMARY KEY (idCredito),
-    CONSTRAINT FK_CreditosProveedor FOREIGN KEY (creditoProveedor) REFERENCES Proveedores(proveedorId)
+    CONSTRAINT FK_CreditosProveedor FOREIGN KEY (creditoProveedor) REFERENCES Proveedores(proveedorId),
+	CONSTRAINT FK_CreditosEstados FOREIGN KEY (creditoEstado) REFERENCES EstadoCredito(estadoCreditoId)
 );

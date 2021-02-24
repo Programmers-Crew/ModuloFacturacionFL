@@ -523,12 +523,11 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
-
 DELIMITER $$
-	create procedure SpAgregarFacturas(id int(100), cliente int(100), fecha date, usuario int(100), neto decimal(10,2), iva decimal(10,2), total decimal(10,2), tipo int)
+	create procedure SpAgregarFacturas(id int(100), cliente int(100), fecha date, usuario int(100), neto decimal(10,2), iva decimal(10,2), total decimal(10,2))
 		BEGIN
-			insert into Facturas(facturaId, clienteId, facturaFecha, usuarioId, facturaTotalNeto, facturaTotalIva, facturaTotal, facturaTipo)
-				values(id, cliente, fecha, usuario, neto, iva, total, tipo);
+			insert into Facturas(facturaId, clienteId, facturaFecha, usuarioId, facturaTotalNeto, facturaTotalIva, facturaTotal)
+				values(id, cliente, fecha, usuario, neto, iva, total);
         END $$
 DELIMITER ;
 
@@ -854,7 +853,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-	create procedure SpAgregarFactura(codigoFactura int(5),clienteId int(5), facturaFecha date, usuarioId int(5), facturaTotalNeto decimal(10,2), facturaTotalIva decimal(10,2), facturaTotal decimal(10,2),tipo int)
+	create procedure SpAgregarFactura(codigoFactura int(5),clienteId int(5), facturaFecha date, usuarioId int(5), facturaTotalNeto decimal(10,2), facturaTotalIva decimal(10,2), facturaTotal decimal(10,2))
 		BEGIN 
 			insert into facturas (facturaId, facturaDetalleId, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal)
 				select codigoFactura, fb.facturaDetalleIdBackup, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal
@@ -1041,7 +1040,8 @@ DELIMITER $$
                 c.chequeDetalle,
                 c.chequeUsuario
             from 
-				Cheque as c;
+				Cheque as c
+					group by c.chequeNo;
         end $$
 DELIMITER ;
 
@@ -1058,8 +1058,29 @@ DELIMITER $$
                 c.chequeUsuario
             from 
 				Cheque as c
+                
 			where 
-				c.chequeNo = idBuscado;
+				c.chequeNo = idBuscado
+                group by c.chequeNo;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarChequePorFecha(fechaInicio date, fechaFinal date)
+		begin
+			select 
+				c.chequeNo,
+                c.chequeLugar,
+                c.chequeFecha,
+                c.chequePagoAlaOrdenDe,
+                c.chequeMonto,
+                c.chequeDetalle,
+                c.chequeUsuario
+            from 
+				Cheque as c
+			where 
+				c.chequeFecha between fechaInicio and fechaFinal
+                  group by c.chequeNo;
         end $$
 DELIMITER ;
 
@@ -1121,6 +1142,8 @@ insert into tipousuario values(0,"Administrador"),(0,"Empleado");
 insert into usuarios values(0,"admin", "admin", 1);
 INSERT INTO clientes(clienteNit,clienteNombre) values("C/F","C/F");
 
+insert into EstadoCredito values(1, "PENDIENTE"),(2, "PAGADO"),(3, "VENCIDO");
+
 DELIMITER $$
 	create procedure Sp_DevolucionProductos(idBuscado int)
 		begin
@@ -1142,5 +1165,16 @@ DELIMITER $$
 		begin 
 			update facturas 
 				set estadoFactura = 2;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarDetalleCheque(idBuscado int)
+		begin
+			select cd.chequeDetalleCuenta, cd.chequeDetalleDesc, cd.chequeDetalleValor
+				from chequedetalle as cd
+					inner join Cheque as c
+						on c.chequeDetalle = cd.chequeDetalleNo
+							where c.chequeNo = idBuscado;
         end $$
 DELIMITER ;
