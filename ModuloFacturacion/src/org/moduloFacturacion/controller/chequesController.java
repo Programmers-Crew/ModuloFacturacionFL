@@ -338,7 +338,7 @@ public class chequesController implements Initializable {
      @FXML
     private void imprimirCheque(MouseEvent event) {
         if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("") || sumaCheque.getText().equals("") 
-            || sumaLetras.getText().equals("") || numeroCuenta.getText().equals("") || descripcionPago.getText().equals("") || chequeValor.getText().equals("")){
+            || sumaLetras.getText().equals("")){
             Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");

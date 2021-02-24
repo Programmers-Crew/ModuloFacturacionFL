@@ -42,16 +42,16 @@ public class Imprimir implements Printable{
         affineTransform.rotate(Math.toRadians(-270),0, 0);
         Font rotatedFont = font.deriveFont(affineTransform);
         g2d.setFont(rotatedFont);
-        g2d.drawString(String.valueOf(fecha.getDayOfMonth()), 400,28);
-        g2d.drawString(String.valueOf(fecha.getMonthValue()),400,68);
-        g2d.drawString(String.valueOf(fecha.getYear()),400,110);
-        g2d.drawString(nombreCliente, 377, 70);
-        g2d.drawString(direccionCliente,362, 70);
-        g2d.drawString(Nit,362 , 215);
-            int ancho =328;
+        g2d.drawString(String.valueOf(fecha.getDayOfMonth()), 399,28);
+        g2d.drawString(String.valueOf(fecha.getMonthValue()),399,68);
+        g2d.drawString(String.valueOf(fecha.getYear()),399,110);
+        g2d.drawString(nombreCliente, 380, 70);
+        g2d.drawString(direccionCliente,364, 70);
+        g2d.drawString(Nit,364 , 218);
+            int ancho =327;
             int largo = 25;
             int anchoDesc = 70;
-            int anchoValor = 218;
+            int anchoValor = 227;
           for(int x=0; x< mensaje.size();x++){
               g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),ancho, largo);
               g2d.drawString(mensaje.get(x).getProductoDesc()+"  "+String.valueOf(mensaje.get(x).getProductoPrecio()), ancho , anchoDesc);
@@ -59,7 +59,7 @@ public class Imprimir implements Printable{
               
               ancho = ancho-18;
           }
-         g2d.drawString(totalFactura, 68, 220);
+         g2d.drawString(totalFactura, 70, 232);
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;

@@ -53,6 +53,7 @@ import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.FacturacionDetalleBackup;
 import org.moduloFacturacion.bean.FacturasBuscadas;
 import org.moduloFacturacion.bean.Imprimir;
+import org.moduloFacturacion.bean.ImprimirOrdenDeCompra;
 import org.moduloFacturacion.bean.Letras;
 import org.moduloFacturacion.bean.ProductoBuscado;
 
@@ -886,9 +887,13 @@ public String buscarCodigoProducto(String precioProductos){
     
     public void imprimir(){
         Imprimir imprimir = new Imprimir();
+        ImprimirOrdenDeCompra imprimirOrden = new ImprimirOrdenDeCompra();
+        if(cmbTipoFactura.getValue().equals("FACTURA")){
+            imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
+        }else{
+            imprimirOrden.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
+        }
         
-        
-        imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
     }
     
     
