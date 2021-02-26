@@ -19,7 +19,7 @@ public class CambioScene {
     public void Cambio(String url, Stage primaryStage) throws IOException{
         
       
-       
+        System.out.println(url);
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(url));
         
         Scene scene = new Scene(root);
@@ -29,5 +29,9 @@ public class CambioScene {
         primaryStage.show();
         
         
+    }
+    public void hola(){
+    
+        System.out.println("hola");
     }
 }

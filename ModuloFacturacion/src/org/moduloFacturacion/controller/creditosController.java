@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -39,7 +38,6 @@ import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.Creditos;
-import org.moduloFacturacion.bean.Proveedores;
 import org.moduloFacturacion.db.Conexion;
 
 public class creditosController implements Initializable {
@@ -108,6 +106,8 @@ public class creditosController implements Initializable {
     String codigo = "";
     @FXML
     private JFXButton btnReporte;
+    @FXML
+    private AnchorPane anchorCreditos;
 
     @FXML
     private void validarPrecioProducto(KeyEvent event) {
@@ -504,10 +504,11 @@ public class creditosController implements Initializable {
         }
     }
     
-    @FXML
+      @FXML
     private void regresar(MouseEvent event) throws IOException {
-         String menu = "org/moduloFacturacion/view/menuPrincipal.fxml";
-        cambioScene.Cambio(menu,(Stage) anchor.getScene().getWindow());
+        String menu1 = "org/moduloFacturacion/view/menuPrincipal.fxml";
+        cambioScene.Cambio(menu1, (Stage) anchorCreditos.getScene().getWindow());
+        
     }
     
     @Override
