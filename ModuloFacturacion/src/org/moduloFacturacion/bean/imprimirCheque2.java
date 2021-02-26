@@ -1,12 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.moduloFacturacion.bean;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
@@ -19,7 +17,7 @@ import java.awt.print.PrinterJob;
  */
 public class imprimirCheque2 implements Printable{
      PrinterJob printerJob;
-    String lugarYfecha,ordenDe,suma;
+    String lugarYfecha,ordenDe,suma,valorTotal;
     double cantidad;
     public imprimirCheque2(){
         super();
@@ -33,6 +31,7 @@ public class imprimirCheque2 implements Printable{
         this.cantidad = cantidad;
         this.ordenDe = ordenDe;
         this.suma = suma;
+        this.valorTotal = valorTotal;
         if(printerJob.printDialog()){
             try{
                 printerJob.print();
@@ -44,9 +43,16 @@ public class imprimirCheque2 implements Printable{
     // Método que traza la imagen para imprimir
     public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){ 
         pf.setOrientation(PageFormat.LANDSCAPE);
-       g2d.drawString(lugarYfecha, 15,15);
-    //g2d.drawString(ordenDe,70, 120);
-    //g2d.drawString(String.valueOf(suma),410 , 120);
+         Font font = new Font(null, Font.PLAIN, 0);    
+        AffineTransform affineTransform = new AffineTransform();
+        affineTransform.rotate(Math.toRadians(-270),0, 0);
+        Font rotatedFont = font.deriveFont(affineTransform);
+        g2d.setFont(rotatedFont);
+        g2d.drawString(lugarYfecha, 111,55);
+        g2d.drawString(ordenDe,94, 60);
+        g2d.drawString(String.valueOf(suma),76,50);
+        g2d.drawString(valorTotal,111,372);
+        
     }
     
     

@@ -1098,7 +1098,7 @@ DELIMITER $$
 	create procedure SpAgregarCheque(numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, usuario int)
 		begin
 			insert into Cheque(chequeNo,chequeLugar,chequeFecha,chequePagoAlaOrdenDe,chequeMonto,chequeDetalle,chequeUsuario) 
-				select chequeNo,lugar,fecha,ordenDe,monto, cd.chequeDetalleNo, usuario
+				select numero,lugar,fecha,ordenDe,monto, cd.chequeDetalleNo, usuario
 					from chequedetallebackup as cd;
         end $$
 DELIMITER ;

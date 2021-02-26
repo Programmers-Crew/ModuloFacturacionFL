@@ -13,8 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -828,11 +826,11 @@ public String buscarCodigoProducto(String precioProductos){
     }
     
 
-    public void guardarFactura(){
+    public boolean guardarFactura(){
         double totalNeto = Double.parseDouble(txtTotalFactura.getText())/1.12;
        double totalIva = totalNeto*0.12;
        int tipo = 0;
-       
+       boolean validacion= false;
        if(cmbTipoFactura.getValue().equals("FACTURA")){
            tipo = 1;
        }else{
@@ -841,10 +839,16 @@ public String buscarCodigoProducto(String precioProductos){
        
        String sql = "{call SpTransferirBackup()}";
        String sqlEliminar = "{call SpEliminarBackup()}";
-       String sqlFactura = "{call SpAgregarFactura('"+txtFacturaId.getText()+"','"+getClienteId()+"','"+date2+"','"+getUsuarioId()+"','"+totalNeto+"','"+totalIva+"','"+txtTotalFactura.getText()+"')}";
+       int tipoFactura=0;
+       if(cmbTipoFactura.getValue().equals("FACTURA")){
+           tipoFactura=1;
+       }else{
+           tipoFactura=2;
+       } 
+       String sqlFactura = "{call SpAgregarFactura('"+txtFacturaId.getText()+"','"+getClienteId()+"','"+date2+"','"+getUsuarioId()+"','"+totalNeto+"','"+totalIva+"','"+txtTotalFactura.getText()+"','"+tipoFactura+"')}";
        String sqlTipo = "{call SpAgregarTipoDocumento('"+txtFacturaId.getText()+"','"+tipo+"')}";
        try{
-
+           
            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
            ps.execute();
            
@@ -857,7 +861,7 @@ public String buscarCodigoProducto(String precioProductos){
                psTipo.execute();
 
                
-               
+               validacion = true;
            psEliminar.execute();
            
             Notifications noti = Notifications.create();
@@ -881,7 +885,9 @@ public String buscarCodigoProducto(String precioProductos){
             noti.hideAfter(Duration.seconds(4));
             noti.darkStyle();
             noti.show();
+            validacion= false;
        }
+       return validacion;
     }
     
     
@@ -889,6 +895,7 @@ public String buscarCodigoProducto(String precioProductos){
         Imprimir imprimir = new Imprimir();
         ImprimirOrdenDeCompra imprimirOrden = new ImprimirOrdenDeCompra();
         if(cmbTipoFactura.getValue().equals("FACTURA")){
+            System.out.println(txtTotalFactura.getText());
             imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
         }else{
             imprimirOrden.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
@@ -919,15 +926,15 @@ public String buscarCodigoProducto(String precioProductos){
                 noti.darkStyle();
                 noti.show();
            }else{
-                imprimir();
                 comprobarClienteExistente();
                 txtLetrasPrecio.setText("");
-                guardarFactura();
-
-                limpiarTextCliente();
-
-               limpiarTextEfectivo();
-               totalFactura = 0;
+                 imprimir();
+                if(guardarFactura()==true){
+                    limpiarTextCliente();
+                   limpiarTextEfectivo();
+                   totalFactura = 0;
+                }
+                
            }
             
        }
