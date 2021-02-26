@@ -171,6 +171,15 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
+DELIMITER $$
+	create procedure SpBuscarProveedoresNombre(nombre varchar(100))
+		BEGIN
+			select proveedorId, proveedorNombre, proveedorTelefono
+				from Proveedores 
+					where proveedorNombre = nombre
+						order by proveedorId asc;
+        END $$
+DELIMITER ;
 
 DELIMITER $$
 	create procedure SpBuscarProveedoresPorNombre(nombre varchar(50))
@@ -1176,5 +1185,189 @@ DELIMITER $$
 					inner join Cheque as c
 						on c.chequeDetalle = cd.chequeDetalleNo
 							where c.chequeNo = idBuscado;
+        end $$
+DELIMITER ;
+
+-- Entidad de creditos
+DELIMITER $$
+	create procedure SpListarCreditos()
+		begin
+			select 
+				c.idCredito,
+                c.creaditoFechaInicio,
+                c.creditoFechaFinal,
+                c.creditoDiasRestantes,
+                c.creditoDesc,
+                p.proveedorNombre,
+                c.creditoMonto,
+                ec.estadoCreditoDesc
+            from Creditos as c
+				inner join proveedores as p
+					on c.creditoProveedor = p.proveedorId
+			inner join EstadoCredito as ec
+				on c.creditoEstado = ec.estadoCreditoId;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarCredito(idBuscado int)
+    begin
+		select 
+			c.idCredito,
+			c.creaditoFechaInicio,
+			c.creditoFechaFinal,
+			c.creditoDiasRestantes,
+			c.creditoDesc,
+			p.proveedorNombre,
+			c.creditoMonto,
+			ec.estadoCreditoDesc
+		from Creditos as c
+		inner join proveedores as p
+			on c.creditoProveedor = p.proveedorId
+		inner join EstadoCredito as ec
+			on c.creditoEstado = ec.estadoCreditoId
+				where c.idCredito = idBuscado;
+    end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarCreditoProveedor(proveedor varchar(25))
+    begin
+		select 
+			c.idCredito,
+			c.creaditoFechaInicio,
+			c.creditoFechaFinal,
+			c.creditoDiasRestantes,
+			c.creditoDesc,
+			p.proveedorNombre,
+			c.creditoMonto,
+			ec.estadoCreditoDesc
+		from Creditos as c
+		inner join proveedores as p
+			on c.creditoProveedor = p.proveedorId
+		inner join EstadoCredito as ec
+			on c.creditoEstado = ec.estadoCreditoId
+				where p.proveedorNombre = proveedor;
+    end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpFiltrarCredito(fechaInicio date, fechaFinal date)
+		begin
+			select 
+				c.idCredito,
+				c.creaditoFechaInicio,
+				c.creditoFechaFinal,
+				c.creditoDiasRestantes,
+				c.creditoDesc,
+				p.proveedorNombre,
+				c.creditoMonto,
+				ec.estadoCreditoDesc
+			from Creditos as c
+			inner join proveedores as p
+				on c.creditoProveedor = p.proveedorId
+			inner join EstadoCredito as ec
+				on c.creditoEstado = ec.estadoCreditoId
+					where c.creaditoFechaInicio between fechaInicio and fechaFinal
+					      and c.creditoFechaFinal between fechaInicio and fechaFinal;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpFiltrarCreditoEmpresa(fechaInicio date, fechaFinal date, proveedor varchar(25))
+		begin
+			select 
+				c.idCredito,
+				c.creaditoFechaInicio,
+				c.creditoFechaFinal,
+				c.creditoDiasRestantes,
+				c.creditoDesc,
+				p.proveedorNombre,
+				c.creditoMonto,
+				ec.estadoCreditoDesc
+			from Creditos as c
+			inner join proveedores as p
+				on c.creditoProveedor = p.proveedorId
+			inner join EstadoCredito as ec
+				on c.creditoEstado = ec.estadoCreditoId
+					where c.creaditoFechaInicio between fechaInicio and fechaFinal
+					      and c.creditoFechaFinal between fechaInicio and fechaFinal
+                          and p.proveedorNombre = proveedor;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpListarComboFiltro()
+    begin
+		select 
+			c.idCredito,
+			p.proveedorNombre
+		from Creditos as c
+		inner join proveedores as p
+			on c.creditoProveedor = p.proveedorId;
+    end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpListarComboFiltroProveedor()
+    begin
+		select 
+			c.idCredito,
+			p.proveedorNombre
+		from Creditos as c
+		inner join proveedores as p
+			on c.creditoProveedor = p.proveedorId
+            group by p.proveedorNombre;
+    end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpMarcarPagado(idBuscado int)
+		begin
+			update Creditos as c
+				set creditoEstado = 2
+					where c.idCredito = idBuscado;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50), proveedor varchar(7), monto double, estado int)
+		begin 
+			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDiasRestantes,creditoDesc,creditoProveedor,creditoMonto,creditoEstado)
+				values(inicio, final, creditoFechaFinal -creaditoFechaInicio ,descripcion, proveedor, monto, estado);
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpValidarCredito()
+		begin
+			select 
+				c.idCredito,
+                c.creditoDiasRestantes
+			from Creditos as c
+				where c.creditoDiasRestantes < 3;
+			
+            update Creditos as c
+				set c.creditoEstado = 3
+					where c.creditoDiasRestantes < 0;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpRestarDias(fechaActual date)
+		begin
+			update Creditos as c
+				set  c.creditoDiasRestantes = c.creditoFechaFinal - fechaActual;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpListarEstado()
+		begin
+			select 
+				ec. estadoCreditoId,
+                ec.estadoCreditoDesc
+            from 
+				EstadoCredito as ec;
         end $$
 DELIMITER ;

@@ -546,26 +546,48 @@ public class MenuPrincipalContoller implements Initializable {
        ttFacturas.play();
     }
     
-    public void inventario() throws IOException{
-        String inventarioUrl = "org/moduloFacturacion/view/InventarioView.fxml";
-        cambioScene.Cambio(inventarioUrl,(Stage) anchor.getScene().getWindow());
-    }
-    
+
+    /* CHEQUE*/
     @FXML
-    private void chequesView(ActionEvent event) throws IOException {
+    private void chequesView() throws IOException {
         String chequesUrl = "org/moduloFacturacion/view/chequesView.fxml";
         cambioScene.Cambio(chequesUrl,(Stage) anchor.getScene().getWindow());
     }
+    
+    private void chequeAtajo(ActionEvent event) throws IOException {
+        chequesView();
+    }
+    
+    /* CREDITOS*/
+    @FXML
+    private void credito() throws IOException {
+        String chequesUrl = "org/moduloFacturacion/view/creditosView.fxml";
+        cambioScene.Cambio(chequesUrl,(Stage) anchor.getScene().getWindow());
+    }
+    
+    private void creditoView(ActionEvent event) throws IOException {
+        credito();
+    }
+    
+    
+    /* INVENTARIO*/
         @FXML
     private void inventarioView(ActionEvent event) throws IOException {
         inventario();
+    }
+    
+    public void inventario() throws IOException{
+        String inventarioUrl = "org/moduloFacturacion/view/InventarioView.fxml";
+        cambioScene.Cambio(inventarioUrl,(Stage) anchor.getScene().getWindow());
     }
     
      @FXML
     private void inventarioAtajo(MouseEvent event) throws IOException {
         inventario();
     }
+    
    
+    /*FACTURA */
     public void factura() throws IOException{
         String facturaUrl = "org/moduloFacturacion/view/FacturacionView.fxml";
         cambioScene.Cambio(facturaUrl,(Stage) anchor.getScene().getWindow());
@@ -580,6 +602,8 @@ public class MenuPrincipalContoller implements Initializable {
         factura();
     }
     
+    
+    /* CLIENTES*/
     public void clientes() throws IOException{
         String clienteUrl = "org/moduloFacturacion/view/ClienteView.fxml";
         cambioScene.Cambio(clienteUrl,(Stage) anchor.getScene().getWindow());
@@ -594,6 +618,8 @@ public class MenuPrincipalContoller implements Initializable {
         clientes();
     }
     
+    
+    /* PRODUCTOS*/
     public void productos() throws IOException{
         String inventarioUrl = "org/moduloFacturacion/view/ProductosView.fxml";
         cambioScene.Cambio(inventarioUrl,(Stage) anchor.getScene().getWindow());
@@ -604,6 +630,8 @@ public class MenuPrincipalContoller implements Initializable {
         productos();
     }
 
+    
+    /* PROVEEDOR*/
     public void proveedores() throws IOException{
         String inventarioUrl = "org/moduloFacturacion/view/ProveedoresView.fxml";
         cambioScene.Cambio(inventarioUrl,(Stage) anchor.getScene().getWindow());
@@ -614,7 +642,6 @@ public class MenuPrincipalContoller implements Initializable {
         proveedores();
     }
     
-   
    
 
     
@@ -651,13 +678,19 @@ public class MenuPrincipalContoller implements Initializable {
                    }else{
                        if(event.getCode() == KeyCode.F5){
                            proveedores();
+                       }else{
+                           if(event.getCode() == KeyCode.F6){
+                               chequesView();
+                           }else{
+                               if(event.getCode() == KeyCode.F7){
+                                   credito();
+                               }
+                           }
                        }
                    }
                }
            }
        }
-       
-        
     }
 
     public void accion(){
