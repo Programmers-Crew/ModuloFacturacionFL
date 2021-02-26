@@ -147,9 +147,10 @@ create table EstadoCredito(
 );
 
 create table Creditos(
-	idCredito int not null,
+	idCredito int not null auto_increment,
     creaditoFechaInicio date not null,
     creditoFechaFinal date not null,
+    creditoDiasRestantes int not null,
 	creditoDesc varchar(50) not null,
     creditoProveedor varchar(50) not null,
     creditoMonto double not null,
