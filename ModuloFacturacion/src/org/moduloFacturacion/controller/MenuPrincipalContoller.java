@@ -12,6 +12,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,10 +59,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.CuadroImagen;
 import org.moduloFacturacion.bean.MiVisorPDF;
 
-import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.Usuario;
@@ -96,7 +97,7 @@ public class MenuPrincipalContoller implements Initializable {
     public Operacion cancelar = Operacion.NINGUNO;
     Image imgError= new Image("org/moduloFacturacion/img/error.png");
     Image imgCorrecto= new Image("org/moduloFacturacion/img/correcto.png");
-    
+    Image warning= new Image("org/moduloFacturacion/img/warning.png");
     private ObservableList<Usuario>listaUsuario;
     private ObservableList<String>listaCombo;
     private ObservableList<String>listaComboCodigo;
@@ -291,9 +292,38 @@ public class MenuPrincipalContoller implements Initializable {
         
     }
     
+    public void anuncio(){
+        LocalDate fechaActual = LocalDate.now();
+        String sql="{call SpRestarDias('"+fechaActual+"')}";
+        String sql2 = "{call SpValidarCredito()}";
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ps.execute();
+            
+            PreparedStatement ps2= Conexion.getIntance().getConexion().prepareCall(sql2);
+            ResultSet rs =ps2.executeQuery();
+            while(rs.next()){
+                
+            }
+            
+            if(rs.first()){
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(warning));
+                noti.title("CREDITOS");
+                noti.text("Tiene creditos Pendientes");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+       
         prefsRegresar.put("regresar", "menu");
         prefsRegresarProductos.put("regresarProducto", "menu");
          validar.validarMenu(prefs.get("dark", "root"), anchor);
@@ -310,6 +340,7 @@ public class MenuPrincipalContoller implements Initializable {
         }else{
                 checkBox.setSelected(false);
         }
+       
         // caja de bienvenida
          FadeTransition ft = new FadeTransition();
        ft.setFromValue(0);
@@ -403,7 +434,6 @@ public class MenuPrincipalContoller implements Initializable {
        ttFacturas.setNode(cajaFactura);
        ttFacturas.setCycleCount(1);
        ttFacturas.play();
-      
        
     }    
 

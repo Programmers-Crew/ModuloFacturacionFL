@@ -42,12 +42,12 @@ public class Imprimir implements Printable{
         affineTransform.rotate(Math.toRadians(-270),0, 0);
         Font rotatedFont = font.deriveFont(affineTransform);
         g2d.setFont(rotatedFont);
-        g2d.drawString(String.valueOf(fecha.getDayOfMonth()), 399,28);
-        g2d.drawString(String.valueOf(fecha.getMonthValue()),399,68);
-        g2d.drawString(String.valueOf(fecha.getYear()),399,110);
-        g2d.drawString(nombreCliente, 380, 70);
-        g2d.drawString(direccionCliente,364, 70);
-        g2d.drawString(Nit,364 , 218);
+        g2d.drawString(String.valueOf(fecha.getDayOfMonth()), 395,28);
+        g2d.drawString(String.valueOf(fecha.getMonthValue()),395,68);
+        g2d.drawString(String.valueOf(fecha.getYear()),395,110);
+        g2d.drawString(nombreCliente, 370, 70);
+        g2d.drawString(direccionCliente,355, 70);
+        g2d.drawString(Nit,355 , 218);
             int ancho =327;
             int largo = 25;
             int anchoDesc = 70;
@@ -59,6 +59,7 @@ public class Imprimir implements Printable{
               
               ancho = ancho-18;
           }
+          System.out.println(totalFactura+"hola");
          g2d.drawString(totalFactura, 70, 232);
     }
     public int print(Graphics g,PageFormat pf,int pagina){

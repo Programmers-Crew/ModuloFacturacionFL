@@ -18,14 +18,12 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -33,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -66,6 +65,10 @@ public class chequesController implements Initializable {
     private JFXTextField recibitext;
     @FXML
     private JFXTextField nombretext;
+
+    @FXML
+    private void convertirLetras(InputMethodEvent event) {
+    }
     
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, VENDER,FILTRAR,CARGAR};
     public Operacion cancelar = Operacion.NINGUNO;
@@ -86,9 +89,7 @@ public class chequesController implements Initializable {
     @FXML
     private JFXTextField pagoOrden;
     @FXML
-    private JFXTextField sumaCheque;
-    @FXML
-    private JFXTextField sumaLetras;
+    private TextField sumaLetras;
     @FXML
     private JFXTextField numeroCuenta;
     @FXML
@@ -168,8 +169,6 @@ public class chequesController implements Initializable {
     public void limpiarTextChequeDetalle(){
         numeroCheque.setText("");
         pagoOrden.setText("");
-        sumaCheque.setText("");
-        sumaLetras.setText("");
         numeroCuenta.setText("");
         descripcionPago.setText("");
         chequeValor.setText("");
@@ -208,7 +207,7 @@ public class chequesController implements Initializable {
         colDescripcion.setCellValueFactory(new PropertyValueFactory("chequeDetalleDesc"));
         colValor.setCellValueFactory(new PropertyValueFactory("chequeDetalleValor"));
         limpiarDetalle();
-        
+        letras();
     }
     public void accion(String sql){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -311,8 +310,7 @@ public class chequesController implements Initializable {
 
     @FXML
     private void btnAgregar(MouseEvent event) {
-        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("") || sumaCheque.getText().equals("") 
-            || sumaLetras.getText().equals("") || numeroCuenta.getText().equals("") || descripcionPago.getText().equals("") || chequeValor.getText().equals("")){
+        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("")  || numeroCuenta.getText().equals("") || descripcionPago.getText().equals("") || chequeValor.getText().equals("")){
             Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
@@ -337,8 +335,7 @@ public class chequesController implements Initializable {
     }
      @FXML
     private void imprimirCheque(MouseEvent event) {
-        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("") || sumaCheque.getText().equals("") 
-            || sumaLetras.getText().equals("")){
+        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("")){
             Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
@@ -351,8 +348,9 @@ public class chequesController implements Initializable {
         }else{
             imprimirCheque imprimirC = new imprimirCheque();
             imprimirCheque2 imprimirch = new imprimirCheque2();
-            imprimirC.imprima(listaCheque, numeroCheque.getText(), chequeFecha.getText(), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText(),sumaCheque.getText(), recibitext.getText(), nombretext.getText());
-            imprimirch.imprima(chequeFecha.getText(), Double.parseDouble(sumaCheque.getText()), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText());
+          
+            imprimirch.imprima(chequeFecha.getText(), Double.parseDouble(totalValor.getText()), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText());
+             imprimirC.imprima(listaCheque, numeroCheque.getText(), chequeFecha.getText(), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText(),totalValor.getText(), recibitext.getText(), nombretext.getText());
             guardarCheque();
         }
        
@@ -360,7 +358,7 @@ public class chequesController implements Initializable {
      public void guardarCheque(){
        String sql = "{call SpTransferirCheque()}";
        String sqlEliminar = "{call SpEliminarBackupCheque()}";
-       String sqlCheque = "{call SpAgregarCheque('"+numeroCheque.getText()+"','"+chequeFecha.getText()+"','"+fechaActual+"','"+pagoOrden.getText()+"','"+sumaCheque.getText()+"','"+getUsuarioId()+"')}";
+       String sqlCheque = "{call SpAgregarCheque('"+numeroCheque.getText()+"','"+chequeFecha.getText()+"','"+fechaActual+"','"+pagoOrden.getText()+"','"+totalValor.getText()+"','"+getUsuarioId()+"')}";
        try{
 
            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
@@ -432,7 +430,6 @@ public class chequesController implements Initializable {
         
     }
     
-      @FXML
     private void sumaEvent(KeyEvent event) {
         char letra = event.getCharacter().charAt(0);
         
@@ -464,16 +461,20 @@ public class chequesController implements Initializable {
         }
     }
 
-    
-    @FXML
     private void convertirLetras(KeyEvent event) {
-        if(!sumaCheque.getText().equals("")){
-            sumaLetras.setText(letras.Convertir(twoDForm.format(Double.parseDouble(sumaCheque.getText())), true));
+        if(!totalValor.getText().equals("")){
+            sumaLetras.setText(letras.Convertir(twoDForm.format(Double.parseDouble(totalValor.getText())), true));
         }else{
-            sumaCheque.setText("");
+            totalValor.setText("");
         }
     }
-    
+    public void letras(){
+        if(!totalValor.getText().equals("")){
+            sumaLetras.setText(letras.Convertir(twoDForm.format(Double.parseDouble(totalValor.getText())), true));
+        }else{
+            totalValor.setText("hola");
+        }
+    }
      @FXML
     private void seleccionarElementosCheques(MouseEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -503,8 +504,8 @@ public class chequesController implements Initializable {
     
     @FXML
     private void btnEditarChequeDetalle(MouseEvent event) {
-        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("") || sumaCheque.getText().equals("") 
-            || sumaLetras.getText().equals("") || numeroCuenta.getText().equals("") || descripcionPago.getText().equals("") || chequeValor.getText().equals("")){
+        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("")
+            ||  numeroCuenta.getText().equals("") || descripcionPago.getText().equals("") || chequeValor.getText().equals("")){
             Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
@@ -533,28 +534,11 @@ public class chequesController implements Initializable {
     private void atajosProductos(KeyEvent event) {
     }
 
-    @FXML
-    private void cargarProductos(Event event) {
-    }
-
-
-    @FXML
-    private void buscarCheque(MouseEvent event) {
-    }
-
-
-
-    @FXML
-    private void btnCargarFiltro(MouseEvent event) {
-    }
 
     @FXML
     private void fechaInicio(ActionEvent event) {
     }
 
-    @FXML
-    private void cargarCategoria(Event event) {
-    }
     
     
     /* CODIGO CONTROL DE CHEQUES*/
@@ -601,6 +585,7 @@ public class chequesController implements Initializable {
     }
     
         
+    @FXML
     public void cargarChequesBuscadas(){
         animacion.animacion(anchor3, anchor4);
         tblResultadoCheque.setItems(getControlCheque());
