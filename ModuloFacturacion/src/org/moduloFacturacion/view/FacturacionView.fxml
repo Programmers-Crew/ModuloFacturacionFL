@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="560.0" prefWidth="947.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.FacturacionViewController">
+<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="560.0" prefWidth="947.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.FacturacionViewController">
    <children>
       <Pane layoutX="5.0" prefHeight="36.0" prefWidth="600.0" styleClass="bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -267,7 +267,12 @@
                                     </JFXButton>
                                     <JFXDatePicker fx:id="txtFechaFinal" layoutX="122.0" layoutY="78.0" prefHeight="28.0" prefWidth="236.0" AnchorPane.leftAnchor="122.0" AnchorPane.rightAnchor="85.0" />
                                     <JFXDatePicker fx:id="txtFechaInicio" layoutX="123.0" layoutY="48.0" onAction="#fechaInicio" prefHeight="28.0" prefWidth="235.0" AnchorPane.leftAnchor="123.0" AnchorPane.rightAnchor="85.0" />
-                                    <JFXButton fx:id="btnMarcarDevolucion" buttonType="RAISED" layoutX="256.0" layoutY="496.0" onMouseClicked="#btnDevolucion" styleClass="boton" text="MARCAR COMO DEVOLUCIÒN" textFill="WHITE" AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="17.0">
+                                    <JFXButton fx:id="btnMarcarDevolucion" buttonType="RAISED" layoutX="102.0" layoutY="492.0" onMouseClicked="#btnDevolucion" styleClass="boton" text="MARCAR COMO DEVOLUCIÒN" textFill="WHITE" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="98.0">
+                                       <font>
+                                          <Font size="11.0" />
+                                       </font>
+                                    </JFXButton>
+                                    <JFXButton fx:id="btnImprimirRespaldo" buttonType="RAISED" layoutX="10.0" layoutY="496.0" onMouseClicked="#btnImprimirRespaldo" styleClass="boton" text="IMPRIMIR" textFill="WHITE" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="19.0">
                                        <font>
                                           <Font size="11.0" />
                                        </font>
@@ -299,6 +304,7 @@
                                     <Label text="NOMBRE:" AnchorPane.leftAnchor="23.0" AnchorPane.topAnchor="104.0" />
                                     <JFXTextField fx:id="txtResultadoNit" layoutX="20.0" layoutY="61.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.19999999999999" />
                                     <JFXTextField fx:id="txtResultadoNombre" layoutX="23.0" layoutY="135.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.19999999999999" />
+                                    <JFXTextField fx:id="txtTotalFac" editable="false" layoutX="23.0" layoutY="473.0" prefHeight="26.0" prefWidth="398.0" promptText="Total de factura" AnchorPane.bottomAnchor="30.99999999999998" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="22.600000000000023" />
                                  </children>
                               </AnchorPane>
                           </items>
