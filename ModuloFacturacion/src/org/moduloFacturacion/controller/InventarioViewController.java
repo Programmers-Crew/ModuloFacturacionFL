@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -1291,6 +1293,35 @@ public class InventarioViewController implements Initializable {
                 buscarEstado();
             }
         }
+    }
+    
+    
+        public void imprimirReporteInventario(){
+            try{
+                Map parametros = new HashMap();
+
+                String repuesta = "'ejemplo'";
+                
+                parametros.put("prueba", "'"+repuesta+"'");
+                 org.moduloFacturacion.report.GenerarReporte.mostrarReporte("ReporteInventario.jasper", "REPORTE DE INVENTARIO", parametros);
+                
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Notifications noti = Notifications.create();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR");
+                    noti.text("DEBE SELECCIONAR FECHA DE INICIO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                }
+    }
+    
+    @FXML
+    public void generarReporteInventario(){
+           imprimirReporteInventario(); 
     }
     //=========================================================================================================================================
     @Override

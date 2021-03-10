@@ -860,12 +860,12 @@ DELIMITER $$
 		END $$
 DELIMITER ;
 
-
+drop procedure SpAgregarFactura
 DELIMITER $$
-	create procedure SpAgregarFactura(codigoFactura int(5),clienteId int(5), facturaFecha date, usuarioId int(5), facturaTotalNeto decimal(10,2), facturaTotalIva decimal(10,2), facturaTotal decimal(10,2))
+	create procedure SpAgregarFactura(codigoFactura int(5),clienteId int(5), facturaFecha date, usuarioId int(5), facturaTotalNeto decimal(10,2), facturaTotalIva decimal(10,2), facturaTotal decimal(10,2), tipo int)
 		BEGIN 
-			insert into facturas (facturaId, facturaDetalleId, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal)
-				select codigoFactura, fb.facturaDetalleIdBackup, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal
+			insert into facturas (facturaId, facturaDetalleId, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal,facturaTipo )
+				select codigoFactura, fb.facturaDetalleIdBackup, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal,tipo
 					from facturadetallebackup as fb;
 		END $$
 DELIMITER ;
@@ -1163,7 +1163,8 @@ DELIMITER $$
 					on fd.productoId = p.productoId
 				inner join facturas as f
 				  on f.facturaDetalleId = fd.facturaDetalleId
-					set ip.inventarioProductoCant = fd.cantidad + ip.inventarioProductoCant
+					set ip.inventarioProductoCant = fd.cantidad + ip.inventarioProductoCant,
+						f.estadoFactura = 2
 						where facturaId = idBuscado;
         end $$
 DELIMITER ;
@@ -1269,7 +1270,8 @@ DELIMITER $$
 			inner join EstadoCredito as ec
 				on c.creditoEstado = ec.estadoCreditoId
 					where c.creaditoFechaInicio between fechaInicio and fechaFinal
-					      and c.creditoFechaFinal between fechaInicio and fechaFinal;
+					      and c.creditoFechaFinal between fechaInicio and fechaFinal
+							group by ec.estadoCreditoDesc asc;
         end $$
 DELIMITER ;
 
@@ -1292,7 +1294,8 @@ DELIMITER $$
 				on c.creditoEstado = ec.estadoCreditoId
 					where c.creaditoFechaInicio between fechaInicio and fechaFinal
 					      and c.creditoFechaFinal between fechaInicio and fechaFinal
-                          and p.proveedorNombre = proveedor;
+                          and p.proveedorNombre = proveedor
+                          group by ec.estadoCreditoDesc asc;
         end $$
 DELIMITER ;
 
@@ -1325,7 +1328,7 @@ DELIMITER $$
 	create procedure SpMarcarPagado(idBuscado int)
 		begin
 			update Creditos as c
-				set creditoEstado = 2
+				set creditoEstado = 2 
 					where c.idCredito = idBuscado;
         end $$
 DELIMITER ;
@@ -1335,6 +1338,27 @@ DELIMITER $$
 		begin 
 			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDiasRestantes,creditoDesc,creditoProveedor,creditoMonto,creditoEstado)
 				values(inicio, final, creditoFechaFinal -creaditoFechaInicio ,descripcion, proveedor, monto, estado);
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpActualizarCredito(idbuscado int,inicio date, final date, descripcion varchar(50), monto double)
+		begin
+			update Creditos
+				set creaditoFechaInicio = inicio,
+                creditoFechaFinal = final,
+                creditoDesc = descripcion,
+                creditoMonto = monto
+			where idCredito = idbuscado;
+        end $$
+DELIMITEr ;
+ 
+
+DELIMITER $$
+	create procedure SpEliminatCreditos(idBuscado int)
+		begin
+			delete from Creditos 
+				where idCredito = idbuscado;
         end $$
 DELIMITER ;
 

@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -519,6 +521,7 @@ public class creditosController implements Initializable {
        llenarComboEstado();
        txtDiasrestantesCredito.setDisable(true);
        cmbFiltroCredito.setValue("");
+       cmbBuscar.setValue("");
     }    
     
         public void accionCreditos(){
@@ -888,11 +891,47 @@ public class creditosController implements Initializable {
 
     @FXML
     private void btnEliminar(MouseEvent event) {
-    }
+         if(tipoOperacion == Operacion.GUARDAR){
+            tipoOperacion = Operacion.CANCELAR;
+        }else{
+            Creditos eliminarCredito = new Creditos();
 
+            accionCreditos();
+            eliminarCredito.setIdCredito(Integer.parseInt(txtCodigoCredito.getText().toString()));
+
+            String sql = "{call SpEliminatCreditos('"+eliminarCredito.getIdCredito()+"')}";
+            tipoOperacion = Operacion.ELIMINAR;
+            accionCreditos(sql);
+        }
+    }
+    
+    
     @FXML
     private void btnEditar(MouseEvent event) {
+                 if(txtfechaInicioCredito.getValue().equals("") || txtFechaFinalCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty()||txtMontoCredito.getText().isEmpty()){
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("ERROR");
+                noti.text("HAY CAMPOS VACÍOS");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();   
+                noti.show();
+            }else{
+                    Creditos nuevoCreditos = new Creditos();
+                    
+                    nuevoCreditos.setIdCredito(Integer.parseInt(txtCodigoCredito.getText().toString()));
+                    nuevoCreditos.setCreaditoFechaInicio(java.sql.Date.valueOf( txtfechaInicioCredito.getValue()));
+                    nuevoCreditos.setCreditoFechaFinal(java.sql.Date.valueOf( txtFechaFinalCredito.getValue()));
+                    nuevoCreditos.setCreditoDesc(txtDescripcionCredito.getText());
+                    nuevoCreditos.setCreditoMonto(Double.parseDouble(txtMontoCredito.getText()));
+                    
+                    tipoOperacion = Operacion.ACTUALIZAR;
+                    String sql = "{call SpActualizarCredito('"+nuevoCreditos.getIdCredito()+"','"+nuevoCreditos.getCreaditoFechaInicio()+"','"+nuevoCreditos.getCreditoFechaFinal()+"','"+nuevoCreditos.getCreditoDesc()+"','"+nuevoCreditos.getCreditoMonto()+"')}";
+                    accionCreditos(sql);
+                }                
     }
+    
 
 
     @FXML
@@ -909,4 +948,74 @@ public class creditosController implements Initializable {
     }
 
 
+  public void imprimirReporteCreditos(){
+            try{
+                Map parametros = new HashMap();
+
+                 String fechaInicio = txtFechaInicio.getValue().toString();
+                 String fechaFinal = txtFechaFinal.getValue().toString();
+
+                
+                parametros.put("fechaInicio", "'"+fechaInicio+"'");
+                parametros.put("fechaFinal", "'"+fechaFinal+"'");
+
+                 org.moduloFacturacion.report.GenerarReporte.mostrarReporte("ReporteCredito.jasper", "REPORTE CREDITO", parametros);
+                
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Notifications noti = Notifications.create();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR");
+                    noti.text("DEBE SELECCIONAR FECHA DE INICIO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                }
+    }
+  
+    public void imprimirReporteCreditosEmpresas(){
+            try{
+                Map parametros = new HashMap();
+
+                 String fechaInicio = txtFechaInicio.getValue().toString();
+                 String fechaFinal = txtFechaFinal.getValue().toString();
+                 String proveedor = cmbBuscar.getValue();
+
+
+                
+                parametros.put("fechaInicio", "'"+fechaInicio+"'");
+                parametros.put("fechaFinal", "'"+fechaFinal+"'");
+                parametros.put("proveedor", "'"+proveedor+"'");
+
+
+                 org.moduloFacturacion.report.GenerarReporte.mostrarReporte("ReporteCreditoEmpresa.jasper", "REPORTE CREDITO", parametros);
+                
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Notifications noti = Notifications.create();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR");
+                    noti.text("DEBE SELECCIONAR FECHA DE INICIO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                }
+    }
+    
+    @FXML
+    public void generarReporteCredito(){
+        
+
+            if(cmbBuscar.getValue().equals("")){
+                       imprimirReporteCreditos(); 
+            }else{
+                imprimirReporteCreditosEmpresas();
+            
+        }
+    }
+    
 }

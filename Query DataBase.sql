@@ -103,7 +103,8 @@ create table Facturas(
     facturaTotalIva decimal(10,2) not null,
     facturaTotal decimal(10,2) not null,
 	facturaTipo int,
-    estadoFactura int default 1,
+    estadoFactura
+    int default 1,
 	CONSTRAINT FK_facturaDetalle FOREIGN KEY (facturaDetalleId) REFERENCES facturadetalle(facturaDetalleId),
 	CONSTRAINT FK_clienteFactura FOREIGN KEY (clienteId) REFERENCES Clientes(clienteId),
 	CONSTRAINT FK_usuarioFactura FOREIGN KEY (usuarioId) REFERENCES Usuarios(usuarioId),
