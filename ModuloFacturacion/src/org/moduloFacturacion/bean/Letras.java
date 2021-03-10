@@ -41,10 +41,13 @@ public class Letras {
             } else if (Integer.parseInt(Num[1]) > 99) {//si es centena
                 literalDecimal = getCentenas(Num[1]);
             } else if (Integer.parseInt(Num[1]) > 9) {//si es decena
-                literalDecimal = getDecenas(Num[1]);
+//                literalDecimal = getDecenas(Num[1]);
+                   literalDecimal = String.valueOf(Num[1])+"/100";
             } else {//sino unidades -> 9
-                literalDecimal = getUnidades(Num[1]);
+                //literalDecimal = getUnidades(Num[1]);
+                literalDecimal = String.valueOf(Num[1])+"/100";
             }
+             
             //de da formato al numero decimal
             if(Integer.parseInt(Num[1]) == 0){
                 parte_decimal = "";

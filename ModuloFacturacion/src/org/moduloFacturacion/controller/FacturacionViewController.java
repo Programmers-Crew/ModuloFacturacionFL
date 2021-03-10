@@ -52,6 +52,7 @@ import org.moduloFacturacion.bean.FacturacionDetalleBackup;
 import org.moduloFacturacion.bean.FacturasBuscadas;
 import org.moduloFacturacion.bean.Imprimir;
 import org.moduloFacturacion.bean.ImprimirOrdenDeCompra;
+import org.moduloFacturacion.bean.ImprimirRespaldo;
 import org.moduloFacturacion.bean.Letras;
 import org.moduloFacturacion.bean.ProductoBuscado;
 
@@ -103,6 +104,10 @@ public class FacturacionViewController implements Initializable {
     
     @FXML
     private JFXButton btnMarcarDevolucion;
+    @FXML
+    private JFXButton btnImprimirRespaldo;
+    @FXML
+    private JFXTextField txtTotalFac;
     
     private void cargarEstado(Event event) {
         animacion.animacion(anchor3, anchor4);
@@ -126,6 +131,7 @@ public class FacturacionViewController implements Initializable {
         cambioScene.Cambio(menu1,(Stage) anchor.getScene().getWindow());
     }
 
+   
 
 
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, VENDER,FILTRAR,CARGAR, DEVOLUCION};
@@ -1123,6 +1129,7 @@ public String buscarCodigoProducto(String precioProductos){
         txtResultadoNombre.setText("");
         btnCorteDeCaja.setDisable(true);
         btnReporteVentas.setDisable(true);
+        btnImprimirRespaldo.setDisable(true);
     }  
     
         
@@ -1203,7 +1210,20 @@ public String buscarCodigoProducto(String precioProductos){
         txtBusquedaCodigoFac.setValue("");
     }   
         
-    
+     @FXML
+    private void btnImprimirRespaldo(MouseEvent event) {
+        int index = tblResultadoFactura.getSelectionModel().getSelectedIndex();
+        String tipoFac = colTipoFactura.getCellData(index);
+        ImprimirRespaldo imprimir = new ImprimirRespaldo();
+        ImprimirOrdenDeCompra imprimirOrden = new ImprimirOrdenDeCompra();
+        if(tipoFac.equals("FACTURA")){
+            imprimir.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtDireccionCliente.getText(), date2, txtTotalFac.getText());
+        } //else{
+//            imprimirOrden.imprima(listaFacturasBuscadas, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
+//        }
+        
+    }
+
     public ObservableList<ProductoBuscado> getProductoBuscado(){
         ArrayList<ProductoBuscado> listaProducto = new ArrayList();
         
@@ -1403,8 +1423,6 @@ public String buscarCodigoProducto(String precioProductos){
                         tipoOperacionBusquedaFacturas = Operacion.CANCELAR;                        
                     }catch (SQLException ex) {
                         ex.printStackTrace();
-                        
-                        
                         noti.graphic(new ImageView(imgError));
                         noti.title("ERROR AL ELIMINAR");
                         noti.text("HA OCURRIDO UN ERROR AL CANCELAR EL DOCUMENTO");
@@ -1557,9 +1575,9 @@ public String buscarCodigoProducto(String precioProductos){
         try{
 
             txtBusquedaCodigoFac.setValue(colNumeroFacBuscado.getCellData(index).toString());
-            
+            txtTotalFac.setText(colTotalBuscado.getCellData(index).toString());
             buscarProducto();
-            
+            btnImprimirRespaldo.setDisable(false);
         }catch(Exception ex){
             
            

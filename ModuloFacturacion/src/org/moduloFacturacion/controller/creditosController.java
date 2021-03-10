@@ -43,7 +43,8 @@ import org.moduloFacturacion.bean.Creditos;
 import org.moduloFacturacion.db.Conexion;
 
 public class creditosController implements Initializable {
-
+    
+    Image warning= new Image("org/moduloFacturacion/img/warning.png");
     @FXML
     private Pane buttonInicio;
     @FXML
@@ -512,13 +513,41 @@ public class creditosController implements Initializable {
         cambioScene.Cambio(menu1, (Stage) anchorCreditos.getScene().getWindow());
         
     }
-    
+      public void anuncio(){
+        LocalDate fechaActual = LocalDate.now();
+        String sql="{call SpRestarDias('"+fechaActual+"')}";
+        String sql2 = "{call SpValidarCredito()}";
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ps.execute();
+            
+            PreparedStatement ps2= Conexion.getIntance().getConexion().prepareCall(sql2);
+            ResultSet rs =ps2.executeQuery();
+            while(rs.next()){
+                
+            }
+            
+            if(rs.first()){
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(warning));
+                noti.title("CREDITOS");
+                noti.text("Tiene creditos Pendientes");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
        cargarCreditos();
        cargarCombo();
        llenarComboProveedores();
        llenarComboEstado();
+       anuncio();
        txtDiasrestantesCredito.setDisable(true);
        cmbFiltroCredito.setValue("");
        cmbBuscar.setValue("");

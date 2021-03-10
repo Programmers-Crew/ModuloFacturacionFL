@@ -60,7 +60,7 @@ public class Imprimir implements Printable{
               ancho = ancho-18;
           }
           System.out.println(totalFactura+"hola");
-         g2d.drawString(totalFactura, 70, 232);
+         g2d.drawString(totalFactura, 68, 232);
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;
