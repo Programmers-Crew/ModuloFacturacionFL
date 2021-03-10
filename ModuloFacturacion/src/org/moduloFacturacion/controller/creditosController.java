@@ -138,14 +138,11 @@ public class creditosController implements Initializable {
     
      //EVENTOS DE LA VISTA DE PROVEEDORES
     public void limpiarTextProveedores(){
-          txtCodigoCredito.setText("");          
           txtDescripcionCredito.setText("");
           txtMontoCredito.setText("");
           txtDiasrestantesCredito.setText("");
           cmbProveedorCreditos.setValue("");
           cmbProveedorProducto1.setValue("");
-
-                    
     }
     
     public void desactivarControlesCreditos(){    
@@ -159,7 +156,6 @@ public class creditosController implements Initializable {
     }
     
     public void desactivarTextCreditos(){
-          txtCodigoCredito.setEditable(false);
           txtfechaInicioCredito.setEditable(false);
           txtFechaFinalCredito.setEditable(false);
           txtDescripcionCredito.setEditable(false);
@@ -171,7 +167,6 @@ public class creditosController implements Initializable {
     }
     
     public void activarTextCreditos(){
-          txtCodigoCredito.setEditable(true);
           txtfechaInicioCredito.setEditable(true);
           txtFechaFinalCredito.setEditable(true);
           txtDescripcionCredito.setEditable(true);
@@ -293,8 +288,8 @@ public class creditosController implements Initializable {
                 while(rs.next()){
                     lista.add(new Creditos(
                                 rs.getInt("idCredito"),
-                                rs.getDate("creaditoFechaInicio"),
                                 rs.getDate("creditoFechaFinal"),
+                                rs.getDate("creaditoFechaInicio"),
                                 rs.getInt("creditoDiasRestantes"),
                                 rs.getString("creditoDesc"),
                                 rs.getString("proveedorNombre"),
@@ -489,9 +484,8 @@ public class creditosController implements Initializable {
         
         int index = tableProductos.getSelectionModel().getSelectedIndex();
         try{
-            txtCodigoCredito.setText(listaCreditos.get(index).getIdCredito().toString());
-            txtfechaInicioCredito.setValue(LocalDate.parse(colFechaInicio.getCellData(index).toString()));
-            txtFechaFinalCredito.setValue(LocalDate.parse(colFechaFinal.getCellData(index).toString()));
+            txtFechaFinalCredito.setValue(LocalDate.parse(colFechaInicio.getCellData(index).toString()));
+            txtfechaInicioCredito.setValue(LocalDate.parse(colFechaFinal.getCellData(index).toString()));
             txtDiasrestantesCredito.setText(colDiasRestantes.getCellData(index).toString());
             txtDescripcionCredito.setText(colDescripcion.getCellData(index));
             txtMontoCredito.setText(colMonto.getCellData(index).toString());
@@ -515,6 +509,7 @@ public class creditosController implements Initializable {
     }
       public void anuncio(){
         LocalDate fechaActual = LocalDate.now();
+        
         String sql="{call SpRestarDias('"+fechaActual+"')}";
         String sql2 = "{call SpValidarCredito()}";
         try{
@@ -523,10 +518,10 @@ public class creditosController implements Initializable {
             
             PreparedStatement ps2= Conexion.getIntance().getConexion().prepareCall(sql2);
             ResultSet rs =ps2.executeQuery();
+
             while(rs.next()){
                 
             }
-            
             if(rs.first()){
                 Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(warning));
@@ -541,6 +536,7 @@ public class creditosController implements Initializable {
             ex.printStackTrace();
         }
     }
+      
     @Override
     public void initialize(URL url, ResourceBundle rb) {
        cargarCreditos();
@@ -741,7 +737,6 @@ public class creditosController implements Initializable {
                     ps = Conexion.getIntance().getConexion().prepareCall(sql);
                     rs = ps.executeQuery();
                     while(rs.next()){
-                        txtCodigoCredito.setText(rs.getString("idCredito"));
                         txtfechaInicioCredito.setValue(LocalDate.parse(rs.getString("creaditoFechaInicio")));
                         txtFechaFinalCredito.setValue(LocalDate.parse(rs.getString("creditoFechaFinal")));
                         txtDescripcionCredito.setText(rs.getString("creditoDesc"));
@@ -811,7 +806,10 @@ public class creditosController implements Initializable {
     
     public void marcarPagado(){
         String sql = "";
-        sql = "{call SpMarcarPagado('"+txtCodigoCredito.getText()+"')}";
+        int index = tableProductos.getSelectionModel().getSelectedIndex();
+         String txtCodigoCredito = listaCreditos.get(index).getIdCredito().toString();
+         
+        sql = "{call SpMarcarPagado('"+txtCodigoCredito+"')}";
         Notifications noti = Notifications.create();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         ButtonType buttonTypeSi = new ButtonType("Si");
@@ -835,6 +833,7 @@ public class creditosController implements Initializable {
               noti.hideAfter(Duration.seconds(4));
               noti.darkStyle();
               noti.show();
+              cargarCreditos();
             }catch(SQLException ex){
                 ex.printStackTrace();
                noti.graphic(new ImageView(imgCorrecto));
@@ -880,7 +879,7 @@ public class creditosController implements Initializable {
     @FXML
     private void btnAgregar(MouseEvent event) {
         if(tipoOperacion == Operacion.GUARDAR){
-            if(txtfechaInicioCredito.getValue().equals("") || txtFechaFinalCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty() || cmbProveedorCreditos.getValue().isEmpty() ||txtMontoCredito.getText().isEmpty() ||cmbProveedorProducto1.getValue().isEmpty()){
+            if(txtFechaFinalCredito.getValue().equals("") || txtfechaInicioCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty() || cmbProveedorCreditos.getValue().isEmpty() ||txtMontoCredito.getText().isEmpty() ||cmbProveedorProducto1.getValue().isEmpty()){
                 Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(imgError));
                 noti.title("ERROR");
@@ -909,7 +908,7 @@ public class creditosController implements Initializable {
                     System.out.println(verficarProveedor(nuevoCredito.getProveedorNombre()));
                     System.out.println(codigoEstado);
 
-                String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+verficarProveedor(nuevoCredito.getProveedorNombre())+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado+"')}";
+                String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoDesc()+"','"+verficarProveedor(nuevoCredito.getProveedorNombre())+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado+"')}";
                     accionCreditos(sql);
                 }
         }else{
@@ -926,9 +925,10 @@ public class creditosController implements Initializable {
             Creditos eliminarCredito = new Creditos();
 
             accionCreditos();
-            eliminarCredito.setIdCredito(Integer.parseInt(txtCodigoCredito.getText().toString()));
-
-            String sql = "{call SpEliminatCreditos('"+eliminarCredito.getIdCredito()+"')}";
+            int index = tableProductos.getSelectionModel().getSelectedIndex();
+             String txtCodigoCredito = listaCreditos.get(index).getIdCredito().toString();
+            
+            String sql = "{call SpEliminatCreditos('"+txtCodigoCredito+"')}";
             tipoOperacion = Operacion.ELIMINAR;
             accionCreditos(sql);
         }
@@ -937,7 +937,7 @@ public class creditosController implements Initializable {
     
     @FXML
     private void btnEditar(MouseEvent event) {
-                 if(txtfechaInicioCredito.getValue().equals("") || txtFechaFinalCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty()||txtMontoCredito.getText().isEmpty()){
+                 if(txtFechaFinalCredito.getValue().equals("") || txtfechaInicioCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty()||txtMontoCredito.getText().isEmpty()){
                 Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(imgError));
                 noti.title("ERROR");
@@ -949,14 +949,16 @@ public class creditosController implements Initializable {
             }else{
                     Creditos nuevoCreditos = new Creditos();
                     
-                    nuevoCreditos.setIdCredito(Integer.parseInt(txtCodigoCredito.getText().toString()));
+                    int index = tableProductos.getSelectionModel().getSelectedIndex();
+                    String txtCodigoCredito = listaCreditos.get(index).getIdCredito().toString();
+
                     nuevoCreditos.setCreaditoFechaInicio(java.sql.Date.valueOf( txtfechaInicioCredito.getValue()));
                     nuevoCreditos.setCreditoFechaFinal(java.sql.Date.valueOf( txtFechaFinalCredito.getValue()));
                     nuevoCreditos.setCreditoDesc(txtDescripcionCredito.getText());
                     nuevoCreditos.setCreditoMonto(Double.parseDouble(txtMontoCredito.getText()));
                     
                     tipoOperacion = Operacion.ACTUALIZAR;
-                    String sql = "{call SpActualizarCredito('"+nuevoCreditos.getIdCredito()+"','"+nuevoCreditos.getCreaditoFechaInicio()+"','"+nuevoCreditos.getCreditoFechaFinal()+"','"+nuevoCreditos.getCreditoDesc()+"','"+nuevoCreditos.getCreditoMonto()+"')}";
+                    String sql = "{call SpActualizarCredito('"+txtCodigoCredito+"','"+nuevoCreditos.getCreditoFechaFinal()+"','"+nuevoCreditos.getCreaditoFechaInicio()+"','"+nuevoCreditos.getCreditoDesc()+"','"+nuevoCreditos.getCreditoMonto()+"')}";
                     accionCreditos(sql);
                 }                
     }

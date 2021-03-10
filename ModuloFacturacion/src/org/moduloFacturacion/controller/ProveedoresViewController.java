@@ -79,6 +79,8 @@ public class ProveedoresViewController implements Initializable {
     @FXML
     private JFXTextField txtTelefonoProveedores;
     @FXML
+    private JFXTextField txtNitProveedores;
+    @FXML
     private JFXButton btnAgregar;
     @FXML
     private JFXButton btnEditar;
@@ -93,6 +95,8 @@ public class ProveedoresViewController implements Initializable {
     @FXML
     private TableColumn<Proveedores, String> colTellefonoProveedores;
     @FXML
+    private TableColumn<Proveedores, String> colNitProveedores;
+    @FXML
     private JFXButton btnBuscar;
     @FXML
     private ComboBox<String> cmbFiltroProveedores;
@@ -105,6 +109,7 @@ public class ProveedoresViewController implements Initializable {
           txtCodigoProveedores.setText("");
           txtNombreProveedores.setText("");
           txtTelefonoProveedores.setText("");
+          txtNitProveedores.setText("");
     }
     
     public void desactivarControlesProveedores(){    
@@ -121,6 +126,7 @@ public class ProveedoresViewController implements Initializable {
         txtNombreProveedores.setEditable(false);
         txtCodigoProveedores.setEditable(false);
         txtTelefonoProveedores.setEditable(false);
+        txtNitProveedores.setEditable(false);
         
     }
     
@@ -130,6 +136,7 @@ public class ProveedoresViewController implements Initializable {
         txtCodigoProveedores.setEditable(true);
         txtTelefonoProveedores.setEditable(true);
         txtNombreProveedores.setEditable(true);
+        txtNitProveedores.setEditable(true);
     }
     
     
@@ -145,7 +152,8 @@ public class ProveedoresViewController implements Initializable {
                 lista.add(new Proveedores(
                               rs.getString("proveedorId"),
                               rs.getString("proveedorNombre"),
-                              rs.getString("proveedorTelefono")
+                              rs.getString("proveedorTelefono"),
+                              rs.getString("proveedorNit")
                 ));
                 
                 listaCodigo.add(x, rs.getString("proveedorId"));
@@ -173,6 +181,7 @@ public class ProveedoresViewController implements Initializable {
        colCodigoProveedores.setCellValueFactory(new PropertyValueFactory("proveedorId"));
        colNombreProveedores.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
        colTellefonoProveedores.setCellValueFactory(new PropertyValueFactory("proveedorTelefono"));
+       colNitProveedores.setCellValueFactory(new PropertyValueFactory("proveedorNit"));
        limpiarTextProveedores();
         desactivarControlesProveedores();
     }
@@ -186,6 +195,8 @@ public class ProveedoresViewController implements Initializable {
             txtCodigoProveedores.setText(colCodigoProveedores.getCellData(index).toString());
             txtNombreProveedores.setText(colNombreProveedores.getCellData(index));
             txtTelefonoProveedores.setText(colTellefonoProveedores.getCellData(index));
+            txtNitProveedores.setText(colNitProveedores.getCellData(index));
+
             btnEliminar.setDisable(false);
             btnEditar.setDisable(false);
             
@@ -391,6 +402,7 @@ public class ProveedoresViewController implements Initializable {
                         txtCodigoProveedores.setText(rs.getString("proveedorId"));
                         txtNombreProveedores.setText(rs.getString("proveedorNombre"));
                         txtTelefonoProveedores.setText(rs.getString("proveedorTelefono"));
+                        txtNitProveedores .setText(rs.getString("proveedorNit"));
                         codigo = rs.getString("proveedorId");
                     }                    
                     if(rs.first()){
@@ -456,7 +468,8 @@ public class ProveedoresViewController implements Initializable {
                     Proveedores nuevoProveedor = new Proveedores();
                     nuevoProveedor.setProveedorId(txtCodigoProveedores.getText());
                     nuevoProveedor.setProveedorNombre(txtNombreProveedores.getText());
-                    nuevoProveedor.setProveedorTelefono(txtTelefonoProveedores.getText());                    
+                    nuevoProveedor.setProveedorTelefono(txtTelefonoProveedores.getText());  
+                    nuevoProveedor.setProveedorNit(txtNitProveedores .getText());                    
                     if(tipoOperacionProveedores == Operacion.GUARDAR){
             
                         if(txtCodigoProveedores.getText().length() <7){
@@ -480,7 +493,7 @@ public class ProveedoresViewController implements Initializable {
                             noti.show();
                             tipoOperacionProveedores = Operacion.GUARDAR;
                         }else{
-                            String sql = "{call SpAgregarProveedores('"+nuevoProveedor.getProveedorId()+"','"+nuevoProveedor.getProveedorNombre()+"','"+nuevoProveedor.getProveedorTelefono()+"')}";
+                            String sql = "{call SpAgregarProveedores('"+nuevoProveedor.getProveedorId()+"','"+nuevoProveedor.getProveedorNombre()+"','"+nuevoProveedor.getProveedorTelefono()+"','"+nuevoProveedor.getProveedorNit()+"')}";
                             accionProveedores(sql);
                         }
                 }
@@ -519,6 +532,7 @@ public class ProveedoresViewController implements Initializable {
                     nuevoProveedor.setProveedorId(txtCodigoProveedores.getText());
                     nuevoProveedor.setProveedorNombre(txtNombreProveedores.getText());
                     nuevoProveedor.setProveedorTelefono(txtTelefonoProveedores.getText());
+                    nuevoProveedor.setProveedorNit(txtNitProveedores.getText());
                             if(txtCodigoProveedores.getText().length() <7){
                                 Notifications noti = Notifications.create();
                                 noti.graphic(new ImageView(imgError));
@@ -541,7 +555,7 @@ public class ProveedoresViewController implements Initializable {
                                 tipoOperacionProveedores = Operacion.GUARDAR;
                             }else{
                                 tipoOperacionProveedores = Operacion.ACTUALIZAR;
-                                String sql = "{call SpActualizarProveedor('"+codigo+"','"+nuevoProveedor.getProveedorId()+"','"+nuevoProveedor.getProveedorNombre()+"','"+nuevoProveedor.getProveedorTelefono()+"')}";
+                                String sql = "{call SpActualizarProveedor('"+codigo+"','"+nuevoProveedor.getProveedorId()+"','"+nuevoProveedor.getProveedorNombre()+"','"+nuevoProveedor.getProveedorTelefono()+"','"+nuevoProveedor.getProveedorNit()+"')}";
                                 accionProveedores(sql);
                             }
                     }else{
@@ -576,7 +590,7 @@ public class ProveedoresViewController implements Initializable {
         
         lista.add(0,"CÓDIGO");
         lista.add(1,"NOMBRE");
-        
+        lista.add(2,"NIT");
         listaFiltro = FXCollections.observableList(lista);
         
         cmbFiltroProveedores.setItems(listaFiltro);
@@ -598,6 +612,8 @@ public class ProveedoresViewController implements Initializable {
                      
                 }else if(cmbFiltroProveedores.getValue().equals("NOMBRE")){
                     lista.add(x, rs.getString("proveedorNombre"));
+                }else if(cmbFiltroProveedores.getValue().equals("NIT")){
+                    lista.add(x, rs.getString("proveedorNit"));
                 }
                  x++;
             }
@@ -628,6 +644,10 @@ public class ProveedoresViewController implements Initializable {
             }else if(cmbFiltroProveedores.getValue().equals("NOMBRE")){
                     tipoOperacionProveedores = Operacion.BUSCAR;
                     String sql = "{ call SpBuscarProveedoresPorNombre('"+cmbBuscar.getValue()+"')}";
+                    accionProveedores(sql);
+            }else if(cmbFiltroProveedores.getValue().equals("NIT")){
+                    tipoOperacionProveedores = Operacion.BUSCAR;
+                    String sql = "{ call SpBuscarProveedoresPorNit('"+cmbBuscar.getValue()+"')}";
                     accionProveedores(sql);
             }
         }

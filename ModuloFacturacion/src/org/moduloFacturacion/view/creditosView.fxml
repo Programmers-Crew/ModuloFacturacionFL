@@ -63,8 +63,6 @@
                                                       </Label>
                                                    </children>
                                                 </HBox>
-                                                <Label layoutX="18.0" layoutY="27.0" text="CÓDIGO:" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="141.6" AnchorPane.topAnchor="27.0" />
-                                                <JFXTextField fx:id="txtCodigoCredito" layoutX="18.0" layoutY="39.0" prefHeight="26.0" prefWidth="170.0" promptText="El código se coloca en automático" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="39.0" />
                                                 <Label layoutX="18.0" layoutY="73.0" prefHeight="18.0" prefWidth="61.0" text="FECHA DE INICIO:" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="126.0" AnchorPane.topAnchor="70.0" />
                                                 <Label layoutX="18.0" layoutY="243.0" text="PROVEEDOR:" AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="232.0" />
                                                 <ComboBox fx:id="cmbProveedorCreditos" editable="true" layoutX="18.0" layoutY="262.0" prefHeight="26.0" prefWidth="250.0" styleClass="comboOscuro" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="248.0" />
@@ -136,6 +134,7 @@
                                           <TableColumn fx:id="colFechaFinal" prefWidth="154.4000244140625" text="FINAL" />
                                           <TableColumn fx:id="colDescripcion" prefWidth="102.10917663574219" text="DESCRIPCIÓN" />
                                           <TableColumn fx:id="colProveedor" prefWidth="95.1273193359375" text="PROVEEDOR" />
+                                          <TableColumn fx:id="colProveedor1" prefWidth="95.1273193359375" text="NIT" />
                                           <TableColumn fx:id="colMonto" prefWidth="91.63623046875" text="MONTO" />
                                           <TableColumn fx:id="colDiasRestantes" prefWidth="91.63623046875" text="DÍAS" />
                                           <TableColumn fx:id="colEstadoCredito" prefWidth="91.63623046875" text="ESTADO" />

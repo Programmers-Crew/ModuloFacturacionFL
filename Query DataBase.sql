@@ -18,8 +18,10 @@ create table EstadoProductos(
 create table Proveedores(
 	proveedorId varchar(7) primary key,
     proveedorNombre varchar(50) unique not null,
-	proveedorTelefono varchar(8) unique not null
+	proveedorTelefono varchar(8) unique not null,
+    proveedorNit varchar(20) unique not null
 );
+
 
 create table CategoriaProductos(
 	categoriaId varchar(7) primary key,
@@ -151,6 +153,7 @@ create table Creditos(
 	idCredito int not null auto_increment,
     creaditoFechaInicio date not null,
     creditoFechaFinal date not null,
+    creditoFechaActual date,
     creditoDiasRestantes int not null,
 	creditoDesc varchar(50) not null,
     creditoProveedor varchar(50) not null,

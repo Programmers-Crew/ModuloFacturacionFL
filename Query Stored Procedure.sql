@@ -135,27 +135,26 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpListarProveedores()
 		BEGIN
-			select proveedorId, proveedorNombre, proveedorTelefono
+			select proveedorId, proveedorNombre, proveedorTelefono, proveedorNit
 				from Proveedores
 					order by proveedorId asc;
         END $$
 DELIMITER ;
 
-
 DELIMITER $$
-	create procedure SpAgregarProveedores(proveedores varchar(7),nombre varchar(50), telefono varchar(8))
+	create procedure SpAgregarProveedores(proveedores varchar(7),nombre varchar(50), telefono varchar(8), nit varchar(20))
 		BEGIN
-			insert into Proveedores(proveedorId,proveedorNombre, proveedorTelefono)
-				values (proveedores , nombre , telefono);
+			insert into Proveedores(proveedorId,proveedorNombre, proveedorTelefono, proveedorNit)
+				values (proveedores , nombre , telefono, nit);
         END $$
 DELIMITER ;
 
 
 DELIMITER $$
-	create procedure SpActualizarProveedor(idBuscado varchar(7), nuevoCodigo varchar(7),nuevoNombre varchar(50), nuevoTelefono varchar(8))
+	create procedure SpActualizarProveedor(idBuscado varchar(7), nuevoCodigo varchar(7),nuevoNombre varchar(50), nuevoTelefono varchar(8),  nit varchar(20))
 		BEGIN
 			update Proveedores
-				set proveedorId = nuevoCodigo ,proveedorNombre = nuevoNombre, proveedorTelefono = nuevoTelefono
+				set proveedorId = nuevoCodigo ,proveedorNombre = nuevoNombre, proveedorTelefono = nuevoTelefono, proveedorNit = nit
 					where proveedorId = idBuscado;
         END $$
 DELIMITER ;
@@ -164,7 +163,7 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpBuscarProveedores(idBuscado varchar(7))
 		BEGIN
-			select proveedorId, proveedorNombre, proveedorTelefono
+			select proveedorId, proveedorNombre, proveedorTelefono, proveedorNit
 				from Proveedores 
 					where proveedorId = idBuscado
 						order by proveedorId asc;
@@ -174,7 +173,7 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpBuscarProveedoresNombre(nombre varchar(100))
 		BEGIN
-			select proveedorId, proveedorNombre, proveedorTelefono
+			select proveedorId, proveedorNombre, proveedorTelefono,proveedorNit
 				from Proveedores 
 					where proveedorNombre = nombre
 						order by proveedorId asc;
@@ -184,13 +183,22 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpBuscarProveedoresPorNombre(nombre varchar(50))
 		BEGIN
-			select proveedorId, proveedorNombre, proveedorTelefono
+			select proveedorId, proveedorNombre, proveedorTelefono,proveedorNit
 				from Proveedores 
 					where proveedorNombre = nombre
 						order by proveedorId asc;
         END $$
 DELIMITER ;
 
+DELIMITER $$
+	create procedure SpBuscarProveedoresPorNit(nit varchar(20))
+		BEGIN
+			select proveedorId, proveedorNombre, proveedorTelefono,proveedorNit
+				from Proveedores 
+					where proveedorNit = nit
+						order by proveedorId asc;
+        END $$
+DELIMITER ;
 
 DELIMITER $$
 	create procedure SpEliminarProveedor(idBuscado varchar(7))
@@ -1170,6 +1178,21 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
+DELIMITER $$
+	create procedure Sp_DevolucionProductosProd(idBuscado int)
+		begin
+			update inventarioproductos as ip
+				inner join productos as p
+					on ip.productoId = p.productoId
+				inner join facturadetalle as fd
+					on fd.productoId = p.productoId
+				inner join facturas as f
+				  on f.facturaDetalleId = fd.facturaDetalleId
+					set 
+						f.estadoFactura = 2
+						where facturaId = idBuscado;
+        end $$
+DELIMITER ;
 
 DELIMITER $$
 	create procedure Sp_CancelarFac(idBuscado int)
