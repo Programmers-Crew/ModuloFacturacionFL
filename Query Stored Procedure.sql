@@ -1055,7 +1055,7 @@ DELIMITER $$
                 c.chequeFecha,
                 c.chequePagoAlaOrdenDe,
                 c.chequeMonto,
-                c.chequeDetalle,
+                c.chequeDetalleDesc,
                 c.chequeUsuario
             from 
 				Cheque as c
@@ -1072,7 +1072,7 @@ DELIMITER $$
                 c.chequeFecha,
                 c.chequePagoAlaOrdenDe,
                 c.chequeMonto,
-                c.chequeDetalle,
+                c.chequeDetalleDesc,
                 c.chequeUsuario
             from 
 				Cheque as c
@@ -1092,7 +1092,7 @@ DELIMITER $$
                 c.chequeFecha,
                 c.chequePagoAlaOrdenDe,
                 c.chequeMonto,
-                c.chequeDetalle,
+                c.chequeDetalleDesc,
                 c.chequeUsuario
             from 
 				Cheque as c
@@ -1115,14 +1115,14 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpAgregarCheque(numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, usuario int)
 		begin
-			insert into Cheque(chequeNo,chequeLugar,chequeFecha,chequePagoAlaOrdenDe,chequeMonto,chequeDetalle,chequeUsuario) 
-				select numero,lugar,fecha,ordenDe,monto, cd.chequeDetalleNo, usuario
+			insert into Cheque(chequeNo,chequeLugar,chequeFecha,chequePagoAlaOrdenDe,chequeMonto,chequeDetalleDesc,chequeUsuario) 
+				select numero,lugar,fecha,ordenDe,monto, chequeDetalleDesc, usuario
 					from chequedetallebackup as cd;
         end $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpEditarCheque( idBuscado int, numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, detalle int, usuario int)
+	create procedure SpEditarCheque( idBuscado int, numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, detalle varchar(25w), usuario int)
 		begin
 			update
 				Cheque
@@ -1132,7 +1132,7 @@ DELIMITER $$
                 chequeFecha = fecha,
                 chequePagoAlaOrdenDe = ordenDe,
                 chequeMonto = monto,
-                chequeDetalle = detalle,
+                chequeDetalleDesc = detalle,
                 chequeUsuario = usuario
 			where
 				chequeNo = idBuscado;

@@ -136,11 +136,10 @@ create table Cheque(
     chequeFecha date not null,
     chequePagoAlaOrdenDe varchar(50) not null,
     chequeMonto double not null,
-	chequeDetalle int(100)  not null,
+	chequeDetalleDesc int(100)  not null,
     chequeUsuario int(5) UNSIGNED ZEROFILL not null,
 	PRIMARY KEY (chequeCodigo),
-	CONSTRAINT FK_usuarioCheque FOREIGN KEY (chequeUsuario) REFERENCES Usuarios(usuarioId),
-	CONSTRAINT FK_ChequeDetalle FOREIGN KEY (chequeDetalle) REFERENCES ChequeDetalle(chequeDetalleNo)
+	CONSTRAINT FK_usuarioCheque FOREIGN KEY (chequeUsuario) REFERENCES Usuarios(usuarioId)
 );
 
 create table EstadoCredito(
