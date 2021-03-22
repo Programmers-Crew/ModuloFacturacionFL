@@ -48,10 +48,10 @@ public class imprimirCheque2 implements Printable{
         affineTransform.rotate(Math.toRadians(-270),0, 0);
         Font rotatedFont = font.deriveFont(affineTransform);
         g2d.setFont(rotatedFont);
-        g2d.drawString(lugarYfecha, 111,55);
-        g2d.drawString(ordenDe,94, 60);
-        g2d.drawString(String.valueOf(suma),76,50);
-        g2d.drawString(valorTotal,111,372);
+        g2d.drawString(lugarYfecha, 115,55);
+        g2d.drawString(ordenDe,97, 64);
+        g2d.drawString(String.valueOf(suma),79,50);
+        g2d.drawString(valorTotal,115,378);
         
     }
     

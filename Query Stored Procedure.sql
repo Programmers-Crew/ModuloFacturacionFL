@@ -1016,34 +1016,10 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
-DELIMITER $$
-	create procedure SpEditarChequeEncabezado(idBuscado int,cuenta varchar(100), descripcion varchar(25), valor double)
-		begin
-			update 
-				chequedetallebackup as cd
-			set
-				cd.chequeDetalleCuenta = cuenta,
-                cd.chequeDetalleDesc = descripcion,
-                cd.chequeDetalleValor  = valor
-			where 
-				cd.chequeDetalleNo = idBuscado;
-        end $$
-DELIMITER ;
 
-DELIMITER $$
-	create procedure  SpAgregarChequeEncabezado(cuenta varchar(100), descripcion varchar(200), valor double)
-		begin
-			insert into chequedetallebackup(chequeDetalleCuenta,chequeDetalleDesc,chequeDetalleValor)
-				values(cuenta,descripcion,valor);
-        end $$
-DELIMITER ;
 
-DELIMITER $$
-create procedure SpEliminarBackupCheque()
-		BEGIN 
-			delete from chequedetallebackup where chequeDetalleNo>0;
-		END $$
-DELIMITER ;
+
+
 
 -- Entidad Cheque
 DELIMITER $$
@@ -1122,7 +1098,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpEditarCheque( idBuscado int, numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, detalle varchar(25w), usuario int)
+	create procedure SpEditarCheque( idBuscado int, numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, detalle varchar(25), usuario int)
 		begin
 			update
 				Cheque
@@ -1295,7 +1271,7 @@ DELIMITER $$
 				on c.creditoEstado = ec.estadoCreditoId
 					where c.creaditoFechaInicio between fechaInicio and fechaFinal
 					      and c.creditoFechaFinal between fechaInicio and fechaFinal
-							group by ec.estadoCreditoDesc asc;
+							group by ec.estadoCreditoDesc order by ec.estadoCreditoDesc asc;
         end $$
 DELIMITER ;
 
@@ -1319,7 +1295,7 @@ DELIMITER $$
 					where c.creaditoFechaInicio between fechaInicio and fechaFinal
 					      and c.creditoFechaFinal between fechaInicio and fechaFinal
                           and p.proveedorNombre = proveedor
-                          group by ec.estadoCreditoDesc asc;
+                          group by ec.estadoCreditoDesc order by  ec.estadoCreditoDesc asc;
         end $$
 DELIMITER ;
 

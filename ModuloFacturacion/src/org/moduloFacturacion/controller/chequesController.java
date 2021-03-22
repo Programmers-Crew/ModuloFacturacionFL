@@ -24,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -31,11 +32,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -62,13 +63,22 @@ public class chequesController implements Initializable {
     @FXML
     private JFXButton btnEliminarCheque;
     @FXML
-    private JFXTextField recibitext;
+    private Label nochequeText;
     @FXML
-    private JFXTextField nombretext;
+    private Label pagueseText;
+    @FXML
+    private Label descText;
+    @FXML
+    private Label digitosText;
+    @FXML
+    private Label sumadeText;
+    @FXML
+    private Label fechaText;
+    @FXML
+    private AnchorPane comprobanteChequeIma;
 
-    @FXML
-    private void convertirLetras(InputMethodEvent event) {
-    }
+    
+    
     
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, VENDER,FILTRAR,CARGAR};
     public Operacion cancelar = Operacion.NINGUNO;
@@ -91,25 +101,10 @@ public class chequesController implements Initializable {
     @FXML
     private TextField sumaLetras;
     @FXML
-    private JFXTextField numeroCuenta;
-    @FXML
     private TextArea descripcionPago;
     @FXML
-    private JFXTextField chequeValor;
-    @FXML
-    private JFXButton btnAgregarDesc;
-    @FXML
     private AnchorPane anchor2;
-    @FXML
-    private TableColumn<Chequedetalle, String> colNumeroCuenta;
-    @FXML
-    private TableColumn<Chequedetalle, String> colDescripcion;
-    @FXML
-    private TableColumn<Chequedetalle, Double> colValor;
-    @FXML
-    private TableColumn<Chequedetalle, Integer> idChequeDetalle;
-    @FXML
-    private TableView<Chequedetalle> tableChequeDetalle;
+   
     @FXML
     private TextField totalValor;
     @FXML
@@ -148,8 +143,9 @@ public class chequesController implements Initializable {
     private TableColumn<ChequeEncabezadoBuscado, String> colDescBuscada;
     @FXML
     private TableColumn<ChequeEncabezadoBuscado, Double> colValorBuscado;
-
-
+    
+    
+    
     double totalChequeDetalle=0;
     ObservableList<Chequedetalle> listaCheque;
     LocalDate fechaActual = LocalDate.now();
@@ -158,57 +154,113 @@ public class chequesController implements Initializable {
     ValidarStyle validar = new ValidarStyle();
     MenuPrincipalContoller menu = new MenuPrincipalContoller();
     
+    
+    @FXML
+    private void previewEvent(MouseEvent event) {
+        
+        Stage stage = (Stage) anchor.getScene().getWindow();
+        
+        if(numeroCheque.getText().isEmpty() || pagoOrden.getText().isEmpty() || totalValor.getText().isEmpty() || sumaLetras.getText().isEmpty() || descripcionPago.getText().isEmpty()){
+             Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("ERROR");
+            noti.text("HAY CAMPOS VACÍOS");
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }else{  
+            if(stage.isMaximized()){
+                nochequeText.setLayoutY(160);
+                nochequeText.setLayoutX(705);
+                nochequeText.setText(numeroCheque.getText());
+                nochequeText.setFont(new Font("System",20));
+                
+                fechaText.setLayoutY(195);
+                fechaText.setLayoutX(280);
+                fechaText.setText(chequeFecha.getText());
+                fechaText.setFont(new Font("System",20));
+                
+                
+                pagueseText.setLayoutY(235);
+                pagueseText.setLayoutX(200);
+                pagueseText.setText(pagoOrden.getText());
+                pagueseText.setFont(new Font("System",20));
+                
+                
+                digitosText.setLayoutY(235);
+                digitosText.setLayoutX(705);
+                digitosText.setText(totalValor.getText());
+                digitosText.setFont(new Font("System",20));
+
+                sumadeText.setLayoutY(275);
+                sumadeText.setLayoutX(200);
+                sumadeText.setText(sumaLetras.getText());
+                sumadeText.setFont(new Font("System",20));
+
+                descText.setLayoutY(450);
+                descText.setLayoutX(290);
+                descText.setText(descripcionPago.getText());
+                descText.setFont(new Font("System",20));
+            }else{
+                nochequeText.setLayoutY(68);
+                nochequeText.setLayoutX(380);
+                nochequeText.setText(numeroCheque.getText());
+                nochequeText.setFont(new Font("System",12));
+
+                fechaText.setLayoutX(135);
+                fechaText.setLayoutY(78);
+                fechaText.setText(chequeFecha.getText());
+                fechaText.setFont(new Font("System",12));
+                 
+                
+                pagueseText.setLayoutY(100);
+                pagueseText.setLayoutX(105);
+                pagueseText.setText(pagoOrden.getText());
+                pagueseText.setFont(new Font("System",12));
+                
+                
+                digitosText.setLayoutY(100);
+                digitosText.setLayoutX(385);
+                digitosText.setText(totalValor.getText());
+                digitosText.setFont(new Font("System",12));
+                
+                sumadeText.setLayoutY(126);
+                sumadeText.setLayoutX(105);
+                sumadeText.setText(sumaLetras.getText());
+                sumadeText.setFont(new Font("System",10));
+
+                descText.setLayoutY(200);
+                descText.setLayoutX(140);
+                descText.setText(descripcionPago.getText());
+                descText.setFont(new Font("System",12));
+            }
+            
+        }
+    
+    }
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cargarDatos();
         validar.validarView(menu.prefs.get("dark", "root"), anchor);
         btnEditarCheque.setDisable(true);
         btnEliminarCheque.setDisable(true);
         limpiarTextChequeDetalle();
+        descripcionPago.setWrapText(true);
+     
     }    
     public void limpiarTextChequeDetalle(){
         numeroCheque.setText("");
         pagoOrden.setText("");
-        numeroCuenta.setText("");
         descripcionPago.setText("");
-        chequeValor.setText("");
     }
     public void limpiarDetalle(){
-        numeroCuenta.setText("");
         descripcionPago.setText("");
-        chequeValor.setText("");
     }
-    public ObservableList<Chequedetalle>getCheque(){
-        ArrayList<Chequedetalle> lista = new ArrayList();
-        totalChequeDetalle=0;
-        String sql = "{call SpListarChequeEncabezado()}";
-        int x=0;
-        double valorTotal=0;
-        try{
-            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                lista.add(new Chequedetalle(rs.getInt("chequeDetalleNo"),rs.getString("chequeDetalleCuenta"),rs.getString("chequeDetalleDesc"),
-                rs.getDouble("chequeDetalleValor")));
-                valorTotal=rs.getDouble("chequeDetalleValor");
-                totalChequeDetalle=totalChequeDetalle+valorTotal;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }
-        totalValor.setText(String.valueOf(totalChequeDetalle));
-        return listaCheque = FXCollections.observableList(lista);
-    }
+   
     
-    public void cargarDatos(){
-        tableChequeDetalle.setItems(getCheque());
-        idChequeDetalle.setCellValueFactory(new PropertyValueFactory("chequeDetalleNo"));
-        colNumeroCuenta.setCellValueFactory(new PropertyValueFactory("chequeDetalleCuenta"));
-        colDescripcion.setCellValueFactory(new PropertyValueFactory("chequeDetalleDesc"));
-        colValor.setCellValueFactory(new PropertyValueFactory("chequeDetalleValor"));
-        limpiarDetalle();
-        letras();
-    }
+   
     public void accion(String sql){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         PreparedStatement ps;
@@ -218,32 +270,6 @@ public class chequesController implements Initializable {
         ButtonType buttonTypeNo = new ButtonType("No");
         
         switch(tipoOperacionChequeDetalle){
-            case AGREGAR:
-                try{
-                    ps = Conexion.getIntance().getConexion().prepareCall(sql);
-                    ps.execute();
-                    
-                    noti.graphic(new ImageView(imgCorrecto));
-                    noti.title("OPERACIÓN EXITOSA");
-                    noti.text("SE HA AGREGADO EXITOSAMENTE EL REGISTRO");
-                    noti.position(Pos.BOTTOM_RIGHT);
-                    noti.hideAfter(Duration.seconds(4));
-                    noti.darkStyle();
-                    noti.show();
-                    tipoOperacionChequeDetalle = Operacion.CANCELAR;
-                    cargarDatos();
-                }catch(SQLException ex){
-                    ex.printStackTrace();
-                    noti.graphic(new ImageView(imgError));
-                    noti.title("ERROR AL AGREGAR");
-                    noti.text("HA OCURRIDO UN ERROR AL GUARDAR EL REGISTRO");
-                    noti.position(Pos.BOTTOM_RIGHT);
-                    noti.hideAfter(Duration.seconds(4));
-                    noti.darkStyle();
-                    noti.show();
-                    tipoOperacionChequeDetalle = Operacion.NINGUNO;
-                }
-                break;
             case ACTUALIZAR:
                 try{
                     ps = Conexion.getIntance().getConexion().prepareCall(sql);
@@ -256,7 +282,6 @@ public class chequesController implements Initializable {
                     noti.darkStyle();
                     noti.show();
                     tipoOperacionChequeDetalle = Operacion.CANCELAR;
-                    cargarDatos();
                     btnEditarCheque.setDisable(true);
                     btnEliminarCheque.setDisable(true);
                 }catch(SQLException ex){
@@ -283,7 +308,6 @@ public class chequesController implements Initializable {
                     noti.darkStyle();
                     noti.show();
                     tipoOperacionChequeDetalle = Operacion.CANCELAR;
-                    cargarDatos();
                     btnEditarCheque.setDisable(true);
                     btnEliminarCheque.setDisable(true);
                 }catch(SQLException ex){
@@ -308,31 +332,7 @@ public class chequesController implements Initializable {
     
     
 
-    @FXML
-    private void btnAgregar(MouseEvent event) {
-        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("")  || numeroCuenta.getText().equals("") || descripcionPago.getText().equals("") || chequeValor.getText().equals("")){
-            Notifications noti = Notifications.create();
-            noti.graphic(new ImageView(imgError));
-            noti.title("ERROR");
-            noti.text("HAY CAMPOS VACÍOS");
-            noti.position(Pos.BOTTOM_RIGHT);
-            noti.hideAfter(Duration.seconds(4));
-            noti.darkStyle();   
-            noti.show();
-            
-        }else{
-            Chequedetalle chequeNuevo = new Chequedetalle();
-            chequeNuevo.setChequeDetalleCuenta(numeroCuenta.getText());
-            chequeNuevo.setChequeDetalleDesc(descripcionPago.getText());
-            chequeNuevo.setChequeDetalleValor(Double.parseDouble(chequeValor.getText()));
-            
-            String sql = "{call SpAgregarChequeEncabezado('"+chequeNuevo.getChequeDetalleCuenta()+"','"+chequeNuevo.getChequeDetalleDesc()+"','"+chequeNuevo.getChequeDetalleValor()+"')}";
-            tipoOperacionChequeDetalle = Operacion.AGREGAR;
-            accion(sql);
-            
-            
-        }
-    }
+ 
      @FXML
     private void imprimirCheque(MouseEvent event) {
         if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("")){
@@ -349,9 +349,9 @@ public class chequesController implements Initializable {
             imprimirCheque imprimirC = new imprimirCheque();
             imprimirCheque2 imprimirch = new imprimirCheque2();
           
-            imprimirch.imprima(chequeFecha.getText(), Double.parseDouble(totalValor.getText()), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText());
-             imprimirC.imprima(listaCheque, numeroCheque.getText(), chequeFecha.getText(), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText(),totalValor.getText(), recibitext.getText(), nombretext.getText());
-            guardarCheque();
+//            imprimirch.imprima(chequeFecha.getText(), Double.parseDouble(totalValor.getText()), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText());
+             imprimirC.imprima(numeroCheque.getText(), chequeFecha.getText(), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText(),descripcionPago.getText());
+          //  guardarCheque();
         }
        
     }
@@ -377,7 +377,6 @@ public class chequesController implements Initializable {
             noti.hideAfter(Duration.seconds(4));
             noti.darkStyle();
             noti.show();
-           cargarDatos();
        }catch(SQLException ex){
            ex.printStackTrace();
            Notifications noti = Notifications.create();
@@ -430,15 +429,6 @@ public class chequesController implements Initializable {
         
     }
     
-    private void sumaEvent(KeyEvent event) {
-        char letra = event.getCharacter().charAt(0);
-        
-        if(Character.isDigit(letra) || letra == '.'){
-            
-        }else{
-            event.consume();
-        }
-    }
     @FXML
     private void validarNoCheque(KeyEvent event) {
         char letra = event.getCharacter().charAt(0);
@@ -450,17 +440,8 @@ public class chequesController implements Initializable {
         }
     }
 
+    
     @FXML
-    private void validarNoCuenta(KeyEvent event) {
-         char letra = event.getCharacter().charAt(0);
-        
-        if(Character.isDigit(letra)){
-            
-        }else{
-            event.consume();
-        }
-    }
-
     private void convertirLetras(KeyEvent event) {
         if(!totalValor.getText().equals("")){
             sumaLetras.setText(letras.Convertir(twoDForm.format(Double.parseDouble(totalValor.getText())), true));
@@ -475,37 +456,12 @@ public class chequesController implements Initializable {
             totalValor.setText("hola");
         }
     }
-     @FXML
-    private void seleccionarElementosCheques(MouseEvent event) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType buttonTypeSi = new ButtonType("Si");
-        ButtonType buttonTypeNo = new ButtonType("No");
-        
-        alert.setTitle("WARNING");
-        alert.setHeaderText("EDITAR REGISTRO DE CHEQUE");
-        alert.setContentText("¿Está seguro que desea editar/eliminar este registro?");
-
-        alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if(result.get() == buttonTypeSi){
-            btnEditarCheque.setDisable(false);
-            btnEliminarCheque.setDisable(false);
-            int index = tableChequeDetalle.getSelectionModel().getSelectedIndex();
-            detalleEditarId = idChequeDetalle.getCellData(index);
-            numeroCuenta.setText(colNumeroCuenta.getCellData(index));
-            descripcionPago.setText(colDescripcion.getCellData(index));
-            chequeValor.setText(colValor.getCellData(index).toString());
-        }else{
-             tableChequeDetalle.getSelectionModel().clearSelection();
-        }
-    }
+    
 
     
     @FXML
     private void btnEditarChequeDetalle(MouseEvent event) {
-        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("")
-            ||  numeroCuenta.getText().equals("") || descripcionPago.getText().equals("") || chequeValor.getText().equals("")){
+        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("")|| descripcionPago.getText().equals("")){
             Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
@@ -517,9 +473,7 @@ public class chequesController implements Initializable {
             
         }else{
             Chequedetalle chequeNuevo = new Chequedetalle();
-            chequeNuevo.setChequeDetalleCuenta(numeroCuenta.getText());
             chequeNuevo.setChequeDetalleDesc(descripcionPago.getText());
-            chequeNuevo.setChequeDetalleValor(Double.parseDouble(chequeValor.getText()));
             
             String sql = "{call SpEditarChequeEncabezado('"+detalleEditarId+"','"+chequeNuevo.getChequeDetalleCuenta()+"','"+chequeNuevo.getChequeDetalleDesc()+"','"+chequeNuevo.getChequeDetalleValor()+"')}";
             tipoOperacionChequeDetalle = Operacion.ACTUALIZAR;

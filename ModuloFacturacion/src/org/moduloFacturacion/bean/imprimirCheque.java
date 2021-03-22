@@ -9,13 +9,17 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterJob;
 import java.time.LocalDate;
-import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+
+    
 
 /**
  *
@@ -23,10 +27,10 @@ import javafx.collections.ObservableList;
  */
 public class imprimirCheque implements Printable{
      PrinterJob printerJob;
-    ObservableList<Chequedetalle> listaChequeDetalle;   
     String chequeNo;
-    String lugarYfecha,ordenDe,suma,valorTotal,recibi,nombre;
-    String cantidad;
+    String lugarYfecha,ordenDe,suma,valorTotal,desc;
+    Image img= new Image("org/moduloFacturacion/img/comprobantecheque.png");
+    BufferedImage image = SwingFXUtils.fromFXImage(img, null);
     LocalDate fechaActual = LocalDate.now();
     public imprimirCheque(){
         super();
@@ -35,16 +39,13 @@ public class imprimirCheque implements Printable{
     }
     // Método que lanza el cuadro de diálogos de la impresora e imprime
     // imagen
-    public void imprima(ObservableList<Chequedetalle> listaChequeDetalle,String chequeNo,String lugarYfecha,String ordenDe, String suma, String valorTotal,String cantidad, String recibi, String nombre){
-        this.listaChequeDetalle=listaChequeDetalle;
+    public void imprima(String chequeNo,String lugarYfecha,String ordenDe, String suma, String valorTotal, String desc){
         this.chequeNo = chequeNo;
         this.lugarYfecha = lugarYfecha;
         this.ordenDe = ordenDe;
         this.suma = suma;
         this.valorTotal = valorTotal;
-        this.cantidad = cantidad;
-        this.recibi = recibi;
-        this.nombre = nombre;
+        this.desc = desc;
         if(printerJob.printDialog()){
             try{
                 printerJob.print();
@@ -55,32 +56,32 @@ public class imprimirCheque implements Printable{
     }
     // Método que traza la imagen para imprimir
     public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){    
-        Font font = new Font(null, Font.PLAIN, 0);    
-        AffineTransform affineTransform = new AffineTransform();
-        affineTransform.rotate(Math.toRadians(-270),0, 0);
-        Font rotatedFont = font.deriveFont(affineTransform);
-        g2d.setFont(rotatedFont);
-        g2d.drawString(chequeNo,390,310);
-        g2d.drawString(lugarYfecha,374, 90);
-        g2d.drawString(ordenDe,350,72);
-        g2d.drawString(cantidad,350,317);
-        g2d.drawString(String.valueOf(fechaActual), 18, 105);
-        g2d.drawString(recibi, 18, 5);
-        g2d.drawString(nombre, 18, 205);
-        g2d.drawString(String.valueOf(suma),325,74);
-        int ancho =220;
-        int largo = 5;
-        int largoDesc = 105;
-        int largoValor = 335;
+           //g2d.drawImage(image, 25,25,400, 500,null);
+
+        g2d.drawString(chequeNo,340,130);
+        g2d.drawString(lugarYfecha,136, 148);
+        g2d.drawString(ordenDe,130,175);
+        g2d.drawString(valorTotal, 340, 175);
+        g2d.drawString(String.valueOf(suma),130,200);
+         while (desc.getPosition() < paragraphEnd) {
+
+            // Retrieve next layout.
+            TextLayout layout = lineMeasurer.nextLayout(formatWidth);
+            // Move y-coordinate by the ascent of the layout.
+            drawPosY += layout.getAscent();
+
+            // Compute pen x position. If the paragraph is
+            // right-to-left, we want to align the TextLayouts
+            // to the right edge of the panel.
+            float drawPosX;
+            if (layout.isLeftToRight()) {
+              drawPosX = 0;
+            } else {
+              drawPosX = formatWidth - layout.getAdvance();
+            }
+        g2d.drawString(desc,136,290);
+//        g2d.drawString(String.valueOf(fechaActual), 18, 105);
         
-        for(int x=0; x< listaChequeDetalle.size();x++){
-            g2d.drawString(String.valueOf(listaChequeDetalle.get(x).getChequeDetalleCuenta()),ancho, largo);
-            g2d.drawString(listaChequeDetalle.get(x).getChequeDetalleDesc(), ancho, largoDesc);
-            g2d.drawString(String.valueOf(listaChequeDetalle.get(x).getChequeDetalleValor()), ancho, largoValor);
-            ancho = ancho-17;
-        }
-         
-         g2d.drawString(valorTotal, 20, 335);
     }
     
     
