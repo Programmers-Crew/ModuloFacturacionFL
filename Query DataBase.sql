@@ -18,8 +18,10 @@ create table EstadoProductos(
 create table Proveedores(
 	proveedorId varchar(7) primary key,
     proveedorNombre varchar(50) unique not null,
-	proveedorTelefono varchar(8) unique not null
+	proveedorTelefono varchar(8) unique not null,
+    proveedorNit varchar(20) unique not null
 );
+
 
 create table CategoriaProductos(
 	categoriaId varchar(7) primary key,
@@ -103,7 +105,8 @@ create table Facturas(
     facturaTotalIva decimal(10,2) not null,
     facturaTotal decimal(10,2) not null,
 	facturaTipo int,
-    estadoFactura int default 1,
+    estadoFactura
+    int default 1,
 	CONSTRAINT FK_facturaDetalle FOREIGN KEY (facturaDetalleId) REFERENCES facturadetalle(facturaDetalleId),
 	CONSTRAINT FK_clienteFactura FOREIGN KEY (clienteId) REFERENCES Clientes(clienteId),
 	CONSTRAINT FK_usuarioFactura FOREIGN KEY (usuarioId) REFERENCES Usuarios(usuarioId),
@@ -150,6 +153,7 @@ create table Creditos(
 	idCredito int not null auto_increment,
     creaditoFechaInicio date not null,
     creditoFechaFinal date not null,
+    creditoFechaActual date,
     creditoDiasRestantes int not null,
 	creditoDesc varchar(50) not null,
     creditoProveedor varchar(50) not null,

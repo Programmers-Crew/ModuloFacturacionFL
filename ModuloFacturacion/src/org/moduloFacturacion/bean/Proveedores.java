@@ -5,14 +5,24 @@ public class Proveedores {
         private String proveedorId;
         private String proveedorNombre;
         private String proveedorTelefono;
+        private String proveedorNit;
 
     public Proveedores() {
     }
 
-    public Proveedores(String proveedorId, String proveedorNombre, String proveedorTelefono) {
+    public Proveedores(String proveedorId, String proveedorNombre, String proveedorTelefono, String proveedorNit) {
         this.proveedorId = proveedorId;
         this.proveedorNombre = proveedorNombre;
         this.proveedorTelefono = proveedorTelefono;
+        this.proveedorNit = proveedorNit;
+    }
+
+    public String getProveedorNit() {
+        return proveedorNit;
+    }
+
+    public void setProveedorNit(String proveedorNit) {
+        this.proveedorNit = proveedorNit;
     }
 
     public String getProveedorId() {

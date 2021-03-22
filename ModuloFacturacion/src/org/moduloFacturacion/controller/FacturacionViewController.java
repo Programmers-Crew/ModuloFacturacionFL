@@ -1489,6 +1489,10 @@ public String buscarCodigoProducto(String precioProductos){
 
         @FXML
     private void btnDevolucion(MouseEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        ButtonType buttonTypeSi = new ButtonType("Si");
+        ButtonType buttonTypeNo = new ButtonType("No");
+        
         
         if(txtBusquedaCodigoFac.getValue().equals("")){
                         Notifications noti = Notifications.create();
@@ -1498,20 +1502,33 @@ public String buscarCodigoProducto(String precioProductos){
                         noti.position(Pos.BOTTOM_RIGHT);
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();   
-                        noti.show();
+                        noti.show();       
+                
                    }else{
+                    alert.setTitle("PRODUCTO DEFECTUOSO");
+                    alert.setHeaderText("PRODUCTO DEFECTUOSO");
+                    alert.setContentText("¿El producto esta defectuoso?");
+
+                    alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
+
+                    Optional<ButtonType> resultEliminar = alert.showAndWait();    
+                    
+                    if(resultEliminar.get() == buttonTypeSi){
                         int codigoFac = Integer.parseInt(txtBusquedaCodigoFac.getValue());
-            
-            
-                        String sql = "{call Sp_DevolucionProductos('"+txtBusquedaCodigoFac.getValue()+"')}";
-                             
+                        String sql = "{call Sp_DevolucionProductosProd('"+txtBusquedaCodigoFac.getValue()+"')}";
                         String sql2 = "{call Sp_CancelarFac('"+txtBusquedaCodigoFac.getValue()+"')}";
-                        
                         tipoOperacionBusquedaFacturas = Operacion.DEVOLUCION;
                         accion(sql); 
                         accion(sql2);
+                    }else{
+                        int codigoFac = Integer.parseInt(txtBusquedaCodigoFac.getValue());
+                        String sql = "{call Sp_DevolucionProductos('"+txtBusquedaCodigoFac.getValue()+"')}";
+                        String sql2 = "{call Sp_CancelarFac('"+txtBusquedaCodigoFac.getValue()+"')}";
+                        tipoOperacionBusquedaFacturas = Operacion.DEVOLUCION;
+                        accion(sql); 
+                        accion(sql2);   
+                    }
                    }
-             
     }
     
     public void buscarProducto(){

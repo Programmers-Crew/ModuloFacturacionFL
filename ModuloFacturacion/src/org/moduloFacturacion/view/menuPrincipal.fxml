@@ -129,7 +129,7 @@
                                     <String fx:value="opciones" />
                                  </styleClass>
                               </AnchorPane>
-                              <AnchorPane fx:id="cajaFactura" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <AnchorPane fx:id="cajaFactura" onMouseClicked="#facturaAtajo" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>

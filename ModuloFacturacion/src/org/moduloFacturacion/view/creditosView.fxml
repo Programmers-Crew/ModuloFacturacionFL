@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorCreditos" prefHeight="494.0" prefWidth="865.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.creditosController">
+<AnchorPane id="AnchorPane" fx:id="anchorCreditos" prefHeight="494.0" prefWidth="865.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.creditosController">
    <children>
       <Pane layoutY="6.0" prefHeight="36.0" prefWidth="865.0" styleClass="bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -63,8 +63,6 @@
                                                       </Label>
                                                    </children>
                                                 </HBox>
-                                                <Label layoutX="18.0" layoutY="27.0" text="CÓDIGO:" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="141.6" AnchorPane.topAnchor="27.0" />
-                                                <JFXTextField fx:id="txtCodigoCredito" layoutX="18.0" layoutY="39.0" prefHeight="26.0" prefWidth="170.0" promptText="El código se coloca en automático" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="39.0" />
                                                 <Label layoutX="18.0" layoutY="73.0" prefHeight="18.0" prefWidth="61.0" text="FECHA DE INICIO:" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="126.0" AnchorPane.topAnchor="70.0" />
                                                 <Label layoutX="18.0" layoutY="243.0" text="PROVEEDOR:" AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="232.0" />
                                                 <ComboBox fx:id="cmbProveedorCreditos" editable="true" layoutX="18.0" layoutY="262.0" prefHeight="26.0" prefWidth="250.0" styleClass="comboOscuro" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="248.0" />
@@ -114,8 +112,8 @@
                                                 <TextArea fx:id="txtDescripcionCredito" layoutX="18.0" layoutY="187.0" prefHeight="50.0" prefWidth="222.0" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="179.0" />
                                                 <Label layoutX="19.0" layoutY="372.0" text="ESTADO:" AnchorPane.leftAnchor="19.0" />
                                                 <ComboBox fx:id="cmbProveedorProducto1" editable="true" layoutX="21.0" layoutY="390.0" prefHeight="31.0" prefWidth="222.0" styleClass="comboOscuro" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="12.0" />
-                                                <JFXDatePicker fx:id="txtFechaFinalCredito" layoutX="23.0" layoutY="126.0" prefHeight="15.0" prefWidth="218.0" />
-                                                <JFXDatePicker fx:id="txtfechaInicioCredito" layoutX="21.0" layoutY="78.0" prefHeight="15.0" prefWidth="218.0" />
+                                                <JFXDatePicker fx:id="txtFechaFinalCredito" layoutX="23.0" layoutY="126.0" prefHeight="31.0" prefWidth="226.0" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="78.0" />
+                                                <JFXDatePicker fx:id="txtfechaInicioCredito" layoutX="24.0" layoutY="130.0" prefHeight="31.0" prefWidth="220.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="130.0" />
                                              </children>
                                              <padding>
                                                 <Insets left="5.0" />
@@ -136,6 +134,7 @@
                                           <TableColumn fx:id="colFechaFinal" prefWidth="154.4000244140625" text="FINAL" />
                                           <TableColumn fx:id="colDescripcion" prefWidth="102.10917663574219" text="DESCRIPCIÓN" />
                                           <TableColumn fx:id="colProveedor" prefWidth="95.1273193359375" text="PROVEEDOR" />
+                                          <TableColumn fx:id="colProveedor1" prefWidth="95.1273193359375" text="NIT" />
                                           <TableColumn fx:id="colMonto" prefWidth="91.63623046875" text="MONTO" />
                                           <TableColumn fx:id="colDiasRestantes" prefWidth="91.63623046875" text="DÍAS" />
                                           <TableColumn fx:id="colEstadoCredito" prefWidth="91.63623046875" text="ESTADO" />
@@ -146,7 +145,7 @@
                                           <Font size="12.0" />
                                        </font></JFXButton>
                                     <ComboBox fx:id="cmbFiltroCredito" editable="true" layoutX="15.0" layoutY="9.0" onAction="#comboFiltro" onMouseClicked="#limpiarBuscar" prefHeight="26.0" prefWidth="395.0" promptText="PROVEEDOR O CÓDIGO" styleClass="comboOscuro" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="117.0" AnchorPane.topAnchor="9.0" />
-                                    <ComboBox fx:id="cmbBuscar" editable="true" layoutX="15.0" layoutY="43.0" onAction="#cmbBuscar" prefHeight="27.0" prefWidth="418.0" promptText="INGRESE EL VALOR A BUSCAR" styleClass="comboOscuro" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="117.65454085420987" AnchorPane.topAnchor="43.0" />
+                                    <ComboBox fx:id="cmbBuscar" editable="true" layoutX="15.0" layoutY="52.0" onAction="#cmbBuscar" prefHeight="27.0" prefWidth="418.0" promptText="INGRESE EL VALOR A BUSCAR" styleClass="comboOscuro" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="117.65454085420987" AnchorPane.topAnchor="52.0" />
                                     <JFXButton fx:id="btnPagado" buttonType="RAISED" layoutX="14.0" layoutY="419.0" onMouseClicked="#btnMarcarPagado" prefHeight="31.0" prefWidth="195.0" styleClass="boton" text="MARCAR COMO PAGADO" textFill="WHITE" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="14.0">
                                        <font>
                                           <Font size="12.0" />
@@ -170,7 +169,7 @@
                                           <JFXDatePicker fx:id="txtFechaInicio" prefHeight="31.0" prefWidth="207.0" promptText="Fecha Inicio" />
                                        </children>
                                     </GridPane>
-                                    <JFXButton fx:id="btnReporte" buttonType="RAISED" layoutX="337.0" layoutY="418.0" prefHeight="31.0" prefWidth="195.0" styleClass="boton" text="REPORTE" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="15.0">
+                                    <JFXButton fx:id="btnReporte" buttonType="RAISED" layoutX="337.0" layoutY="418.0" onAction="#generarReporteCredito" prefHeight="31.0" prefWidth="195.0" styleClass="boton" text="REPORTE" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="15.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>

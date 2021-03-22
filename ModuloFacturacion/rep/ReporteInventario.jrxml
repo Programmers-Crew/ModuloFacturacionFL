@@ -3,38 +3,29 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="FechaCorte" class="java.lang.String">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:/Program Files (x86)/ModuloFacturacion/ModuloFacturacion/rep/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["/rep/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="imagesDir" class="java.lang.String" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[call SpCorteDeCaja($P!{FechaCorte});]]>
+		<![CDATA[call SpListarInventarioProductos();]]>
 	</queryString>
-	<field name="facturaId" class="java.lang.Long">
+	<field name="productoId" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="clienteNombre" class="java.lang.String">
+	<field name="inventarioProductoCant" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="clienteNit" class="java.lang.String">
+	<field name="proveedorNombre" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="facturaFecha" class="java.sql.Timestamp">
+	<field name="productoDesc" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="usuarioNombre" class="java.lang.String">
+	<field name="estadoProductoDesc" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="facturaTotalNeto" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="facturaTotalIva" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="facturaTotal" class="java.math.BigDecimal">
+	<field name="precioCosto" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -43,7 +34,7 @@
 				<reportElement isPrintRepeatedValues="false" x="0" y="372" width="752" height="200" uuid="22213afe-69b2-43f3-ba7c-e59dfeddb42a">
 					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() > 0]]></printWhenExpression>
 				</reportElement>
-				<imageExpression><![CDATA["C:/Program Files (x86)/ModuloFacturacion/ModuloFacturacion/rep/fondo.png"]]></imageExpression>
+				<imageExpression><![CDATA["C:/git/ModuloFacturacionFL/ModuloFacturacion/src/org/moduloFacturacion/report/fondo.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="16" y="549" width="130" height="22" uuid="6299c248-b01f-46af-9d54-b3fbd8ed089a"/>
@@ -71,11 +62,18 @@
 	<title>
 		<band height="79" splitType="Stretch">
 			<staticText>
-				<reportElement x="261" y="0" width="266" height="79" uuid="3532f7b1-ccd5-4e2c-97f2-d2eb25a14e59"/>
+				<reportElement x="236" y="0" width="266" height="79" uuid="3532f7b1-ccd5-4e2c-97f2-d2eb25a14e59"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Bell MT" size="30" isBold="true" isItalic="false" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[CIERRE DE CAJA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="645" y="0" width="69" height="79" uuid="a68da3b6-76bc-4701-9f51-c095c445b4fc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[LOGO EMPRESA]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -97,27 +95,10 @@
 				<reportElement x="627" y="0" width="16" height="20" uuid="f400a3db-8830-407c-9392-7c266ce106a5"/>
 			</line>
 			<textField>
-				<reportElement x="74" y="0" width="100" height="20" uuid="1805cc0e-2e9a-4f1e-93b1-ad81631232f9"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font size="12" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{FechaCorte}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="527" y="0" width="100" height="20" uuid="765f26b2-55cb-41a2-9030-7d0b116e654d"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
-			<subreport>
-				<reportElement x="-24" y="20" width="712" height="100" isRemoveLineWhenBlank="true" uuid="7281dcdf-24cf-4317-afb7-2f76d49b303a">
-					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1]]></printWhenExpression>
-				</reportElement>
-				<subreportParameter name="FechaCorte">
-					<subreportParameterExpression><![CDATA[$P{FechaCorte}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "TotalVendio.jasper"]]></subreportExpression>
-			</subreport>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -163,43 +144,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="42" splitType="Stretch">
-			<textField>
-				<reportElement x="460" y="10" width="120" height="23" uuid="6917eb1b-0afe-41e7-8f56-8c4555f4d221"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{usuarioNombre}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="326" y="10" width="120" height="23" uuid="5f160c2c-eb20-4dd8-ba45-89ab29138000"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{clienteNit}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="177" y="10" width="120" height="23" uuid="a16ceefe-fd10-404c-9f5f-299fe806eead"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{clienteNombre}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="37" y="10" width="120" height="23" uuid="96076615-6c5c-4600-9f3f-59c5ed586a3d"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{facturaId}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="605" y="10" width="138" height="23" uuid="059dbbe3-2d4a-49e0-969a-75a65f1098db"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{facturaTotal}]]></textFieldExpression>
-			</textField>
-		</band>
+		<band height="42" splitType="Stretch"/>
 	</detail>
 	<lastPageFooter>
 		<band height="54"/>

@@ -600,7 +600,7 @@ public class MenuPrincipalContoller implements Initializable {
     private void facturasView(ActionEvent event) throws IOException {
         factura();
     }
-    
+    @FXML
     private void facturaAtajo(MouseEvent event) throws IOException {
         factura();
     }

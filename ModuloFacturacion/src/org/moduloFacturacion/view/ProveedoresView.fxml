@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="538.0" prefWidth="900.0" styleClass="anchorOscuro" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.ProveedoresViewController">
+<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="538.0" prefWidth="900.0" styleClass="anchorOscuro" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.ProveedoresViewController">
    <children>
       <Pane layoutY="1.0" prefHeight="36.0" prefWidth="600.0" styleClass="bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -58,7 +58,7 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="386.0" prefWidth="197.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <AnchorPane fx:id="anchor1" prefHeight="266.0" prefWidth="198.0">
+                                          <AnchorPane fx:id="anchor1" prefHeight="407.0" prefWidth="309.0">
                                              <children>
                                                 <HBox alignment="CENTER" layoutY="7.0" prefHeight="27.0" prefWidth="198.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <children>
@@ -75,7 +75,7 @@
                                                 <JFXTextField fx:id="txtCodigoProveedores" layoutX="14.0" layoutY="58.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="8.199999999999989" AnchorPane.topAnchor="58.0" />
                                                 <JFXTextField fx:id="txtNombreProveedores" layoutX="20.0" layoutY="108.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="8.199999999999989" AnchorPane.topAnchor="109.0" />
                                                 <JFXTextField fx:id="txtTelefonoProveedores" layoutX="17.0" layoutY="157.0" onKeyReleased="#validarTelefono" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="8.199999999999989" AnchorPane.topAnchor="163.0" />
-                                                <HBox alignment="CENTER" layoutX="1.0" layoutY="204.0" prefHeight="27.0" prefWidth="208.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="212.0">
+                                                <HBox alignment="CENTER" layoutX="5.0" layoutY="312.0" prefHeight="27.0" prefWidth="208.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="312.0">
                                                    <children>
                                                       <GridPane prefHeight="28.0" prefWidth="250.0">
                                                          <columnConstraints>
@@ -112,6 +112,8 @@
                                                       </GridPane>
                                                    </children>
                                                 </HBox>
+                                                <Label layoutX="19.0" layoutY="204.0" text="NIT:" />
+                                                <JFXTextField fx:id="txtNitProveedores" layoutX="16.0" layoutY="225.0" onKeyReleased="#validarTelefono" prefHeight="31.0" prefWidth="283.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="225.0" />
                                              </children>
                                              <padding>
                                                 <Insets left="5.0" />
@@ -129,8 +131,9 @@
                                        </columnResizePolicy>
                                        <columns>
                                           <TableColumn fx:id="colCodigoProveedores" prefWidth="76.00001525878906" text="CÓDIGO" />
-                                          <TableColumn fx:id="colNombreProveedores" prefWidth="154.4000244140625" text="NOMBRE:" />
-                                          <TableColumn fx:id="colTellefonoProveedores" prefWidth="136.800048828125" text="TELÉFONO:" />
+                                          <TableColumn fx:id="colNombreProveedores" prefWidth="154.4000244140625" text="NOMBRE" />
+                                          <TableColumn fx:id="colTellefonoProveedores" prefWidth="136.800048828125" text="TELÉFONO" />
+                                          <TableColumn fx:id="colNitProveedores" prefWidth="136.800048828125" text="NIT" />
                                        </columns>
                                     </TableView>
                                     <JFXButton fx:id="btnBuscar" buttonType="RAISED" layoutX="258.0" layoutY="25.0" onMouseClicked="#btnBuscar" prefHeight="66.0" prefWidth="73.0" styleClass="boton" text="BUSCAR" textFill="WHITE" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="25.0" />
