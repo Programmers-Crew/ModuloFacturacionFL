@@ -6,6 +6,7 @@ import java.awt.print.*;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import javafx.collections.ObservableList;
 
@@ -46,21 +47,24 @@ public class Imprimir implements Printable{
         g2d.drawString(String.valueOf(fecha.getMonthValue()),395,68);
         g2d.drawString(String.valueOf(fecha.getYear()),395,110);
         g2d.drawString(nombreCliente, 370, 70);
-        g2d.drawString(direccionCliente,355, 70);
-        g2d.drawString(Nit,355 , 218);
-            int ancho =327;
+        g2d.drawString(direccionCliente,360, 65);
+        g2d.drawString(Nit,360 , 218);
+            int ancho =320;
             int largo = 25;
             int anchoDesc = 70;
             int anchoValor = 227;
+            DecimalFormat df = new DecimalFormat("#.00");
           for(int x=0; x< mensaje.size();x++){
+                String totalp = String.valueOf(df.format(mensaje.get(x).getTotalParcialBackup()));
+              String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
               g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),ancho, largo);
-              g2d.drawString(mensaje.get(x).getProductoDesc()+"  "+String.valueOf(mensaje.get(x).getProductoPrecio()), ancho , anchoDesc);
-              g2d.drawString(String.valueOf(mensaje.get(x).getTotalParcialBackup()), ancho, anchoValor);
+              g2d.drawString(mensaje.get(x).getProductoDesc()+"  "+String.valueOf(precio), ancho , anchoDesc);
+              g2d.drawString(String.valueOf(totalp), ancho, anchoValor);
               
               ancho = ancho-18;
           }
           System.out.println(totalFactura+"hola");
-         g2d.drawString(totalFactura, 68, 232);
+         g2d.drawString(totalFactura, 55, 232);
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;
