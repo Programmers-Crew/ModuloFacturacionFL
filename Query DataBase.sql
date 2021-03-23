@@ -117,11 +117,10 @@ create table Facturas(
 create table Cheque(
 	chequeCodigo int not null auto_increment,
 	chequeNo int(10)  UNSIGNED ZEROFILL,
-    chequeLugar varchar(100) not null,
-    chequeFecha date not null,
+    chequeLugarYFecha varchar(100) not null,
     chequePagoAlaOrdenDe varchar(50) not null,
     chequeMonto double not null,
-	chequeDetalleDesc int(100)  not null,
+	chequeDetalleDesc varchar(100)  not null,
     chequeUsuario int(5) UNSIGNED ZEROFILL not null,
 	PRIMARY KEY (chequeCodigo),
 	CONSTRAINT FK_usuarioCheque FOREIGN KEY (chequeUsuario) REFERENCES Usuarios(usuarioId)

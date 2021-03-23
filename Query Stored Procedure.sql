@@ -971,50 +971,7 @@ DELIMITER ;
 
 
 -- ENTIDAD CHEQUE ENCABEZADO 
-DELIMITER $$
-	create  procedure SpListarChequeEncabezado()
-		begin
-			select 
-				cd.chequeDetalleNo,
-                cd.chequeDetalleCuenta, 
-                cd.chequeDetalleDesc,
-                cd.chequeDetalleValor 
-            from 
-				chequedetallebackup as cd;
-        end $$
-DELIMITER ;
-DELIMITER $$
-	create procedure SpTransferirCheque()
-		BEGIN 
-			insert into chequeDetalle(chequeDetalleNo,chequeDetalleCuenta,chequeDetalleDesc,chequeDetalleValor)
-				select chequeDetalleNo,chequeDetalleCuenta,chequeDetalleDesc,chequeDetalleValor 
-					from chequeDetalleBackup;
-		END $$
-DELIMITER ;
-DELIMITER $$
-	create procedure SpBuscarChequeEncabezado(idBuscado int)
-		begin
-			select 
-				cd.chequeDetalleNo,
-                cd.chequeDetalleCuenta, 
-                cd.chequeDetalleDesc,
-                cd.chequeDetalleValor 
-            from 
-				ChequeDetalle as cd
-			where 
-				cd.chequeDetalleNo = idBuscado;
-        end $$
-DELIMITER ;
 
-DELIMITER $$
-	create procedure SpEliminarChequeEncabezado(idBuscado int)
-		begin
-			delete from
-				chequedetallebackup as cd
-			where 
-                cd.chequeDetalleNo = idBuscado;
-        end $$
-DELIMITER ;
 
 
 
@@ -1027,8 +984,7 @@ DELIMITER $$
 		begin
 			select 
 				c.chequeNo,
-                c.chequeLugar,
-                c.chequeFecha,
+                c.chequeLugarYFecha,
                 c.chequePagoAlaOrdenDe,
                 c.chequeMonto,
                 c.chequeDetalleDesc,
@@ -1044,8 +1000,7 @@ DELIMITER $$
 		begin
 			select 
 				c.chequeNo,
-                c.chequeLugar,
-                c.chequeFecha,
+                c.chequeLugarYFecha,
                 c.chequePagoAlaOrdenDe,
                 c.chequeMonto,
                 c.chequeDetalleDesc,
@@ -1064,8 +1019,7 @@ DELIMITER $$
 		begin
 			select 
 				c.chequeNo,
-                c.chequeLugar,
-                c.chequeFecha,
+                c.chequeLugarYFecha,
                 c.chequePagoAlaOrdenDe,
                 c.chequeMonto,
                 c.chequeDetalleDesc,
@@ -1089,23 +1043,21 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarCheque(numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, usuario int)
+	create procedure SpAgregarCheque(numero int, lugaryfecha varchar(100), ordenDe varchar(50), monto double, usuario int, descripcion varchar(100))
 		begin
-			insert into Cheque(chequeNo,chequeLugar,chequeFecha,chequePagoAlaOrdenDe,chequeMonto,chequeDetalleDesc,chequeUsuario) 
-				select numero,lugar,fecha,ordenDe,monto, chequeDetalleDesc, usuario
-					from chequedetallebackup as cd;
+			insert into Cheque(chequeNo,chequeLugarYFecha,chequePagoAlaOrdenDe,chequeMonto,chequeUsuario,chequeDetalleDesc)  
+            value(numero,lugaryfecha,ordenDe,monto,usuario,descripcion);
         end $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpEditarCheque( idBuscado int, numero int, lugar varchar(100), fecha date, ordenDe varchar(50), monto double, detalle varchar(25), usuario int)
+	create procedure SpEditarCheque( idBuscado int, numero int, lugarYfecha varchar(100),  ordenDe varchar(50), monto double, detalle varchar(25), usuario int)
 		begin
 			update
 				Cheque
 			set
 				chequeNo = numero,
-                chequeLugar = lugar,
-                chequeFecha = fecha,
+                chequeLugarYFecha = lugarYfecha,
                 chequePagoAlaOrdenDe = ordenDe,
                 chequeMonto = monto,
                 chequeDetalleDesc = detalle,

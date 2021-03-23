@@ -128,7 +128,7 @@ public class chequesController implements Initializable {
     @FXML
     private TableColumn<ChequeBuscado, Integer> colNoChequeBuscado;
     @FXML
-    private TableColumn<ChequeBuscado, Date> colFechaChequeBuscado;
+    private TableColumn<ChequeBuscado, String> colFechaChequeBuscado;
     @FXML
     private TableColumn<ChequeBuscado, Double> colTotalChequeBuscado;
     @FXML
@@ -349,25 +349,18 @@ public class chequesController implements Initializable {
             imprimirCheque imprimirC = new imprimirCheque();
             imprimirCheque2 imprimirch = new imprimirCheque2();
           
-//            imprimirch.imprima(chequeFecha.getText(), Double.parseDouble(totalValor.getText()), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText());
+            imprimirch.imprima(chequeFecha.getText(), Double.parseDouble(totalValor.getText()), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText());
              imprimirC.imprima(numeroCheque.getText(), chequeFecha.getText(), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText(),descripcionPago.getText());
-          //  guardarCheque();
+            guardarCheque();
         }
        
     }
      public void guardarCheque(){
-       String sql = "{call SpTransferirCheque()}";
-       String sqlEliminar = "{call SpEliminarBackupCheque()}";
-       String sqlCheque = "{call SpAgregarCheque('"+numeroCheque.getText()+"','"+chequeFecha.getText()+"','"+fechaActual+"','"+pagoOrden.getText()+"','"+totalValor.getText()+"','"+getUsuarioId()+"')}";
+       String sqlCheque = "{call SpAgregarCheque('"+numeroCheque.getText()+"','"+chequeFecha.getText()+"','"+pagoOrden.getText()+"','"+totalValor.getText()+"','"+getUsuarioId()+"','"+descripcionPago.getText()+"')}";
        try{
 
-           PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-           ps.execute();
-           
            PreparedStatement psCheque = Conexion.getIntance().getConexion().prepareCall(sqlCheque);
            psCheque.execute();
-           PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
-           psEliminar.execute();
            
             Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgCorrecto));
@@ -522,7 +515,7 @@ public class chequesController implements Initializable {
             while(rs.next()){
                 lista.add(new ChequeBuscado(
                             rs.getInt("chequeNo"),
-                            rs.getDate("chequeFecha"),
+                            rs.getString("chequeLugarYFecha"),
                             rs.getDouble("chequeMonto"),
                             rs.getString("chequePagoAlaOrdenDe")
                 ));
@@ -569,7 +562,7 @@ public class chequesController implements Initializable {
             while(rs.next()){
                 lista.add(new ChequeBuscado(
                             rs.getInt("chequeNo"),
-                            rs.getDate("chequeFecha"),
+                            rs.getString("chequeLugarYFecha"),
                             rs.getDouble("chequeMonto"),
                             rs.getString("chequePagoAlaOrdenDe")
                 ));
@@ -604,7 +597,7 @@ public class chequesController implements Initializable {
             while(rs.next()){
                 lista.add(new ChequeBuscado(
                             rs.getInt("chequeNo"),
-                            rs.getDate("chequeFecha"),
+                            rs.getString("chequeLugarYFecha"),
                             rs.getDouble("chequeMonto"),
                             rs.getString("chequePagoAlaOrdenDe")
                 ));

@@ -5,9 +5,13 @@
  */
 package org.moduloFacturacion.bean;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -15,6 +19,8 @@ import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterJob;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.time.LocalDate;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -55,33 +61,24 @@ public class imprimirCheque implements Printable{
         }
     }
     // Método que traza la imagen para imprimir
-    public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){    
-           //g2d.drawImage(image, 25,25,400, 500,null);
-
+    public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){
+        
+        g2d.drawImage(image, 25,25,400, 500,null);
         g2d.drawString(chequeNo,340,130);
         g2d.drawString(lugarYfecha,136, 148);
         g2d.drawString(ordenDe,130,175);
         g2d.drawString(valorTotal, 340, 175);
-        g2d.drawString(String.valueOf(suma),130,200);
-         while (desc.getPosition() < paragraphEnd) {
-
-            // Retrieve next layout.
-            TextLayout layout = lineMeasurer.nextLayout(formatWidth);
-            // Move y-coordinate by the ascent of the layout.
-            drawPosY += layout.getAscent();
-
-            // Compute pen x position. If the paragraph is
-            // right-to-left, we want to align the TextLayouts
-            // to the right edge of the panel.
-            float drawPosX;
-            if (layout.isLeftToRight()) {
-              drawPosX = 0;
-            } else {
-              drawPosX = formatWidth - layout.getAdvance();
-            }
-        g2d.drawString(desc,136,290);
-//        g2d.drawString(String.valueOf(fechaActual), 18, 105);
+        g2d.drawString(String.valueOf(suma),130,200);     
         
+         g2d.drawString(desc, 136, 290);
+        g2d.drawString(String.valueOf(fechaActual), 136, 495);
+         String[] arreglo = desc.split("\n");
+         float x= 136;
+         float y = 290;
+         for (String arreglo1 : arreglo) {
+             g2d.drawString(arreglo1, x, y);
+             y=y+10;
+         }
     }
     
     
