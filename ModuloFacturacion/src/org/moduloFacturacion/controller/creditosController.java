@@ -50,8 +50,6 @@ public class creditosController implements Initializable {
     @FXML
     private AnchorPane anchor1;
     @FXML
-    private JFXTextField txtCodigoCredito;
-    @FXML
     private JFXDatePicker txtfechaInicioCredito;
     @FXML
     private JFXTextField txtMontoCredito;
@@ -111,6 +109,10 @@ public class creditosController implements Initializable {
     private JFXButton btnReporte;
     @FXML
     private AnchorPane anchorCreditos;
+    @FXML
+    private JFXTextField txtNitProveedor;
+    @FXML
+    private TableColumn<?, ?> colProveedor1;
 
     @FXML
     private void validarPrecioProducto(KeyEvent event) {
@@ -127,6 +129,7 @@ public class creditosController implements Initializable {
     ObservableList<String> listaCmbCodigoCreditos;
     ObservableList<String> listaCmbBuscar;
     ObservableList<String> listaCmbFiltro;
+    ObservableList<String> listaCmbFechaFinal;
 
 
     @FXML
@@ -399,7 +402,7 @@ public class creditosController implements Initializable {
     @FXML
     public void buscarCreditosFiltrados(){
         try{
-            if(cmbFiltroCredito.getValue().isEmpty()){
+            if(cmbBuscar.getValue().equals("")){
                 if(txtFechaInicio.getValue() == null || txtFechaFinal.getValue()==null){
                     Notifications noti = Notifications.create();
                     noti.graphic(new ImageView(imgError));
@@ -509,12 +512,13 @@ public class creditosController implements Initializable {
     }
       public void anuncio(){
         LocalDate fechaActual = LocalDate.now();
-        
-        String sql="{call SpRestarDias('"+fechaActual+"')}";
+          System.out.println(fechaActual);
         String sql2 = "{call SpValidarCredito()}";
+        String sql3="{call SpRestarDias2('"+fechaActual+"')}";
+        
         try{
-            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-            ps.execute();
+            PreparedStatement ps3 = Conexion.getIntance().getConexion().prepareCall(sql3);
+            ps3.execute();
             
             PreparedStatement ps2= Conexion.getIntance().getConexion().prepareCall(sql2);
             ResultSet rs =ps2.executeQuery();
@@ -536,6 +540,7 @@ public class creditosController implements Initializable {
             ex.printStackTrace();
         }
     }
+    
       
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -606,6 +611,7 @@ public class creditosController implements Initializable {
                         noti.show();
                         tipoOperacion = Operacion.CANCELAR;
                         accionCreditos();
+                        anuncio();
                         cargarCreditos();
                         limpiarTextProveedores();
                         
@@ -965,6 +971,29 @@ public class creditosController implements Initializable {
     
 
 
+    public void buscarNitProveedores(){
+        if(cmbProveedorCreditos.getValue()!= ""){
+                try{
+                     PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscareProveedorNit(?)}");
+                     sp.setString(1, cmbProveedorCreditos.getValue());
+                     ResultSet resultado = sp.executeQuery(); 
+                        while(resultado.next()){
+                            txtNitProveedor.setText(resultado.getString("proveedorNit"));
+                        }  
+                }catch(Exception e){
+                    Notifications noti = Notifications.create();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR");
+                    noti.text("El CAMPO DE BUSQUEDA ESTA VACÍO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();   
+                    noti.show();
+                }
+            }
+    }
+    
+    
     @FXML
     private void btnBuscar(MouseEvent event) {
         buscar();
@@ -1005,6 +1034,9 @@ public class creditosController implements Initializable {
                     noti.show();
                 }
     }
+  
+  
+  
   
     public void imprimirReporteCreditosEmpresas(){
             try{

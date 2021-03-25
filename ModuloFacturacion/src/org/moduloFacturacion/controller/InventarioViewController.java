@@ -569,6 +569,7 @@ public class InventarioViewController implements Initializable {
                     }                    
                     if(rs.first()){
                         for(int i=0; i<tblInventario.getItems().size(); i++){
+                            
                             if(colCodigoProductoInventario.getCellData(i) == codigoProducto){
                                 tblInventario.getSelectionModel().select(i);
                                 break;

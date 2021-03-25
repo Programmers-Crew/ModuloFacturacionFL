@@ -616,7 +616,7 @@ public class MenuPrincipalContoller implements Initializable {
     private void Clientesview(ActionEvent event) throws IOException {
         clientes();
     }
-    
+      @FXML
     private void ClientesAtajo(MouseEvent event) throws IOException {
         clientes();
     }

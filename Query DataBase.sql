@@ -22,7 +22,6 @@ create table Proveedores(
     proveedorNit varchar(20) unique not null
 );
 
-
 create table CategoriaProductos(
 	categoriaId varchar(7) primary key,
     categoriaNombre varchar(50) unique not null
@@ -146,3 +145,4 @@ create table Creditos(
     CONSTRAINT FK_CreditosProveedor FOREIGN KEY (creditoProveedor) REFERENCES Proveedores(proveedorId),
 	CONSTRAINT FK_CreditosEstados FOREIGN KEY (creditoEstado) REFERENCES EstadoCredito(estadoCreditoId)
 );
+
