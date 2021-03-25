@@ -6,6 +6,7 @@ import java.awt.print.*;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import javafx.collections.ObservableList;
 
@@ -41,6 +42,7 @@ public class ImprimirOrdenDeCompra implements Printable{
         AffineTransform affineTransform = new AffineTransform();
         affineTransform.rotate(Math.toRadians(-270),0, 0);
         Font rotatedFont = font.deriveFont(affineTransform);
+        DecimalFormat df = new DecimalFormat("#.00");
         g2d.setFont(rotatedFont);
         g2d.drawString(String.valueOf(fecha.getDayOfMonth()), 320,28);
         g2d.drawString(String.valueOf(fecha.getMonthValue()),320,68);
@@ -53,9 +55,11 @@ public class ImprimirOrdenDeCompra implements Printable{
             int anchoDesc = 68;
             int anchoValor = 237;
           for(int x=0; x< mensaje.size();x++){
+              String totalp = String.valueOf(df.format(mensaje.get(x).getTotalParcialBackup()));
+              String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
               g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),ancho, largo);
-              g2d.drawString(mensaje.get(x).getProductoDesc()+"  "+String.valueOf(mensaje.get(x).getProductoPrecio()), ancho , anchoDesc);
-              g2d.drawString(String.valueOf(mensaje.get(x).getTotalParcialBackup()), ancho, anchoValor);
+              g2d.drawString(mensaje.get(x).getProductoDesc()+"  "+String.valueOf(precio), ancho , anchoDesc);
+              g2d.drawString(String.valueOf(totalp), ancho, anchoValor);
               
               ancho = ancho-18;
           }

@@ -52,6 +52,7 @@ import org.moduloFacturacion.bean.FacturacionDetalleBackup;
 import org.moduloFacturacion.bean.FacturasBuscadas;
 import org.moduloFacturacion.bean.Imprimir;
 import org.moduloFacturacion.bean.ImprimirOrdenDeCompra;
+import org.moduloFacturacion.bean.ImprimirOrdenRespaldo;
 import org.moduloFacturacion.bean.ImprimirRespaldo;
 import org.moduloFacturacion.bean.Letras;
 import org.moduloFacturacion.bean.ProductoBuscado;
@@ -900,11 +901,14 @@ public String buscarCodigoProducto(String precioProductos){
     public void imprimir(){
         Imprimir imprimir = new Imprimir();
         ImprimirOrdenDeCompra imprimirOrden = new ImprimirOrdenDeCompra();
+        DecimalFormat df = new DecimalFormat("#.00");
+        double total = Double.parseDouble( txtTotalFactura.getText());
+        String st =String.valueOf(df.format(total));
         if(cmbTipoFactura.getValue().equals("FACTURA")){
-            System.out.println(txtTotalFactura.getText());
-            imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
+            imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
+            imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
         }else{
-            imprimirOrden.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
+            imprimirOrden.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(),st);
         }
         
     }
@@ -1215,12 +1219,15 @@ public String buscarCodigoProducto(String precioProductos){
         int index = tblResultadoFactura.getSelectionModel().getSelectedIndex();
         String tipoFac = colTipoFactura.getCellData(index);
         ImprimirRespaldo imprimir = new ImprimirRespaldo();
-        ImprimirOrdenDeCompra imprimirOrden = new ImprimirOrdenDeCompra();
+        ImprimirOrdenRespaldo imprimirOrden = new ImprimirOrdenRespaldo();
+        DecimalFormat df = new DecimalFormat("#.00");
+        double totalT = Double.parseDouble(txtTotalFac.getText());
+        String tot = String.valueOf(df.format(totalT));
         if(tipoFac.equals("FACTURA")){
-            imprimir.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtDireccionCliente.getText(), date2, txtTotalFac.getText());
-        } //else{
-//            imprimirOrden.imprima(listaFacturasBuscadas, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), txtTotalFactura.getText());
-//        }
+            imprimir.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtDireccionCliente.getText(), date2,tot);
+        } else{
+            imprimirOrden.imprima(listaProductoBuscado, txtResultadoNit.getText(), txtResultadoNombre.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), tot);
+        }
         
     }
 

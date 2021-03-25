@@ -114,29 +114,13 @@ create table Facturas(
     CONSTRAINT FK_estadoFactura FOREIGN KEY (estadoFactura) REFERENCES EstadoFactura(estadoFactura)
 );
 
-create table ChequeDetalle(
-	chequeDetalleNo int(100)  auto_increment,
-    chequeDetalleCuenta varchar(100) not null,
-    chequeDetalleDesc varchar(200) not null, 
-    chequeDetalleValor double not null,
-    PRIMARY KEY (chequeDetalleNo)
-);
-create table ChequeDetallebackup(
-	chequeDetalleNo int(100)  auto_increment,
-    chequeDetalleCuenta varchar(100) not null,
-    chequeDetalleDesc varchar(200) not null, 
-    chequeDetalleValor double not null,
-    PRIMARY KEY (chequeDetalleNo)
-);
-
 create table Cheque(
 	chequeCodigo int not null auto_increment,
 	chequeNo int(10)  UNSIGNED ZEROFILL,
-    chequeLugar varchar(100) not null,
-    chequeFecha date not null,
+    chequeLugarYFecha varchar(100) not null,
     chequePagoAlaOrdenDe varchar(50) not null,
     chequeMonto double not null,
-	chequeDetalleDesc int(100)  not null,
+	chequeDetalleDesc varchar(100)  not null,
     chequeUsuario int(5) UNSIGNED ZEROFILL not null,
 	PRIMARY KEY (chequeCodigo),
 	CONSTRAINT FK_usuarioCheque FOREIGN KEY (chequeUsuario) REFERENCES Usuarios(usuarioId)

@@ -6,16 +6,16 @@ import java.sql.Date;
 public class ChequeBuscado {
     
     private int chequeNo;
-    private Date chequeFecha;
+    private String chequeLugarYFecha;
     private Double chequeMonto;
     private String chequePagoAlaOrdenDe ;
 
     public ChequeBuscado() {
     }
 
-    public ChequeBuscado(int chequeNo, Date chequeFecha, Double chequeMonto, String chequePagoAlaOrdenDe) {
+    public ChequeBuscado(int chequeNo, String chequeLugarYFecha, Double chequeMonto, String chequePagoAlaOrdenDe) {
         this.chequeNo = chequeNo;
-        this.chequeFecha = chequeFecha;
+        this.chequeLugarYFecha = chequeLugarYFecha;
         this.chequeMonto = chequeMonto;
         this.chequePagoAlaOrdenDe = chequePagoAlaOrdenDe;
     }
@@ -36,13 +36,15 @@ public class ChequeBuscado {
         this.chequeNo = chequeNo;
     }
 
-    public Date getChequeFecha() {
-        return chequeFecha;
+    public String getChequeLugarYFecha() {
+        return chequeLugarYFecha;
     }
 
-    public void setChequeFecha(Date chequeFecha) {
-        this.chequeFecha = chequeFecha;
+    public void setChequeLugarYFecha(String chequeLugarYFecha) {
+        this.chequeLugarYFecha = chequeLugarYFecha;
     }
+
+    
 
     public Double getChequeMonto() {
         return chequeMonto;
