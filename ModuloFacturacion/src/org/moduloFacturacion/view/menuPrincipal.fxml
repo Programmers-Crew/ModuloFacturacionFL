@@ -59,7 +59,7 @@
                               <RowConstraints maxHeight="139.2" minHeight="10.0" prefHeight="134.40001220703124" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <AnchorPane fx:id="cajaClientes" prefHeight="200.0" prefWidth="200.0">
+                              <AnchorPane fx:id="cajaClientes" onMouseClicked="#ClientesAtajo" prefHeight="200.0" prefWidth="200.0">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>

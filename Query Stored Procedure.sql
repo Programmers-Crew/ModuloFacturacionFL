@@ -142,7 +142,15 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarProveedores(proveedores varchar(7),nombre varchar(50), telefono varchar(8), nit varchar(20))
+	create procedure SpAgregarProveedores(proveedores varchar(7),nombre varchar(50), telefono varchar(8), nit varchar(50))
+		BEGIN
+			insert into Proveedores(proveedorId,proveedorNombre, proveedorTelefono, proveedorNit)
+				values (proveedores , nombre , telefono, nit);
+        END $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpAgregarProveedores(proveedores varchar(7),nombre varchar(50), telefono varchar(8), nit varchar(50))
 		BEGIN
 			insert into Proveedores(proveedorId,proveedorNombre, proveedorTelefono, proveedorNit)
 				values (proveedores , nombre , telefono, nit);
@@ -1221,11 +1229,13 @@ DELIMITER $$
 				on c.creditoProveedor = p.proveedorId
 			inner join EstadoCredito as ec
 				on c.creditoEstado = ec.estadoCreditoId
-					where c.creaditoFechaInicio between fechaInicio and fechaFinal
-					      and c.creditoFechaFinal between fechaInicio and fechaFinal
-							group by ec.estadoCreditoDesc order by ec.estadoCreditoDesc asc;
+					where (c.creaditoFechaInicio between fechaInicio and fechaFinal)
+							and (creditoEstado = 1 or 2 or 3)
+                            order by idCredito desc;
         end $$
 DELIMITER ;
+
+call SpFiltrarCredito('2021-02-20','2021-03-21')
 
 DELIMITER $$
 	create procedure SpFiltrarCreditoEmpresa(fechaInicio date, fechaFinal date, proveedor varchar(25))
@@ -1244,9 +1254,8 @@ DELIMITER $$
 				on c.creditoProveedor = p.proveedorId
 			inner join EstadoCredito as ec
 				on c.creditoEstado = ec.estadoCreditoId
-					where c.creaditoFechaInicio between fechaInicio and fechaFinal
-					      and c.creditoFechaFinal between fechaInicio and fechaFinal
-                          and p.proveedorNombre = proveedor
+					where (c.creaditoFechaInicio between fechaInicio and fechaFinal)
+                          and (p.proveedorNombre = proveedor)
                           group by ec.estadoCreditoDesc order by  ec.estadoCreditoDesc asc;
         end $$
 DELIMITER ;
@@ -1317,15 +1326,10 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpValidarCredito()
 		begin
-			select 
-				c.idCredito,
-                c.creditoDiasRestantes
-			from Creditos as c
-				where c.creditoDiasRestantes < 3;
-			
-            update Creditos as c
-				set c.creditoEstado = 3
-					where c.creditoDiasRestantes < 0;
+			update creditos
+				set 
+					creditoEstado = if(creditoEstado > 1, creditoEstado = 1, creditoEstado = 3);
+
         end $$
 DELIMITER ;
 
@@ -1335,6 +1339,26 @@ DELIMITER $$
 			update Creditos as c
 				set  c.creditoDiasRestantes = TIMESTAMPDIFF(DAY,fechaActual,c.creditoFechaFinal)
                 where c.idCredito>0;
+<<<<<<< HEAD
+=======
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpRestarDias2(fechaActual date)
+		begin
+			update Creditos as c
+				set  c.creditoDiasRestantes = TIMESTAMPDIFF(DAY,fechaActual,c.creditoFechaFinal)
+                where c.idCredito>0;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpRestarDias3(dias date)
+		begin
+			update Creditos as c
+				set  c.creditoDiasRestantes = dias;
+>>>>>>> Diego-Gonzalez
         end $$
 DELIMITER ;
 
@@ -1347,4 +1371,12 @@ DELIMITER $$
             from 
 				EstadoCredito as ec;
         end $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure SpBuscareProveedorNit(proveedor varchar(50))
+	begin
+		select * from proveedores
+			where proveedorNombre = proveedor;
+    end $$
 DELIMITER ;
