@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -76,6 +77,50 @@ public class chequesController implements Initializable {
     private Label fechaText;
     @FXML
     private AnchorPane comprobanteChequeIma;
+    @FXML
+    private TextField fechaX;
+    @FXML
+    private TextField fechaY;
+    @FXML
+    private TextField ordenX;
+    @FXML
+    private TextField OrdenY;
+    @FXML
+    private TextField totalX;
+    @FXML
+    private TextField totalY;
+    @FXML
+    private TextField letrasX;
+    @FXML
+    private TextField letrasY;
+    @FXML
+    private TextField descX;
+    @FXML
+    private TextField descY;
+    @FXML
+    private TextField CNoChequeX;
+    @FXML
+    private TextField CNoChequeY;
+    @FXML
+    private TextField CordenX;
+    @FXML
+    private TextField CordenY;
+    @FXML
+    private TextField CletrasX;
+    @FXML
+    private TextField CletrasY;
+    @FXML
+    private TextField CfechaX;
+    @FXML
+    private TextField CfechaY;
+    @FXML
+    private TextField CtotalX;
+    @FXML
+    private TextField CtotalY;
+
+   
+
+   
 
     
     
@@ -350,7 +395,7 @@ public class chequesController implements Initializable {
             imprimirCheque2 imprimirch = new imprimirCheque2();
           
             imprimirch.imprima(chequeFecha.getText(), Double.parseDouble(totalValor.getText()), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText());
-             imprimirC.imprima(numeroCheque.getText(), chequeFecha.getText(), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText(),descripcionPago.getText());
+            imprimirC.imprima(numeroCheque.getText(), chequeFecha.getText(), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText(),descripcionPago.getText());
             guardarCheque();
         }
        
@@ -873,4 +918,82 @@ public class chequesController implements Initializable {
         cargarChequesBuscadas();
     }
         
+    
+    // PREFERENCES PARA MAPEAR DATOS EN IMPRESIÓN.
+    
+    
+     @FXML
+    private void preferencesCargar(Event event) {
+        fechaX.setText(menu.PfechaX.get("valor1", "root"));
+        fechaY.setText(menu.PfechaY.get("valor2", "root"));
+        
+        ordenX.setText(menu.PordenX.get("valor3", "root"));
+        OrdenY.setText(menu.PordenY.get("valor4", "root"));
+        
+        totalX.setText(menu.PTotalX.get("valor5", "root"));
+        totalY.setText(menu.PTotalY.get("valor6", "root"));
+        
+        letrasX.setText(menu.PLetrasX.get("valor7", "root"));
+        letrasY.setText(menu.PLetrasY.get("valor8", "root"));   
+        
+        CNoChequeX.setText(menu.comprobante.get("nochequeX", "root"));
+        CNoChequeY.setText(menu.comprobante.get("nochequeY", "root"));
+        
+        CfechaX.setText(menu.comprobante.get("fechaX", "root"));
+        CfechaY.setText(menu.comprobante.get("fechaY", "root"));
+        
+        CordenX.setText(menu.comprobante.get("ordenX", "root"));
+        CordenY.setText(menu.comprobante.get("ordenY", "root"));
+        
+        CtotalX.setText(menu.comprobante.get("totalX", "root"));
+        CtotalY.setText(menu.comprobante.get("totalY", "root"));
+        
+        CletrasX.setText(menu.comprobante.get("letrasX","root"));
+        CletrasY.setText(menu.comprobante.get("letrasY","root"));
+        
+        descX.setText(menu.comprobante.get("descX","root"));
+        descY.setText(menu.comprobante.get("descY","root"));
+        
+    }
+    
+    
+     @FXML
+    private void guardarPreferences(MouseEvent event) {
+        menu.PfechaX.put("valor1", fechaX.getText());
+        menu.PfechaY.put("valor2", fechaY.getText());
+        
+        menu.PordenX.put("valo3", ordenX.getText());
+        menu.PordenY.put("valor4", OrdenY.getText());
+        
+        menu.PTotalX.put("valor5", totalX.getText());
+        menu.PTotalY.put("valor6", totalY.getText());
+        
+        menu.PLetrasX.put("valor7", letrasX.getText());
+        menu.PLetrasY.put("valor8", letrasY.getText());
+    }
+
+    @FXML
+    private void guardarPreferencesComprobante(MouseEvent event) {
+    
+        menu.comprobante.put("nochequeX",CNoChequeX.getText() );
+        menu.comprobante.put("nochequeY",CNoChequeY.getText() );
+        
+        menu.comprobante.put("fechaX",CfechaX.getText() );
+        menu.comprobante.put("fechaY",CfechaY.getText() );
+        
+         menu.comprobante.put("ordenX",CordenX.getText() );
+        menu.comprobante.put("ordenY",CordenY.getText() );
+        
+         menu.comprobante.put("totalX",CtotalX.getText() );
+        menu.comprobante.put("totalY",CtotalY.getText() );
+        
+         menu.comprobante.put("letrasX",CletrasX.getText() );
+        menu.comprobante.put("letrasY",CletrasY.getText() );
+        
+         menu.comprobante.put("descX",descX.getText() );
+        menu.comprobante.put("descY",descY.getText() );
+    }
+    
+    
+    
 }

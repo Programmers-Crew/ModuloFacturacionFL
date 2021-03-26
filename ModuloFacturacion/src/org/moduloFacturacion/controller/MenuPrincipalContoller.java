@@ -156,7 +156,25 @@ public class MenuPrincipalContoller implements Initializable {
     public Preferences prefsUsuario1 = Preferences.userRoot().node(this.getClass().getName());
     public Preferences prefsRegresar = Preferences.userRoot().node(this.getClass().getName());
     public Preferences prefsRegresarProductos = Preferences.userRoot().node(this.getClass().getName());
-     ValidarStyle validar = new ValidarStyle();
+    //preferences impresión cheques
+    
+    
+    public Preferences PfechaX = Preferences.userRoot().node(this.getClass().getName());
+    public Preferences PfechaY = Preferences.userRoot().node(this.getClass().getName());
+    
+    public Preferences PordenX = Preferences.userRoot().node(this.getClass().getName());
+    public Preferences PordenY = Preferences.userRoot().node(this.getClass().getName());
+    
+    public Preferences PTotalX = Preferences.userRoot().node(this.getClass().getName());
+    public Preferences PTotalY = Preferences.userRoot().node(this.getClass().getName());
+    
+    public Preferences PLetrasX = Preferences.userRoot().node(this.getClass().getName());
+    public Preferences PLetrasY = Preferences.userRoot().node(this.getClass().getName());
+    
+    public Preferences comprobante = Preferences.userRoot().node(this.getClass().getName());
+    public Preferences factura = Preferences.userRoot().node(this.getClass().getName());
+    public Preferences orden = Preferences.userRoot().node(this.getClass().getName());
+    ValidarStyle validar = new ValidarStyle();
     
     
     @FXML
@@ -292,11 +310,130 @@ public class MenuPrincipalContoller implements Initializable {
         
     }
     
-  
+    public void resetarCamposCheque(){
+        PfechaX.put("valor1", "55");
+        PfechaY.put("valor2", "115");
+        
+        PordenX.put("valor3", "64");
+        PordenY.put("valor4", "97");
+        
+        PTotalX.put("valor5", "50");
+        PTotalY.put("valor6", "79");
+        
+        PLetrasX.put("valor7", "378");
+        PLetrasY.put("valor8", "115");
+    }
+    public void resetarCamposComprobante(){
+        comprobante.put("nochequeX", "340");
+        comprobante.put("nochequeY", "130");
+        
+        comprobante.put("fechaX", "136");
+        comprobante.put("fechaY", "148");
+        
+        comprobante.put("ordenX", "130");
+        comprobante.put("ordenY", "175");
+        
+        comprobante.put("totalX", "130");
+        comprobante.put("totalY", "200");
+        
+        comprobante.put("letrasX", "340");
+        comprobante.put("letrasY", "175");
+        
+        comprobante.put("descX", "136");
+        comprobante.put("descY", "290");
+    }
+     public void resetearCamposFactura(){
+        factura.put("diax", "28");
+        factura.put("diay", "395");
+        
+        factura.put("mesx", "68");
+        factura.put("mesy", "395");
+        
+        factura.put("añox", "110");
+        factura.put("añoy", "395");
+        
+        factura.put("nombrex", "70");
+        factura.put("nombrey", "370");
+        
+        factura.put("direccionx", "65");
+        factura.put("direcciony", "360");
+        
+        factura.put("nitx", "218");
+        factura.put("nity", "360");
+        
+        factura.put("tablax", "25");
+        factura.put("tablay", "320");
+        
+        factura.put("descfacx", "70");
+        
+        factura.put("valorx", "227");
+        
+        factura.put("espaciado", "18");
+        
+        factura.put("totalfacx", "232");
+        factura.put("totalfacy", "55");
+    }
+    
+     public void resetearCamposOrden(){
+        orden.put("diaxorden", "28");
+        orden.put("diayorden", "320");
+        
+        orden.put("mesxorden", "68");
+        orden.put("mesyorden", "320");
+        
+        orden.put("añoxorden", "110");
+        orden.put("añoyorden", "320");
+        
+        orden.put("nombrexorden", "68");
+        orden.put("nombreyorden", "297");
+        
+        orden.put("direccionxorden", "68");
+        orden.put("direccionyorden", "279");
+        
+        
+        orden.put("tablaxorden", "28");
+        orden.put("tablayorden", "242");
+        
+        orden.put("descfacxorden", "68");
+        
+        orden.put("valorxorden", "237");
+        
+        orden.put("espaciadoorden", "18");
+        
+        orden.put("totalfacxorden", "240");
+        orden.put("totalfacyorden", "40");
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       
+        if(PfechaX.get("valor1","root").equals("root") || PfechaY.get("valor2","root").equals("root") || PordenX.get("valor3","root").equals("root") || PordenY.get("valor4","root").equals("root")
+                || PTotalX.get("valor5","root").equals("root") || PTotalY.get("valor6","root").equals("root") || PLetrasX.get("valor7","root").equals("root") ||
+                 PLetrasY.get("valor8","root").equals("root") ){
+            resetarCamposCheque();
+        }
+        
+        if(comprobante.get("nochequeX","root").equals("root") || comprobante.get("nochequeY","root").equals("root") || comprobante.get("fechaX","root").equals("root") || comprobante.get("fechaY","root").equals("root")
+                || comprobante.get("ordenX","root").equals("root") || comprobante.get("ordenY","root").equals("root") || comprobante.get("totalX","root").equals("root") ||
+                 comprobante.get("totalY","root").equals("root") || comprobante.get("letrasX","root").equals("root") || comprobante.get("letrasY","root").equals("root") || 
+                comprobante.get("descX","root").equals("root") || comprobante.get("descY","root").equals("root")){
+            resetarCamposComprobante();
+            
+        }
+        
+        if(factura.get("totalfacy","root").equals("root")){
+            resetearCamposFactura();
+        
+        }else{
+                resetearCamposFactura();
+        }
+        
+        if(orden.get("totalfacyorden","root").equals("root")){
+            resetearCamposOrden();
+        
+        }else{
+                resetearCamposOrden();
+        }
+        
         prefsRegresar.put("regresar", "menu");
         prefsRegresarProductos.put("regresarProducto", "menu");
          validar.validarMenu(prefs.get("dark", "root"), anchor);

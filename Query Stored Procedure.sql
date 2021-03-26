@@ -1462,6 +1462,8 @@ DELIMITER $$
 			update Creditos as c
 				set  c.creditoDiasRestantes = TIMESTAMPDIFF(DAY,fechaActual,c.creditoFechaFinal)
                 where c.idCredito>0;
+<<<<<<< HEAD
+=======
         end $$
 DELIMITER ;
 
@@ -1479,6 +1481,7 @@ DELIMITER $$
 		begin
 			update Creditos as c
 				set  c.creditoDiasRestantes = dias;
+>>>>>>> Diego-Gonzalez
         end $$
 DELIMITER ;
 
