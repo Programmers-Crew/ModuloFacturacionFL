@@ -7,18 +7,22 @@ public class InventarioProductos {
     private String productoDesc;
     private String estadoProductoDesc;
     private Double precioCosto;
+    private String tipoProdDesc;
     
     public InventarioProductos() {
     }
 
-    public InventarioProductos(String productoId, int inventarioProductoCant, String proveedorNombre, String productoDesc, String estadoProductoDesc, Double precioCosto) {
+    public InventarioProductos(String productoId, int inventarioProductoCant, String proveedorNombre, String productoDesc, String estadoProductoDesc, Double precioCosto, String tipoProdDesc) {
         this.productoId = productoId;
         this.inventarioProductoCant = inventarioProductoCant;
         this.proveedorNombre = proveedorNombre;
         this.productoDesc = productoDesc;
         this.estadoProductoDesc = estadoProductoDesc;
         this.precioCosto = precioCosto;
+        this.tipoProdDesc = tipoProdDesc;
     }
+
+
 
     public Double getPrecioCosto() {
         return precioCosto;
@@ -76,9 +80,11 @@ public class InventarioProductos {
         this.proveedorNombre = proveedorNombre;
     }
 
+    public String getTipoProdDesc() {
+        return tipoProdDesc;
+    }
 
-
-
-
-    
+    public void setTipoProdDesc(String tipoProdDesc) {
+        this.tipoProdDesc = tipoProdDesc;
+    }
 }

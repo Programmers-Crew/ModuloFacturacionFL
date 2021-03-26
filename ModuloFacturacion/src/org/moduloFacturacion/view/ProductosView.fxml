@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="494.0" prefWidth="865.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.ProductosViewController">
+<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="494.0" prefWidth="865.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.ProductosViewController">
    <children>
       <Pane layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="600.0" styleClass="bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -74,17 +74,17 @@
                                                       </Label>
                                                    </children>
                                                 </HBox>
-                                                <Label layoutX="13.0" layoutY="65.0" text="CÓDIGO:" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="136.6" AnchorPane.topAnchor="65.0" />
-                                                <JFXTextField fx:id="txtCodigoProducto" layoutX="13.0" layoutY="77.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="14.199999999999989" AnchorPane.topAnchor="77.0" />
-                                                <Label layoutX="13.0" layoutY="117.0" prefHeight="18.0" prefWidth="61.0" text="NOMBRE:" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="123.0" AnchorPane.topAnchor="117.0" />
-                                                <JFXTextField fx:id="txtNombreProducto" layoutX="13.0" layoutY="131.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="14.199999999999989" AnchorPane.topAnchor="131.0" />
-                                                <Label layoutX="13.0" layoutY="164.0" text="CATEGORÍA:" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="164.0" />
-                                                <ComboBox fx:id="cmbCategoriaProducto" editable="true" layoutX="13.0" layoutY="189.0" prefHeight="26.0" prefWidth="250.0" styleClass="comboOscuro" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="15.799999999999983" />
-                                                <Label layoutX="13.0" layoutY="226.0" text="PROVEEDOR:" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="226.0" />
-                                                <ComboBox fx:id="cmbProveedorProducto" editable="true" layoutX="13.0" layoutY="245.0" prefHeight="26.0" prefWidth="250.0" styleClass="comboOscuro" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="15.799999999999983" AnchorPane.topAnchor="245.0" />
-                                                <Label layoutX="13.0" layoutY="279.0" prefHeight="18.0" prefWidth="61.0" text="PRECIO:" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="279.0" />
-                                                <JFXTextField fx:id="txtPrecioProducto" layoutX="13.0" layoutY="295.0" onKeyReleased="#validarPrecioProducto" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="295.0" />
-                                                <GridPane layoutX="13.0" layoutY="404.0" prefHeight="30.0" prefWidth="260.0" AnchorPane.bottomAnchor="21.8908943214106" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="12.309090031395272" AnchorPane.topAnchor="404.0">
+                                                <Label layoutX="16.0" layoutY="39.0" text="CÓDIGO:" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="138.6" AnchorPane.topAnchor="39.0" />
+                                                <JFXTextField fx:id="txtCodigoProducto" layoutX="16.0" layoutY="51.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.19999999999999" AnchorPane.topAnchor="51.0" />
+                                                <Label layoutX="16.0" layoutY="91.0" prefHeight="18.0" prefWidth="61.0" text="NOMBRE:" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="91.0" />
+                                                <JFXTextField fx:id="txtNombreProducto" layoutX="16.0" layoutY="105.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.19999999999999" AnchorPane.topAnchor="105.0" />
+                                                <Label layoutX="16.0" layoutY="138.0" text="CATEGORÍA:" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="138.0" />
+                                                <ComboBox fx:id="cmbCategoriaProducto" editable="true" layoutX="16.0" layoutY="163.0" prefHeight="26.0" prefWidth="250.0" styleClass="comboOscuro" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="17.799999999999983" />
+                                                <Label layoutX="16.0" layoutY="200.0" text="PROVEEDOR:" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="200.0" />
+                                                <ComboBox fx:id="cmbProveedorProducto" editable="true" layoutX="16.0" layoutY="219.0" prefHeight="26.0" prefWidth="250.0" styleClass="comboOscuro" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="17.799999999999983" AnchorPane.topAnchor="219.0" />
+                                                <Label layoutX="16.0" layoutY="253.0" prefHeight="18.0" prefWidth="61.0" text="PRECIO:" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="253.0" />
+                                                <JFXTextField fx:id="txtPrecioProducto" layoutX="16.0" layoutY="269.0" onKeyReleased="#validarPrecioProducto" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="269.0" />
+                                                <GridPane layoutX="20.0" layoutY="419.0" prefHeight="30.0" prefWidth="260.0" AnchorPane.bottomAnchor="6.890894321410599" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="15.309090031395272" AnchorPane.topAnchor="419.0">
                                                    <columnConstraints>
                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.20001220703125" minWidth="10.0" prefWidth="70.99998779296875" />
                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="118.0" minWidth="10.0" prefWidth="76.19997558593751" />
@@ -97,13 +97,13 @@
                                                       <HBox alignment="CENTER" prefHeight="27.0" prefWidth="195.0" />
                                                       <JFXButton fx:id="btnAgregar" buttonType="RAISED" onMouseClicked="#btnAgregar" prefHeight="24.0" prefWidth="72.0" styleClass="boton" text="AGREGAR" textFill="WHITE">
                                                          <GridPane.margin>
-                                                            <Insets />
+                                                            <Insets right="5.0" />
                                                          </GridPane.margin>
                                                          <font>
                                                             <Font size="11.0" />
                                                          </font>
                                                       </JFXButton>
-                                                      <JFXButton fx:id="btnEliminar" buttonType="RAISED" onMouseClicked="#btnEliminar" prefHeight="24.0" prefWidth="82.0" styleClass="boton" text="ELIMINAR" textFill="WHITE" GridPane.columnIndex="1">
+                                                      <JFXButton fx:id="btnEliminar" buttonType="RAISED" onMouseClicked="#btnEliminar" prefHeight="24.0" prefWidth="74.0" styleClass="boton" text="ELIMINAR" textFill="WHITE" GridPane.columnIndex="1">
                                                          <GridPane.margin>
                                                             <Insets />
                                                          </GridPane.margin>
@@ -121,8 +121,10 @@
                                                       </JFXButton>
                                                    </children>
                                                 </GridPane>
-                                                <Label layoutX="18.0" layoutY="338.0" prefHeight="18.0" prefWidth="61.0" text="COSTO:" />
-                                                <JFXTextField fx:id="txtCostoProducto" layoutX="16.0" layoutY="348.0" onKeyReleased="#validarPrecioProducto" prefHeight="27.0" prefWidth="216.0" AnchorPane.bottomAnchor="81.38180329125825" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="19.78181694093817" AnchorPane.topAnchor="348.0" />
+                                                <Label layoutX="16.0" layoutY="312.0" prefHeight="18.0" prefWidth="61.0" text="COSTO:" />
+                                                <JFXTextField fx:id="txtCostoProducto" layoutX="19.0" layoutY="322.0" onKeyReleased="#validarPrecioProducto" prefHeight="27.0" prefWidth="216.0" AnchorPane.bottomAnchor="107.38180329125828" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="21.78181694093817" AnchorPane.topAnchor="322.0" />
+                                                <Label layoutX="17.0" layoutY="370.0" prefHeight="18.0" prefWidth="61.0" text="TIPO:" />
+                                                <ComboBox fx:id="cmbTipoProducto" editable="true" layoutX="13.0" layoutY="391.0" prefHeight="31.0" prefWidth="227.0" styleClass="comboOscuro" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="391.0" />
                                              </children>
                                              <padding>
                                                 <Insets left="5.0" />
@@ -145,6 +147,7 @@
                                           <TableColumn fx:id="colProveedorProductos" prefWidth="95.1273193359375" text="PROVEEDOR" />
                                           <TableColumn fx:id="colCostoProductos" prefWidth="91.63623046875" text="COSTO" />
                                           <TableColumn fx:id="colPrecioProductos" prefWidth="91.63623046875" text="PRECIO" />
+                                          <TableColumn fx:id="colTipoProducto" prefWidth="91.63623046875" text="TIPO" />
                                        </columns>
                                     </TableView>
                                     <JFXButton fx:id="btnBuscar" buttonType="RAISED" layoutX="456.0" layoutY="7.0" onMouseClicked="#btnBuscar" prefHeight="63.0" prefWidth="65.0" styleClass="boton" text="BUSCAR" textFill="WHITE" AnchorPane.rightAnchor="29.236346808820258" AnchorPane.topAnchor="7.0" />

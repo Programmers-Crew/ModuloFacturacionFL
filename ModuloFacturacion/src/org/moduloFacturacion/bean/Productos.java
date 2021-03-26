@@ -1,20 +1,30 @@
 package org.moduloFacturacion.bean;
 
 public class Productos {
-    String productoId;
-    String productoDesc;
-    String proveedorNombre;
-    String categoriaNombre;
-    Double precioCosto;
-    Double productoPrecio;
+    private String productoId;
+    private String productoDesc;
+    private String proveedorNombre;
+    private String categoriaNombre;
+    private Double precioCosto;
+    private Double productoPrecio;
+    private String tipoProdDesc;
 
-    public Productos(String productoId, String productoDesc, String proveedorNombre, String categoriaNombre, Double precioCosto, Double productoPrecio) {
+    public Productos(String productoId, String productoDesc, String proveedorNombre, String categoriaNombre, Double precioCosto, Double productoPrecio, String tipoProdDesc) {
         this.productoId = productoId;
         this.productoDesc = productoDesc;
         this.proveedorNombre = proveedorNombre;
         this.categoriaNombre = categoriaNombre;
         this.precioCosto = precioCosto;
         this.productoPrecio = productoPrecio;
+        this.tipoProdDesc = tipoProdDesc;
+    }
+
+    public String getTipoProdDesc() {
+        return tipoProdDesc;
+    }
+
+    public void setTipoProdDesc(String tipoProdDesc) {
+        this.tipoProdDesc = tipoProdDesc;
     }
 
     public Double getPrecioCosto() {

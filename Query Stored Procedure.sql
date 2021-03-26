@@ -150,15 +150,6 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarProveedores(proveedores varchar(7),nombre varchar(50), telefono varchar(8), nit varchar(50))
-		BEGIN
-			insert into Proveedores(proveedorId,proveedorNombre, proveedorTelefono, proveedorNit)
-				values (proveedores , nombre , telefono, nit);
-        END $$
-DELIMITER ;
-
-
-DELIMITER $$
 	create procedure SpActualizarProveedor(idBuscado varchar(7), nuevoCodigo varchar(7),nuevoNombre varchar(50), nuevoTelefono varchar(8),  nit varchar(20))
 		BEGIN
 			update Proveedores
@@ -275,18 +266,43 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
+#----------------------- TipoProductos
+DELIMITER $$
+	create procedure SpListarTipoProductos()
+		begin
+			select tipoProdId,tipoProdDesc
+				from tipoproducto;
+        end $$
+DELIMITER ;
 
 #-------------------------- Entidad de productos
 DELIMITER $$
 	create procedure SpListarProductos()
 		BEGIN
-			select pr.productoId, pr.productoDesc, p.proveedorNombre, cp.categoriaNombre , pr.precioCosto,pr.productoPrecio
-				from Productos as pr
-					inner join Proveedores as p
-						on pr.proveedorId = p.proveedorId
-							inner join CategoriaProductos as cp
-								on pr.categoriaId = cp.categoriaId 
-									order by pr.productoId ASC
+			select 
+				pr.productoId,
+                pr.productoDesc,
+                p.proveedorNombre,
+                cp.categoriaNombre,
+                pr.precioCosto,
+                pr.productoPrecio,
+                tp.tipoProdDesc
+			from 
+				Productos as pr
+			inner join
+				Proveedores as p
+			on 
+				pr.proveedorId = p.proveedorId
+			inner join 
+				CategoriaProductos as cp
+			on
+				pr.categoriaId = cp.categoriaId 
+			inner join 
+				tipoProducto as tp
+			on 
+				pr.tipoProductoId = tp.tipoProdId
+			order by
+				pr.productoId ASC
 										;
         END $$
 DELIMITER ;
@@ -294,32 +310,49 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpListarProductosPorProveedor(proveedor varchar(50))
 		BEGIN
-			select pr.productoId, pr.productoDesc, p.proveedorNombre, cp.categoriaNombre , pr.precioCosto,pr.productoPrecio
-				from Productos as pr
-					inner join Proveedores as p
-						on pr.proveedorId = p.proveedorId
-							inner join CategoriaProductos as cp
-								on pr.categoriaId = cp.categoriaId 
-									where proveedorNombre=proveedor
-									order by pr.productoId ASC;
+			select 
+				pr.productoId,
+                pr.productoDesc,
+                p.proveedorNombre,
+                cp.categoriaNombre,
+                pr.precioCosto,
+                pr.productoPrecio,
+                tp.tipoProdDesc
+			from 
+				Productos as pr
+			inner join
+				Proveedores as p
+			on 
+				pr.proveedorId = p.proveedorId
+			inner join 
+				CategoriaProductos as cp
+			on
+				pr.categoriaId = cp.categoriaId 
+			inner join 
+				tipoProducto as tp
+			on 
+				pr.tipoProductoId = tp.tipoProdId
+			where proveedorNombre=proveedor
+			order by pr.productoId ASC;
         END $$
 DELIMITER ;
 
 
 DELIMITER $$
-	create procedure SpAgregarProductos(id varchar(7), descr varchar(50), provId varchar(7), catId varchar(7), costo decimal(10,2),precio decimal(10,2))
+	create procedure SpAgregarProductos(id varchar(7), descr varchar(50), provId varchar(7), catId varchar(7), costo decimal(10,2),precio decimal(10,2), tipoProducto int)
 		BEGIN
-			insert into Productos(productoId, productoDesc, proveedorId, categoriaId, precioCosto,productoPrecio)
-				values(id, descr, provId, catId, costo,precio);
+			insert into Productos(productoId, productoDesc, proveedorId, categoriaId, precioCosto,productoPrecio,tipoProductoId)
+				values(id, descr, provId, catId, costo,precio, tipoProducto);
         END $$
 DELIMITER ;
 
 
 DELIMITER $$
-	create procedure SpActualizarProductos(idBuscado varchar(7),id varchar(7), descr varchar(50), costo decimal(10,2),precio decimal(10,2))
+	create procedure SpActualizarProductos(idBuscado varchar(7),descr varchar(50), costo decimal(10,2),precio decimal(10,2))
 		BEGIN
 			update Productos
-				set productoId = id, productoDesc = descr,
+				set
+					productoDesc = descr,
 					precioCosto = costo,
 					productoPrecio = precio
 					where productoId = idBuscado;
@@ -330,28 +363,60 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpBuscarProductos(idBuscado varchar(7))
 		BEGIN
-			select pr.productoId, pr.productoDesc, p.proveedorNombre, cp.categoriaNombre ,pr.precioCosto,pr.productoPrecio
-				from Productos as pr
-					inner join Proveedores as p
-						on pr.proveedorId = p.proveedorId
-							inner join CategoriaProductos as cp
-								on pr.categoriaId = cp.categoriaId
-									where pr.productoId = idBuscado
-										order by pr.productoId ASC;
+select 
+				pr.productoId,
+                pr.productoDesc,
+                p.proveedorNombre,
+                cp.categoriaNombre,
+                pr.precioCosto,
+                pr.productoPrecio,
+                tp.tipoProdDesc
+			from 
+				Productos as pr
+			inner join
+				Proveedores as p
+			on 
+				pr.proveedorId = p.proveedorId
+			inner join 
+				CategoriaProductos as cp
+			on
+				pr.categoriaId = cp.categoriaId 
+			inner join 
+				tipoProducto as tp
+			on 
+				pr.tipoProductoId = tp.tipoProdId
+			where pr.productoId = idBuscado
+			order by pr.productoId ASC;
         END $$
 DELIMITER ;
 
 DELIMITER $$
 create procedure SpBuscarProductosNombre(nombreProductos varchar(50))
 		BEGIN
-			select pr.productoId, pr.productoDesc, p.proveedorNombre, cp.categoriaNombre , pr.precioCosto,pr.productoPrecio
-				from Productos as pr
-					inner join Proveedores as p
-						on pr.proveedorId = p.proveedorId
-							inner join CategoriaProductos as cp
-								on pr.categoriaId = cp.categoriaId
-									where pr.productoDesc = nombreProductos
-										order by pr.productoId ASC;
+select 
+				pr.productoId,
+                pr.productoDesc,
+                p.proveedorNombre,
+                cp.categoriaNombre,
+                pr.precioCosto,
+                pr.productoPrecio,
+                tp.tipoProdDesc
+			from 
+				Productos as pr
+			inner join
+				Proveedores as p
+			on 
+				pr.proveedorId = p.proveedorId
+			inner join 
+				CategoriaProductos as cp
+			on
+				pr.categoriaId = cp.categoriaId 
+			inner join 
+				tipoProducto as tp
+			on 
+				pr.tipoProductoId = tp.tipoProdId
+			where pr.productoDesc = nombreProductos
+			order by pr.productoId ASC;
         END $$
 DELIMITER ;
 
@@ -381,18 +446,30 @@ DELIMITER $$
 DELIMITER ;
 
 #----------------- Entidad Inventario de productos
+
 DELIMITER $$
 	create procedure SpListarInventarioProductos()
 		BEGIN
-			select p.productoId,ip.inventarioProductoCant, pr.proveedorNombre , p.productoDesc, ep.estadoProductoDesc, p.precioCosto
-				from InventarioProductos as ip
-					inner join Productos as p
-						on ip.productoId = p.productoId
-							inner join EstadoProductos as ep
-								on ip.estadoProductoId = ep.estadoProductoId
-									inner join Proveedores as pr
-										on p.proveedorId = pr.proveedorId
-											order by p.productoId ASC;
+			select
+				p.productoId,
+                ip.inventarioProductoCant,
+                pr.proveedorNombre,
+                p.productoDesc,
+                ep.estadoProductoDesc,
+                p.precioCosto,
+                tp.tipoProdDesc
+		from
+			InventarioProductos as ip
+		inner join Productos as p
+			on ip.productoId = p.productoId
+		inner join EstadoProductos as ep
+			on ip.estadoProductoId = ep.estadoProductoId
+		inner join Proveedores as pr
+			on p.proveedorId = pr.proveedorId
+		inner join tipoproducto as tp
+			on p.tipoProductoId = tp.tipoProdId
+		order by 
+			p.productoId ASC;
         END $$
 DELIMITER ;
 
@@ -417,32 +494,52 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpBuscarInventarioProductos(idBuscado varchar(7))
 		BEGIN
-			select p.productoId,ip.inventarioProductoCant, pr.proveedorNombre , p.productoDesc, ep.estadoProductoDesc, p.precioCosto
-				from InventarioProductos as ip
-					inner join Productos as p
-						on ip.productoId = p.productoId
-							inner join EstadoProductos as ep
-								on ip.estadoProductoId = ep.estadoProductoId
-									inner join Proveedores as pr
-										on p.proveedorId = pr.proveedorId
-											where p.productoId = idBuscado
-												order by p.productoId ASC;
+			select
+				p.productoId,
+                ip.inventarioProductoCant,
+                pr.proveedorNombre,
+                p.productoDesc,
+                ep.estadoProductoDesc,
+                p.precioCosto,
+                tp.tipoProdDesc
+		from
+			InventarioProductos as ip
+		inner join Productos as p
+			on ip.productoId = p.productoId
+		inner join EstadoProductos as ep
+			on ip.estadoProductoId = ep.estadoProductoId
+		inner join Proveedores as pr
+			on p.proveedorId = pr.proveedorId
+		inner join tipoproducto as tp
+			on p.tipoProductoId = tp.tipoProdId
+		where p.productoId = idBuscado
+		order by p.productoId ASC;
         END $$
 DELIMITER ;
 
 DELIMITER $$
 	create procedure SpBuscarInventarioProductosNombre(nombre varchar(100))
 		BEGIN
-			select p.productoId,ip.inventarioProductoCant, pr.proveedorNombre , p.productoDesc, ep.estadoProductoDesc, p.precioCosto
-				from InventarioProductos as ip
-					inner join Productos as p
-						on ip.productoId = p.productoId
-							inner join EstadoProductos as ep
-								on ip.estadoProductoId = ep.estadoProductoId
-									inner join Proveedores as pr
-										on p.proveedorId = pr.proveedorId
-											where p.productoDesc = nombre
-												order by p.productoId ASC;
+			select
+				p.productoId,
+                ip.inventarioProductoCant,
+                pr.proveedorNombre,
+                p.productoDesc,
+                ep.estadoProductoDesc,
+                p.precioCosto,
+                tp.tipoProdDesc
+		from
+			InventarioProductos as ip
+		inner join Productos as p
+			on ip.productoId = p.productoId
+		inner join EstadoProductos as ep
+			on ip.estadoProductoId = ep.estadoProductoId
+		inner join Proveedores as pr
+			on p.proveedorId = pr.proveedorId
+		inner join tipoproducto as tp
+			on p.tipoProductoId = tp.tipoProdId
+		where p.productoDesc = nombre
+		order by p.productoId ASC;
         END $$
 DELIMITER ;
 
@@ -591,7 +688,13 @@ DELIMITER $$
 		END $$
 DELIMITER ;
 
-
+DELIMITER $$
+	create procedure SpEliminarFac(numero int)
+		begin
+			delete from facturas
+				where codigo = numero;
+        end$$
+DELIMITER ;
 
 DELIMITER $$
 	create procedure SpListarFacturaDetalle()
@@ -819,6 +922,15 @@ DELIMITER ;
 		END $$
 	DELIMITER ;
 
+DELIMITER $$
+	CREATE PROCEDURE  SpLoginAdmin(usuarioNom varchar(100), pass varchar(100))
+		BEGIN
+			select u.usuarioNombre, u.usuarioPassword
+				from usuarios as u
+					where (u.usuarioNombre = usuarioNom and u.usuarioPassword = pass) and tipoUsuarioId = 1;
+		END $$
+	DELIMITER ;
+
 
 	DELIMITER $$
 
@@ -965,6 +1077,15 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
+DELIMITER $$
+	create procedure SpRestarProductos(idBuscado varchar(7), cantidad int)
+		BEGIN 
+			update inventarioproductos as ip
+					set ip.inventarioProductoCant = ip.inventarioProductoCant - cantidad
+						where ip.productoId = idBuscado ;
+        END $$
+DELIMITER ;
+
 
 DELIMITER $$
 	create procedure SpDatoReporteVentas(fechaCorte date)
@@ -1089,14 +1210,16 @@ insert into tipofactua(tipoFactura,tipoFacturaDesc)
 	values(1,"FACTURA"),(2,"ORDEN DE COMPRA");
     
 insert into estadofactura(estadoFactura,estadoFacturaDesc)
-	values(1,"Activa"), (2,"Cancelada");
+	values(1,"ACTIVA"), (2,"ORDEN DE COMPRA");
     
-insert into tipousuario values(0,"Administrador"),(0,"Empleado");
+insert into tipousuario values(0,"ADMINISTRADOR"),(0,"EMPLEADO");
 
 insert into usuarios values(0,"admin", "admin", 1);
 INSERT INTO clientes(clienteNit,clienteNombre) values("C/F","C/F");
 
 insert into EstadoCredito values(1, "PENDIENTE"),(2, "PAGADO"),(3, "VENCIDO");
+
+insert into tipoproducto values (1,'BIEN'),(2,'SERVICIO');
 
 DELIMITER $$
 	create procedure Sp_DevolucionProductos(idBuscado int)

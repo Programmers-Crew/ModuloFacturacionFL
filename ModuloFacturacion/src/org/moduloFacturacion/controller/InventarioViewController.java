@@ -71,10 +71,12 @@ public class InventarioViewController implements Initializable {
     Animations animacion = new Animations();
     @FXML
     private JFXButton btnAgregarInventario1;
+    @FXML
+    private JFXButton btnBuscarInventario1;
 
 
 
-    public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, SUMAR};
+    public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, SUMAR, RESTAR};
     public Operacion cancelar = Operacion.NINGUNO;
     
     // Variables para Inventario
@@ -132,6 +134,10 @@ public class InventarioViewController implements Initializable {
     private TableColumn<InventarioProductos, String> colEstadoInventario;
     @FXML
     private TableColumn<InventarioProductos, Double> colPrecioInventario;
+    @FXML
+    private JFXButton btnRestarInventario;
+    @FXML
+    private TableColumn<InventarioProductos, String> colTipoProducto;
     @FXML
     private JFXButton btnBuscarInventario;
     @FXML
@@ -229,7 +235,8 @@ public class InventarioViewController implements Initializable {
                             rs.getString("proveedorNombre"),
                             rs.getString("productoDesc"),
                             rs.getString("estadoProductoDesc"),
-                            rs.getDouble("precioCosto")
+                            rs.getDouble("precioCosto"),
+                            rs.getString("tipoProdDesc")
                 ));
                 comboCodigoFiltro.add(x, rs.getString("productoId"));
                 x++;
@@ -285,6 +292,7 @@ public class InventarioViewController implements Initializable {
         colEstadoInventario.setCellValueFactory(new PropertyValueFactory("estadoProductoDesc"));
         colEstadoInventario.setCellValueFactory(new PropertyValueFactory("estadoProductoDesc"));
         colPrecioInventario.setCellValueFactory(new PropertyValueFactory("precioCosto"));
+        colTipoProducto.setCellValueFactory(new PropertyValueFactory("tipoProdDesc"));
         limpiarText();
        
         llenarComboEstado();
@@ -661,6 +669,56 @@ public class InventarioViewController implements Initializable {
                     accionInventario();
                 }
                 break;
+            case RESTAR:
+                alert.setTitle("RESTAR PRODUCTO");
+                alert.setHeaderText("RESTAR PRODUCTO");
+                alert.setContentText("¿Está seguro que desea restar esta cantidad?");
+                
+                alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
+                
+                Optional<ButtonType> resultResta = alert.showAndWait();
+                if(resultResta.get() == buttonTypeSi ){
+                    try {
+                        ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                        ps.execute();
+                        
+                        noti.graphic(new ImageView(imgCorrecto));
+                        noti.title("OPERACIÓN EXITOSA");
+                        noti.text("SE HA ACTUALIZADO LA CANTIDAD EXITOSAMENTE");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        tipoOperacionInventario = Operacion.CANCELAR;
+                        accionInventario();
+                        
+                        cargarDatos();
+                        
+                    }catch (SQLException ex) {
+                        ex.printStackTrace();
+                        noti.graphic(new ImageView(imgError));
+                        noti.title("ERROR AL SUMAR");
+                        noti.text("HA OCURRIDO UN ERROR AL SUMAR");
+                        noti.position(Pos.BOTTOM_RIGHT);
+                        noti.hideAfter(Duration.seconds(4));
+                        noti.darkStyle();
+                        noti.show();
+                        tipoOperacionInventario = Operacion.CANCELAR;
+                        accionInventario();
+                    }
+                }else{
+                    
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("OPERACIÓN CANCELADA");
+                    noti.text("NO SE HA AGREGADO EL REGISTRO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                    tipoOperacionInventario = Operacion.CANCELAR;
+                    accionInventario();
+                }
+                break;
         }
     }
     
@@ -734,6 +792,29 @@ public class InventarioViewController implements Initializable {
                     accionInventario();
     }
     
+    
+           @FXML
+    private void btnRestar(MouseEvent event) {
+           if(cmbCodigoProductoInventario.getValue().equals("") || txtCantidadInventario.getText().isEmpty()){
+                    Notifications noti = Notifications.create();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR");
+                    noti.text("HAY CAMPOS VACÍOS");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();   
+                    noti.show();
+           }else{
+                   InventarioProductos nuevoInventario = new InventarioProductos();
+                   nuevoInventario.setProductoId(cmbCodigoProductoInventario.getValue());
+                   nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
+
+                   String sql = "{call SpRestarProductos('"+nuevoInventario.getProductoId()+"','"+ nuevoInventario.getInventarioProductoCant()+"')}";
+                   tipoOperacionInventario = Operacion.RESTAR;
+                   accion(sql);                   
+                }
+                   accionInventario();
+    }
     
     @FXML
     public void buscarProducto(){
