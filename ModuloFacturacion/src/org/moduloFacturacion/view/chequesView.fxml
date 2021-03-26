@@ -256,6 +256,95 @@
                   </AnchorPane>
                </content>
             </Tab>
+            <Tab onSelectionChanged="#preferencesCargar" styleClass="tabItem">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.46944307540660424" layoutX="415.0" layoutY="157.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <Label layoutX="144.0" layoutY="14.0" prefHeight="31.0" prefWidth="90.0" text="CHEQUE">
+                                       <font>
+                                          <Font size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="37.0" layoutY="94.0" text="Fecha Y Lugar:" />
+                                    <Label layoutX="31.0" layoutY="125.0" text="X:" />
+                                    <Label layoutX="109.0" layoutY="125.0" text="y:" />
+                                    <TextField fx:id="fechaX" layoutX="48.0" layoutY="121.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <TextField fx:id="fechaY" layoutX="124.0" layoutY="121.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="204.0" layoutY="94.0" text="Pago a la orden de:" />
+                                    <Label layoutX="199.0" layoutY="126.0" text="X:" />
+                                    <Label layoutX="265.0" layoutY="127.0" text="y:" />
+                                    <TextField fx:id="ordenX" layoutX="213.0" layoutY="122.0" prefHeight="26.0" prefWidth="40.0" />
+                                    <TextField fx:id="OrdenY" layoutX="283.0" layoutY="122.0" prefHeight="26.0" prefWidth="40.0" />
+                                    <Label layoutX="41.0" layoutY="157.0" text="Total Números:" />
+                                    <Label layoutX="36.0" layoutY="189.0" text="X:" />
+                                    <Label layoutX="102.0" layoutY="190.0" text="y:" />
+                                    <TextField fx:id="totalX" layoutX="50.0" layoutY="185.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <TextField fx:id="totalY" layoutX="120.0" layoutY="185.0" prefHeight="26.0" prefWidth="56.0" />
+                                    <Label layoutX="208.0" layoutY="158.0" text="Total Letras:" />
+                                    <Label layoutX="203.0" layoutY="190.0" text="X:" />
+                                    <Label layoutX="269.0" layoutY="191.0" text="y:" />
+                                    <TextField fx:id="letrasX" layoutX="217.0" layoutY="186.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <TextField fx:id="letrasY" layoutX="287.0" layoutY="186.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <Button layoutX="153.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#guardarPreferences" styleClass="boton" text="GUARDAR" textFill="#f8f8f8" />
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <Label layoutX="219.0" layoutY="201.0" text="Descripción de pago:" />
+                                    <Label layoutX="214.0" layoutY="233.0" text="X:" />
+                                    <Label layoutX="280.0" layoutY="234.0" text="y:" />
+                                    <TextField fx:id="descX" layoutX="228.0" layoutY="229.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <TextField fx:id="descY" layoutX="298.0" layoutY="229.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <Label layoutX="135.0" layoutY="21.0" prefHeight="31.0" prefWidth="157.0" text="COMPROBANTE:">
+                                       <font>
+                                          <Font size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="47.0" layoutY="64.0" text="No. cheque:" />
+                                    <Label layoutX="43.0" layoutY="96.0" text="X:" />
+                                    <Label layoutX="109.0" layoutY="97.0" text="y:" />
+                                    <TextField fx:id="CNoChequeX" layoutX="57.0" layoutY="92.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <TextField fx:id="CNoChequeY" layoutX="127.0" layoutY="92.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <Label layoutX="52.0" layoutY="131.0" text="Pago a la orden de:" />
+                                    <Label layoutX="47.0" layoutY="163.0" text="X:" />
+                                    <Label layoutX="113.0" layoutY="164.0" text="y:" />
+                                    <TextField fx:id="CordenX" layoutX="61.0" layoutY="159.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <TextField fx:id="CordenY" layoutX="131.0" layoutY="159.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <Label layoutX="47.0" layoutY="201.0" text="Total Letras:" />
+                                    <Label layoutX="42.0" layoutY="233.0" text="X:" />
+                                    <Label layoutX="108.0" layoutY="234.0" text="y:" />
+                                    <TextField fx:id="CletrasX" layoutX="56.0" layoutY="229.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <TextField fx:id="CletrasY" layoutX="126.0" layoutY="229.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <Label layoutX="225.0" layoutY="65.0" text="Fecha Y Lugar:" />
+                                    <Label layoutX="219.0" layoutY="96.0" text="X:" />
+                                    <Label layoutX="286.0" layoutY="96.0" text="y:" />
+                                    <TextField fx:id="CfechaX" layoutX="236.0" layoutY="92.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <TextField fx:id="CfechaY" layoutX="302.0" layoutY="92.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <Label layoutX="223.0" layoutY="132.0" text="Total Números:" />
+                                    <Label layoutX="218.0" layoutY="164.0" text="X:" />
+                                    <Label layoutX="284.0" layoutY="165.0" text="y:" />
+                                    <TextField fx:id="CtotalX" layoutX="232.0" layoutY="160.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <TextField fx:id="CtotalY" layoutX="302.0" layoutY="160.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <Button layoutX="178.0" layoutY="299.0" mnemonicParsing="false" onMouseClicked="#guardarPreferencesComprobante" styleClass="boton" text="GUARDAR" textFill="#f8f8f8" />
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/categoriaNombre.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Tab>
          </tabs>
       </TabPane>
    </children>

@@ -1333,7 +1333,8 @@ DELIMITER $$
 	create procedure SpRestarDias(fechaActual date)
 		begin
 			update Creditos as c
-				set  c.creditoDiasRestantes = c.creditoFechaFinal - fechaActual;
+				set  c.creditoDiasRestantes = TIMESTAMPDIFF(DAY,fechaActual,c.creditoFechaFinal)
+                where c.idCredito>0;
         end $$
 DELIMITER ;
 

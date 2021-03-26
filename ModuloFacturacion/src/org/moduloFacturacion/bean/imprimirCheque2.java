@@ -10,6 +10,7 @@ import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterJob;
+import org.moduloFacturacion.controller.MenuPrincipalContoller;
 
 /**
  *
@@ -19,6 +20,19 @@ public class imprimirCheque2 implements Printable{
      PrinterJob printerJob;
     String lugarYfecha,ordenDe,suma,valorTotal;
     double cantidad;
+    MenuPrincipalContoller menu = new MenuPrincipalContoller();
+    float fechaX = Float.parseFloat(menu.PfechaX.get("valor1", "root"));
+    float fechaY = Float.parseFloat(menu.PfechaY.get("valor2", "root"));
+    
+    float ordenX = Float.parseFloat(menu.PordenX.get("valor3", "root"));
+    float ordenY = Float.parseFloat(menu.PordenY.get("valor4", "root"));
+    
+    float totalX = Float.parseFloat(menu.PTotalX.get("valor5", "root"));
+    float totalY = Float.parseFloat(menu.PTotalY.get("valor6", "root"));
+    
+    float letrasX = Float.parseFloat(menu.PLetrasX.get("valor7", "root"));
+    float letrasY = Float.parseFloat(menu.PLetrasY.get("valor8", "root"));
+    
     public imprimirCheque2(){
         super();
         printerJob=PrinterJob.getPrinterJob();
@@ -48,10 +62,11 @@ public class imprimirCheque2 implements Printable{
         affineTransform.rotate(Math.toRadians(-270),0, 0);
         Font rotatedFont = font.deriveFont(affineTransform);
         g2d.setFont(rotatedFont);
-        g2d.drawString(lugarYfecha, 115,55);
-        g2d.drawString(ordenDe,97, 64);
-        g2d.drawString(String.valueOf(suma),79,50);
-        g2d.drawString(valorTotal,115,378);
+        g2d.drawString(lugarYfecha, fechaY,fechaX);
+        
+        g2d.drawString(ordenDe,ordenY, ordenX);
+        g2d.drawString(String.valueOf(suma),totalY,totalX);
+        g2d.drawString(valorTotal,letrasY,letrasX);
         
     }
     

@@ -5,25 +5,18 @@
  */
 package org.moduloFacturacion.bean;
 
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.font.FontRenderContext;
-import java.awt.font.LineBreakMeasurer;
-import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterJob;
-import java.text.AttributedCharacterIterator;
-import java.text.AttributedString;
 import java.time.LocalDate;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import org.moduloFacturacion.controller.MenuPrincipalContoller;
 
     
 
@@ -36,8 +29,33 @@ public class imprimirCheque implements Printable{
     String chequeNo;
     String lugarYfecha,ordenDe,suma,valorTotal,desc;
     Image img= new Image("org/moduloFacturacion/img/comprobantecheque.png");
+    
     BufferedImage image = SwingFXUtils.fromFXImage(img, null);
     LocalDate fechaActual = LocalDate.now();
+    
+    MenuPrincipalContoller menu = new MenuPrincipalContoller();
+    
+    float chequeNoX = Float.parseFloat(menu.comprobante.get("nochequeX", "root"));
+    float chequeNoY = Float.parseFloat(menu.comprobante.get("nochequeY", "root"));
+    
+    
+    float fechaX = Float.parseFloat(menu.comprobante.get("fechaX", "root"));
+    float fechaY = Float.parseFloat(menu.comprobante.get("fechaY", "root"));
+    
+    float ordenX = Float.parseFloat(menu.comprobante.get("ordenX", "root"));
+    float ordenY = Float.parseFloat(menu.comprobante.get("ordenY", "root"));
+    
+    float totalX = Float.parseFloat(menu.comprobante.get("totalX", "root"));
+    float totalY = Float.parseFloat(menu.comprobante.get("totalY", "root"));
+    
+    float letrasX = Float.parseFloat(menu.comprobante.get("letrasX", "root"));
+    float letrasY = Float.parseFloat(menu.comprobante.get("letrasY", "root"));
+    
+    
+    float descX = Float.parseFloat(menu.comprobante.get("descX", "root"));
+    float descY = Float.parseFloat(menu.comprobante.get("descY", "root"));
+    
+    
     public imprimirCheque(){
         super();
         printerJob=PrinterJob.getPrinterJob();
@@ -64,13 +82,12 @@ public class imprimirCheque implements Printable{
     public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){
         
         g2d.drawImage(image, 25,25,400, 500,null);
-        g2d.drawString(chequeNo,340,130);
-        g2d.drawString(lugarYfecha,136, 148);
-        g2d.drawString(ordenDe,130,175);
-        g2d.drawString(valorTotal, 340, 175);
-        g2d.drawString(String.valueOf(suma),130,200);     
-        
-         g2d.drawString(desc, 136, 290);
+        g2d.drawString(chequeNo,chequeNoX,chequeNoY);
+        g2d.drawString(lugarYfecha,fechaX, fechaY);
+        g2d.drawString(ordenDe,ordenX,ordenY);
+        g2d.drawString(String.valueOf(suma),totalX,totalY);     
+        g2d.drawString(valorTotal, letrasX, letrasY);
+         g2d.drawString(desc, descX, descY);
         g2d.drawString(String.valueOf(fechaActual), 136, 495);
          String[] arreglo = desc.split("\n");
          float x= 136;
