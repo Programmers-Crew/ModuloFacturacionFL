@@ -30,7 +30,7 @@ import org.moduloFacturacion.bean.ValidarStyle;
 import org.moduloFacturacion.db.Conexion;
 import org.moduloFacturacion.controller.FacturacionViewController;
 
-public class EliminarFacturaController implements Initializable {
+public class EliminarChequeController implements Initializable {
 
     @FXML
     private AnchorPane anchor;
@@ -98,7 +98,7 @@ public class EliminarFacturaController implements Initializable {
                         noti.show();
 
             }else{
-                 String sql2 = "{call SpEliminarFac('"+txtNumeroFactura.getText()+"')}";
+                 String sql2 = "{call SpEliminarCheque('"+txtNumeroFactura.getText()+"')}";
                 ps = Conexion.getIntance().getConexion().prepareCall(sql2);
                 rs = ps.executeQuery();
                 

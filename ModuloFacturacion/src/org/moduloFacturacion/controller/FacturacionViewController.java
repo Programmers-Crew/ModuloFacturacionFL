@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import java.awt.print.PrinterJob;
+import javafx.scene.control.TextField; 
 
 import java.io.IOException;
 import static java.lang.Integer.parseInt;
@@ -129,8 +130,8 @@ public class FacturacionViewController implements Initializable {
     private TextField nombrefacx;
     @FXML
     private TextField nombrefacy;
+     @FXML
     private TextField direccionfacx;
-    @FXML
     @FXML
     private TextField direccionfacy;
     @FXML
@@ -162,10 +163,9 @@ public class FacturacionViewController implements Initializable {
     private TextField direccionordeny;
     @FXML
     private TextField tablaordenx;
+     @FXML
     private TextField tablaordeny;
-    @FXML
-    @FXML
-    @FXML
+      @FXML
     private TextField nombreordeny;
     @FXML
     private TextField nombreordenx;
@@ -1872,144 +1872,139 @@ public String buscarCodigoProducto(String precioProductos){
 		};
 
     
-    @FXML
-    private void guardarPreferencesFactura(MouseEvent event) {
-        menu.factura.put("diax", diafacx.getText());
-        menu.factura.put("diay", diafacy.getText());
-        
-        menu.factura.put("mesx", mesfacx.getText());
-        menu.factura.put("mesy", mesfacy.getText());
-        
-        menu.factura.put("añox", añofacx.getText());
-        menu.factura.put("añoy", añofacy.getText());
-        
-        menu.factura.put("nombrex", nombrefacx.getText());
-        menu.factura.put("nombrey", nombrefacy.getText());
-        
-        menu.factura.put("direccionx", direccionfacx.getText());
-        menu.factura.put("direcciony", direccionfacy.getText());
-        
-        menu.factura.put("nitx", nitfacx.getText());
-        menu.factura.put("nity", nitfacy.getText());
-        
-        menu.factura.put("tablax", tablafacx.getText());
-        menu.factura.put("tablay", tablafacy.getText());
-        
-        menu.factura.put("descfacx", descfacx.getText());
-        
-        
-        menu.factura.put("valorx", valorfacx.getText());
-        
-        
-        menu.factura.put("espaciado", espaciadofac.getText());
-        
-        menu.factura.put("totalfacx", totalfacx.getText());
-        menu.factura.put("totalfacy", totalfacy.getText());
-        
-    }
-    
-    @FXML
-    private void guardarPreferencesOrden(MouseEvent event) {
-        menu.factura.put("diaxorden", diaordenx.getText());
-        menu.factura.put("diayorden", diaordeny.getText());
-        
-        menu.factura.put("mesxorden", mesordenx.getText());
-        menu.factura.put("mesyorden", mesordeny.getText());
-        
-        menu.factura.put("añoxorden", añoordenx.getText());
-        menu.factura.put("añoyorden", añoordeny.getText());
-        
-        menu.factura.put("nombrexorden", nombreordenx.getText());
-        menu.factura.put("nombreyorden", nombreordeny.getText());
-        
-        menu.factura.put("direccionxorden", direccionordenx.getText());
-        menu.factura.put("direccionyorden", direccionordeny.getText());
-        
-        
-        menu.factura.put("tablaxorden", tablaordenx.getText());
-        menu.factura.put("tablayorden", tablaordeny.getText());
-        
-        menu.factura.put("descfacxorden", descordenx.getText());
-        
-        
-        menu.factura.put("valorxorden", valorordenx.getText());
-        
-        
-        menu.factura.put("espaciadoorden", espaciadoorden.getText());
-        
-        menu.factura.put("totalfacxorden", totalordenx.getText());
-        menu.factura.put("totalfacyorden", totalordeny.getText());
-    }
-    
-    @FXML
-    private void preferencesCargar(Event event) {
-        diafacx.setText(menu.factura.get("diax", "root"));
-        diafacy.setText(menu.factura.get("diay", "root"));
-        
-        mesfacx.setText(menu.factura.get("mesx", "root"));
-        mesfacy.setText(menu.factura.get("mesy", "root"));
-        
-        
-        añofacx.setText(menu.factura.get("añox", "root"));
-        añofacy.setText(menu.factura.get("añoy", "root"));
-        
-        nombrefacx.setText(menu.factura.get("nombrex", "root"));
-        nombrefacy.setText(menu.factura.get("nombrey", "root"));
-        
-        direccionfacx.setText(menu.factura.get("direccionx", "root"));
-        direccionfacy.setText(menu.factura.get("direcciony", "root"));
-        
-        nitfacx.setText(menu.factura.get("nitx", "root"));
-        nitfacy.setText(menu.factura.get("nity", "root"));
-        
-        tablafacx.setText(menu.factura.get("tablax", "root"));
-        tablafacy.setText(menu.factura.get("tablay", "root"));
-        
-        descfacx.setText(menu.factura.get("descfacx", "root"));
-        
-        valorfacx.setText(menu.factura.get("valorx", "root"));
-        
-        espaciadofac.setText(menu.factura.get("espaciado", "root"));
-        
-        totalfacx.setText(menu.factura.get("totalfacx", "root"));
-        totalfacy.setText(menu.factura.get("totalfacy", "root"));
-        
-        
-        
-        
-        diaordenx.setText(menu.orden.get("diaxorden", "root"));
-        diaordeny.setText(menu.orden.get("diayorden", "root"));
-        
-        mesordenx.setText(menu.orden.get("mesxorden", "root"));
-        mesordeny.setText(menu.orden.get("mesyorden", "root"));
-        
-        
-        añoordenx.setText(menu.orden.get("añoxorden", "root"));
-        añoordeny.setText(menu.orden.get("añoyorden", "root"));
-        
-        nombreordenx.setText(menu.orden.get("nombrexorden", "root"));
-        nombreordeny.setText(menu.orden.get("nombreyorden", "root"));
-        
-        direccionordenx.setText(menu.orden.get("direccionxorden", "root"));
-        direccionordeny.setText(menu.orden.get("direccionyorden", "root"));
-        
-        
-        tablaordenx.setText(menu.orden.get("tablaxorden", "root"));
-        tablaordeny.setText(menu.orden.get("tablayorden", "root"));
-        
-        descordenx.setText(menu.orden.get("descfacxorden", "root"));
-        
-        valorordenx.setText(menu.orden.get("valorxorden", "root"));
-        
-        espaciadoorden.setText(menu.orden.get("espaciadoorden", "root"));
-        
-        totalordenx.setText(menu.orden.get("totalfacxorden", "root"));
-        totalordeny.setText(menu.orden.get("totalfacyorden", "root"));
-        
-        
-    }
-    
-    
-    
-    
+@FXML 
+    private void guardarPreferencesFactura(MouseEvent event) { 
+        menu.factura.put("diax", diafacx.getText()); 
+        menu.factura.put("diay", diafacy.getText()); 
+         
+        menu.factura.put("mesx", mesfacx.getText()); 
+        menu.factura.put("mesy", mesfacy.getText()); 
+         
+        menu.factura.put("añox", añofacx.getText()); 
+        menu.factura.put("añoy", añofacy.getText()); 
+         
+        menu.factura.put("nombrex", nombrefacx.getText()); 
+        menu.factura.put("nombrey", nombrefacy.getText()); 
+         
+        menu.factura.put("direccionx", direccionfacx.getText()); 
+        menu.factura.put("direcciony", direccionfacy.getText()); 
+         
+        menu.factura.put("nitx", nitfacx.getText()); 
+        menu.factura.put("nity", nitfacy.getText()); 
+         
+        menu.factura.put("tablax", tablafacx.getText()); 
+        menu.factura.put("tablay", tablafacy.getText()); 
+         
+        menu.factura.put("descfacx", descfacx.getText()); 
+         
+         
+        menu.factura.put("valorx", valorfacx.getText()); 
+         
+         
+        menu.factura.put("espaciado", espaciadofac.getText()); 
+         
+        menu.factura.put("totalfacx", totalfacx.getText()); 
+        menu.factura.put("totalfacy", totalfacy.getText()); 
+         
+    } 
+     
+    @FXML 
+    private void guardarPreferencesOrden(MouseEvent event) { 
+        menu.factura.put("diaxorden", diaordenx.getText()); 
+        menu.factura.put("diayorden", diaordeny.getText()); 
+         
+        menu.factura.put("mesxorden", mesordenx.getText()); 
+        menu.factura.put("mesyorden", mesordeny.getText()); 
+         
+        menu.factura.put("añoxorden", añoordenx.getText()); 
+        menu.factura.put("añoyorden", añoordeny.getText()); 
+         
+        menu.factura.put("nombrexorden", nombreordenx.getText()); 
+        menu.factura.put("nombreyorden", nombreordeny.getText()); 
+         
+        menu.factura.put("direccionxorden", direccionordenx.getText()); 
+        menu.factura.put("direccionyorden", direccionordeny.getText()); 
+         
+         
+        menu.factura.put("tablaxorden", tablaordenx.getText()); 
+        menu.factura.put("tablayorden", tablaordeny.getText()); 
+         
+        menu.factura.put("descfacxorden", descordenx.getText()); 
+         
+         
+        menu.factura.put("valorxorden", valorordenx.getText()); 
+         
+         
+        menu.factura.put("espaciadoorden", espaciadoorden.getText()); 
+         
+        menu.factura.put("totalfacxorden", totalordenx.getText()); 
+        menu.factura.put("totalfacyorden", totalordeny.getText()); 
+    } 
+     
+    @FXML 
+    private void preferencesCargar(Event event) { 
+        diafacx.setText(menu.factura.get("diax", "root")); 
+        diafacy.setText(menu.factura.get("diay", "root")); 
+         
+        mesfacx.setText(menu.factura.get("mesx", "root")); 
+        mesfacy.setText(menu.factura.get("mesy", "root")); 
+         
+         
+        añofacx.setText(menu.factura.get("añox", "root")); 
+        añofacy.setText(menu.factura.get("añoy", "root")); 
+         
+        nombrefacx.setText(menu.factura.get("nombrex", "root")); 
+        nombrefacy.setText(menu.factura.get("nombrey", "root")); 
+         
+        direccionfacx.setText(menu.factura.get("direccionx", "root")); 
+        direccionfacy.setText(menu.factura.get("direcciony", "root")); 
+         
+        nitfacx.setText(menu.factura.get("nitx", "root")); 
+        nitfacy.setText(menu.factura.get("nity", "root")); 
+         
+        tablafacx.setText(menu.factura.get("tablax", "root")); 
+        tablafacy.setText(menu.factura.get("tablay", "root")); 
+         
+        descfacx.setText(menu.factura.get("descfacx", "root")); 
+         
+        valorfacx.setText(menu.factura.get("valorx", "root")); 
+         
+        espaciadofac.setText(menu.factura.get("espaciado", "root")); 
+         
+        totalfacx.setText(menu.factura.get("totalfacx", "root")); 
+        totalfacy.setText(menu.factura.get("totalfacy", "root")); 
+         
+         
+         
+         
+        diaordenx.setText(menu.orden.get("diaxorden", "root")); 
+        diaordeny.setText(menu.orden.get("diayorden", "root")); 
+         
+        mesordenx.setText(menu.orden.get("mesxorden", "root")); 
+        mesordeny.setText(menu.orden.get("mesyorden", "root")); 
+         
+         
+        añoordenx.setText(menu.orden.get("añoxorden", "root")); 
+        añoordeny.setText(menu.orden.get("añoyorden", "root")); 
+         
+        nombreordenx.setText(menu.orden.get("nombrexorden", "root")); 
+        nombreordeny.setText(menu.orden.get("nombreyorden", "root")); 
+         
+        direccionordenx.setText(menu.orden.get("direccionxorden", "root")); 
+        direccionordeny.setText(menu.orden.get("direccionyorden", "root")); 
+         
+         
+        tablaordenx.setText(menu.orden.get("tablaxorden", "root")); 
+        tablaordeny.setText(menu.orden.get("tablayorden", "root")); 
+         
+        descordenx.setText(menu.orden.get("descfacxorden", "root")); 
+         
+        valorordenx.setText(menu.orden.get("valorxorden", "root")); 
+         
+        espaciadoorden.setText(menu.orden.get("espaciadoorden", "root")); 
+         
+        totalordenx.setText(menu.orden.get("totalfacxorden", "root")); 
+        totalordeny.setText(menu.orden.get("totalfacyorden", "root")); 
+    } 
+
 }

@@ -1108,6 +1108,7 @@ DELIMITER ;
 
 
 -- Entidad Cheque
+
 DELIMITER $$
 	create procedure SpListarCheque()
 		begin
@@ -1117,9 +1118,11 @@ DELIMITER $$
                 c.chequePagoAlaOrdenDe,
                 c.chequeMonto,
                 c.chequeDetalleDesc,
-                c.chequeUsuario
+                u.usuarioNombre
             from 
 				Cheque as c
+			inner join usuarios as u
+				on c.chequeUsuario = u.usuarioId
 					group by c.chequeNo;
         end $$
 DELIMITER ;
@@ -1133,14 +1136,23 @@ DELIMITER $$
                 c.chequePagoAlaOrdenDe,
                 c.chequeMonto,
                 c.chequeDetalleDesc,
-                c.chequeUsuario
+                u.usuarioNombre
             from 
 				Cheque as c
-                
+			inner join usuarios as u
+				on c.chequeUsuario = u.usuarioId
 			where 
 				c.chequeNo = idBuscado
                 group by c.chequeNo;
         end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpEliminarCheque(idBuscado int)
+		begin
+			delete from cheque
+				where chequeNo = idBuscado;
+		end $$
 DELIMITER ;
 
 DELIMITER $$
@@ -1161,15 +1173,7 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
-DELIMITER $$
-	create procedure SpEliminarCheque(idBuscado int)
-		begin
-			delete from
-				Cheque
-			where 
-				c.chequeNo = idBuscado;
-        end $$
-DELIMITER ;
+
 
 DELIMITER $$
 	create procedure SpAgregarCheque(numero int, lugaryfecha varchar(100), ordenDe varchar(50), monto double, usuario int, descripcion varchar(100))
@@ -1212,7 +1216,7 @@ insert into tipofactua(tipoFactura,tipoFacturaDesc)
 insert into estadofactura(estadoFactura,estadoFacturaDesc)
 	values(1,"ACTIVA"), (2,"ORDEN DE COMPRA");
     
-insert into tipousuario values(0,"ADMINISTRADOR"),(0,"EMPLEADO");
+insert into tipousuario values(0,"Administrador"),(0,"Empleado");
 
 insert into usuarios values(0,"admin", "admin", 1);
 INSERT INTO clientes(clienteNit,clienteNombre) values("C/F","C/F");
@@ -1462,8 +1466,6 @@ DELIMITER $$
 			update Creditos as c
 				set  c.creditoDiasRestantes = TIMESTAMPDIFF(DAY,fechaActual,c.creditoFechaFinal)
                 where c.idCredito>0;
-<<<<<<< HEAD
-=======
         end $$
 DELIMITER ;
 
@@ -1481,7 +1483,6 @@ DELIMITER $$
 		begin
 			update Creditos as c
 				set  c.creditoDiasRestantes = dias;
->>>>>>> Diego-Gonzalez
         end $$
 DELIMITER ;
 

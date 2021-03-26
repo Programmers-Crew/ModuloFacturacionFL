@@ -19,9 +19,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -39,6 +43,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.Animations;
@@ -158,13 +163,6 @@ public class chequesController implements Initializable {
     private AnchorPane anchor3;
     @FXML
     private JFXButton btnBuscarFiltro;
-    @FXML
-    private JFXButton btnFiltrarCheque;
-    @FXML
-    private JFXDatePicker txtFechaFinal;
-    @FXML
-    private JFXDatePicker txtFechaInicio;
-    @FXML
     private AnchorPane anchor4;
     
     /* ENTIDADES DE CONTROL DE CHEQUES*/
@@ -178,16 +176,14 @@ public class chequesController implements Initializable {
     private TableColumn<ChequeBuscado, Double> colTotalChequeBuscado;
     @FXML
     private TableColumn<ChequeBuscado, String> colReferenteChequeBuscado;
+     @FXML
+    private TableColumn<ChequeBuscado, String> colDetallerChequeBuscado;
+    @FXML
+    private TableColumn<ChequeBuscado, String> colUsuarioChequeBuscado;
+
     @FXML
     private JFXComboBox<String> txtBusquedaCodigoChe;
-    @FXML
-    private TableView<ChequeEncabezadoBuscado> tblResultadoEncabezado;
-    @FXML
-    private TableColumn<ChequeEncabezadoBuscado, String> colCuentaBuscado;
-    @FXML
-    private TableColumn<ChequeEncabezadoBuscado, String> colDescBuscada;
-    @FXML
-    private TableColumn<ChequeEncabezadoBuscado, Double> colValorBuscado;
+
     
     
     
@@ -527,9 +523,6 @@ public class chequesController implements Initializable {
     }
 
 
-    @FXML
-    private void fechaInicio(ActionEvent event) {
-    }
 
     
     
@@ -561,8 +554,10 @@ public class chequesController implements Initializable {
                 lista.add(new ChequeBuscado(
                             rs.getInt("chequeNo"),
                             rs.getString("chequeLugarYFecha"),
+                            rs.getString("chequePagoAlaOrdenDe"),
                             rs.getDouble("chequeMonto"),
-                            rs.getString("chequePagoAlaOrdenDe")
+                            rs.getString("chequeDetalleDesc"),
+                            rs.getString("usuarioNombre")
                 ));
                 comboNumeroCheques.add(x, rs.getString("chequeNo"));
                 x++;
@@ -582,17 +577,31 @@ public class chequesController implements Initializable {
         animacion.animacion(anchor3, anchor4);
         tblResultadoCheque.setItems(getControlCheque());
         colNoChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeNo"));
-        colFechaChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeFecha"));  
+        colFechaChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeLugarYFecha"));  
         colTotalChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeMonto"));
         colReferenteChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequePagoAlaOrdenDe"));
+        
+        colDetallerChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeDetalleDesc"));
+        colUsuarioChequeBuscado.setCellValueFactory(new PropertyValueFactory("usuarioNombre"));
 
         new AutoCompleteComboBoxListener(txtBusquedaCodigoChe);
-        
         txtBusquedaCodigoChe.setValue("");
-        txtFechaInicio.setValue(null);
-        txtFechaFinal.setValue(null);
-        tblResultadoEncabezado.setItems(null);
     }  
+    
+            
+    @FXML
+    public void cargarChequesBuscadas2(){
+        tblResultadoCheque.setItems(getControlCheque());
+        colNoChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeNo"));
+        colFechaChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeLugarYFecha"));  
+        colTotalChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeMonto"));
+        colReferenteChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequePagoAlaOrdenDe"));
+        
+        colDetallerChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeDetalleDesc"));
+        colUsuarioChequeBuscado.setCellValueFactory(new PropertyValueFactory("usuarioNombre"));
+
+    }  
+    
     
     /*listar cheque buscados por id*/
     
@@ -608,8 +617,10 @@ public class chequesController implements Initializable {
                 lista.add(new ChequeBuscado(
                             rs.getInt("chequeNo"),
                             rs.getString("chequeLugarYFecha"),
+                            rs.getString("chequePagoAlaOrdenDe"),
                             rs.getDouble("chequeMonto"),
-                            rs.getString("chequePagoAlaOrdenDe")
+                            rs.getString("chequeDetalleDesc"),
+                            rs.getString("usuarioNombre")
                 ));
             }
         }catch(SQLException ex){
@@ -618,82 +629,20 @@ public class chequesController implements Initializable {
         return listaChequeBuscadas = FXCollections.observableList(lista);
     }
         
-        public void cargarChequesBuscadasPorId(){
+    public void cargarChequesBuscadasPorId(){
         tblResultadoCheque.setItems(getChequeBuscadasPorId());
         
         colNoChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeNo"));
-        colFechaChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeFecha"));  
-        colTotalChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeMonto"));
-        colReferenteChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequePagoAlaOrdenDe"));
-        buscarEncabezado();
-        txtBusquedaCodigoChe.setValue("");
-    }  
-        
-   /* listar los cheques segun su fecha*/
-       
-        public ObservableList<ChequeBuscado> getChequeBuscadasPorFecha(){
-        ArrayList<ChequeBuscado> lista = new ArrayList();
-        String sql = "{call SpBuscarChequePorFecha('"+txtFechaInicio.getValue()+"','"+txtFechaFinal.getValue()+"')}";
-        int x=0;
-        
-        try{
-            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                lista.add(new ChequeBuscado(
-                            rs.getInt("chequeNo"),
-                            rs.getString("chequeLugarYFecha"),
-                            rs.getDouble("chequeMonto"),
-                            rs.getString("chequePagoAlaOrdenDe")
-                ));
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }
-        return listaChequeBuscadas = FXCollections.observableList(lista);
-    }
-        
-       public void cargarChequesBuscadasPorFecha(){
-        tblResultadoCheque.setItems(getChequeBuscadasPorFecha());
-        
-        colNoChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeNo"));
-        colFechaChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeFecha"));  
+        colFechaChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeLugarYFecha"));  
         colTotalChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeMonto"));
         colReferenteChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequePagoAlaOrdenDe"));
         
+        colDetallerChequeBuscado.setCellValueFactory(new PropertyValueFactory("chequeDetalleDesc"));
+        colUsuarioChequeBuscado.setCellValueFactory(new PropertyValueFactory("usuarioNombre"));
         txtBusquedaCodigoChe.setValue("");
     }  
-       
-    /*OBTENER INFORMACION DEL CHEQUE SEGUN ID */
-    public ObservableList<ChequeEncabezadoBuscado> getEncabezadoBuscado(){
-        ArrayList<ChequeEncabezadoBuscado> listaEnzacezado = new ArrayList();
         
-        String sql = "{call SpBuscarDetalleCheque('"+txtBusquedaCodigoChe.getValue()+"')}";
-        
-        try{
-            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                listaEnzacezado.add(new ChequeEncabezadoBuscado(
-                            rs.getString("chequeDetalleCuenta"),
-                            rs.getString("chequeDetalleDesc"),
-                            rs.getDouble("chequeDetalleValor")
-                ));
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }
-        return listaEncabezadoBuscado = FXCollections.observableList(listaEnzacezado);
-    }
-    
-    public void cargarEnzabezadoBuscados(){
-        tblResultadoEncabezado.setItems(getEncabezadoBuscado());
-        
-        colCuentaBuscado.setCellValueFactory(new PropertyValueFactory("chequeDetalleCuenta"));
-        colDescBuscada.setCellValueFactory(new PropertyValueFactory("chequeDetalleDesc"));  
-        colValorBuscado.setCellValueFactory(new PropertyValueFactory("chequeDetalleValor"));
-    }  
-    
+     
      public void accionBusqueda(String sql){
          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         PreparedStatement ps;
@@ -766,8 +715,6 @@ public class chequesController implements Initializable {
                         noti.show();
                         tipoOperacionBusquedaCheques = Operacion.CANCELAR;
                         cargarChequesBuscadas();
-                        txtFechaInicio.setValue(null);
-                        txtFechaFinal.setValue(null);
                     }catch (SQLException ex) {
                         ex.printStackTrace();
                         noti.graphic(new ImageView(imgError));
@@ -832,8 +779,6 @@ public class chequesController implements Initializable {
                     noti.show();
                     tipoOperacionBusquedaCheques = Operacion.CANCELAR;
                 }
-                        txtFechaInicio.setValue(null);
-                        txtFechaFinal.setValue(null);
                 break;     
         }
     }
@@ -854,41 +799,7 @@ public class chequesController implements Initializable {
             tipoOperacionBusquedaCheques = Operacion.BUSCAR;
             cargarChequesBuscadasPorId();
         }  
-    }
-    
-    /* proceso para buscar cheque por fechas*/
-    @FXML
-    public void buscarPorFechas(){
-        try{
-            if(txtFechaInicio.getValue() == null || txtFechaFinal.getValue()==null){
-                          Notifications noti = Notifications.create();
-                          noti.graphic(new ImageView(imgError));
-                          noti.title("ERROR");
-                          noti.text("SELECCIONE FECHAS PARA PODER FILTRAR");
-                          noti.position(Pos.BOTTOM_RIGHT);
-                          noti.hideAfter(Duration.seconds(4));
-                          noti.darkStyle();   
-                          noti.show();
-              }else{
-                  tipoOperacionBusquedaCheques = Operacion.FILTRAR;
-                  cargarChequesBuscadasPorFecha();
-                }  
-            }catch(Exception e){
-               e.printStackTrace();
-            }
-    }
-    
-   
-    public void buscarEncabezado(){
-        for(int i=0; i<tblResultadoCheque.getItems().size(); i++){
-            if(colNoChequeBuscado.getCellData(i) == noCheque){
-                tblResultadoCheque.getSelectionModel().select(i);
-                 break;
-             }
-        }
-        cargarEnzabezadoBuscados();
-    }      
-               
+    }           
     
         @FXML
     private void seleccionarElementosChequeBuscadas(MouseEvent event) {
@@ -896,9 +807,7 @@ public class chequesController implements Initializable {
         try{
 
             txtBusquedaCodigoChe.setValue(colNoChequeBuscado.getCellData(index).toString());
-            
-            cargarEnzabezadoBuscados();
-            
+                        
         }catch(Exception ex){
               ex.printStackTrace();
         }
@@ -906,11 +815,6 @@ public class chequesController implements Initializable {
     
     private void btnBuscarCheque(MouseEvent event) {
         buscarPorId();
-    }
-    
-    
-    private void btnFiltrarCheque(MouseEvent event) {
-        buscarPorFechas();
     }
     
     @FXML
@@ -994,6 +898,59 @@ public class chequesController implements Initializable {
         menu.comprobante.put("descY",descY.getText() );
     }
     
+            double xOffset = 0;
+    double yOffset = 0;
     
+        @FXML
+    private void eliminarCheque(MouseEvent event) throws IOException {
+        
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("org/moduloFacturacion/view/eliminarCheque.fxml"));
+        Scene scene = new Scene(root);
+         
+        
+       root.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            }
+        });
+        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+                
+                
+            }
+        });
+        stage.setHeight(510);
+        stage.setWidth(599);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setTitle("ELIMINAR FACTURA");
+        stage.setScene(scene);
+        stage.show();
+        
+        Thread hilo = new Thread(runnable);
+	hilo.start();
+    }
+    
+    
+    Runnable runnable = new Runnable() {
+    @Override
+	public void run() {
+            while (true) {
+		try {
+                    Thread.sleep(1000);
+                    cargarChequesBuscadas2();
+		} catch (InterruptedException e) {
+                    e.printStackTrace();
+					}
+				}
+			}
+        
+		};
+
     
 }
