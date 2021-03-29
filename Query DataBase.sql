@@ -27,6 +27,10 @@ create table CategoriaProductos(
     categoriaNombre varchar(50) unique not null
 );
 
+create table tipoProducto(
+	tipoProdId int auto_increment primary key,
+    tipoProdDesc varchar(20) not null unique
+);
 
 create table Productos(
 	productoId	varchar(7) primary key,
@@ -35,8 +39,10 @@ create table Productos(
     categoriaId varchar(7) not null,
 	precioCosto decimal(10,2) not null,
     productoPrecio decimal(10,2) not null,
+    tipoProductoId int not null,
     CONSTRAINT FK_ProveedorProductos FOREIGN KEY (proveedorId) REFERENCES Proveedores(proveedorId),
-    CONSTRAINT FK_CategoriaProductos FOREIGN KEY (categoriaId) REFERENCES CategoriaProductos(categoriaId)
+    CONSTRAINT FK_CategoriaProductos FOREIGN KEY (categoriaId) REFERENCES CategoriaProductos(categoriaId),
+    CONSTRAINT FK_TipoProductos FOREIGN KEY (tipoProductoId) REFERENCES tipoProducto(tipoProdId)
 );
 
 create table InventarioProductos(

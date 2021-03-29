@@ -57,7 +57,8 @@ public class ProductosViewController implements Initializable {
     ObservableList<String> listaBuscar;
     ObservableList<String> listaFiltroCategoria;
     ObservableList<String> listaBuscarCategoria;
-    
+    ObservableList<String> listaTipoProducto;
+
     
     Image imgError = new Image("org/moduloFacturacion/img/error.png");
     Image imgCorrecto= new Image("org/moduloFacturacion/img/correcto.png");
@@ -69,6 +70,8 @@ public class ProductosViewController implements Initializable {
     private ComboBox<String> cmbCategoriaProducto;
     @FXML
     private ComboBox<String> cmbProveedorProducto;
+    @FXML
+    private ComboBox<String> cmbTipoProducto;
     @FXML
     private JFXButton btnAgregar;
     @FXML
@@ -85,6 +88,8 @@ public class ProductosViewController implements Initializable {
     private TableColumn<Productos, String> colCategoriaProductos;
     @FXML
     private TableColumn<Productos, Double> colPrecioProductos;
+    @FXML
+    private TableColumn<Productos, String> colTipoProducto;
     @FXML
     private JFXTextField txtCostoProducto;
     @FXML
@@ -118,6 +123,7 @@ public class ProductosViewController implements Initializable {
     private ComboBox<String> cmbFiltrar;
     @FXML
     private JFXButton btnFiltrar;
+
 
    
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO,FILTRAR};
@@ -231,6 +237,7 @@ public class ProductosViewController implements Initializable {
          txtCostoProducto.setText("");
          cmbFiltroProductos.setValue("");
          cmbBuscar.setValue("");
+         cmbTipoProducto.setValue("");
     }
      
     public void desactivarControles(){
@@ -250,6 +257,7 @@ public class ProductosViewController implements Initializable {
         txtCostoProducto.setEditable(false);
         cmbCategoriaProducto.setDisable(true);
         cmbProveedorProducto.setDisable(true);
+        cmbTipoProducto.setDisable(true);
         
     }
     
@@ -260,6 +268,7 @@ public class ProductosViewController implements Initializable {
         txtNombreProducto.setEditable(true);
         cmbCategoriaProducto.setDisable(false);
         cmbProveedorProducto.setDisable(false);
+        cmbTipoProducto.setDisable(false);
     }
     
     
@@ -279,7 +288,8 @@ public class ProductosViewController implements Initializable {
                             rs.getString("proveedorNombre"),
                             rs.getString("categoriaNombre"),
                             rs.getDouble("precioCosto"),
-                            rs.getDouble("productoPrecio")
+                            rs.getDouble("productoPrecio"),
+                            rs.getString("tipoProdDesc")
                 ));
                 comboCodigo.add(x, rs.getString("productoId"));
                 x++;
@@ -299,11 +309,13 @@ public class ProductosViewController implements Initializable {
         colProveedorProductos.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
         colCostoProductos.setCellValueFactory(new PropertyValueFactory("precioCosto"));
         colPrecioProductos.setCellValueFactory(new PropertyValueFactory("productoPrecio"));
+        colTipoProducto.setCellValueFactory(new PropertyValueFactory("tipoProdDesc"));
         limpiarText();
         desactivarControles();
         desactivarText();
         llenarComboCategoria();
         llenarComboProveedores();
+        llenarComboTipoProductos();
         cmbCategoriaProducto.setValue("");
         cmbProveedorProducto.setValue("");
         new AutoCompleteComboBoxListener(cmbCategoriaProducto);
@@ -326,7 +338,8 @@ public class ProductosViewController implements Initializable {
                             rs.getString("proveedorNombre"),
                             rs.getString("categoriaNombre"),
                             rs.getDouble("precioCosto"),
-                            rs.getDouble("productoPrecio")
+                            rs.getDouble("productoPrecio"),
+                            rs.getString("tipoProdDesc")
                 ));
                 comboCodigo.add(x, rs.getString("productoId"));
                 x++;
@@ -346,11 +359,13 @@ public class ProductosViewController implements Initializable {
         colProveedorProductos.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
         colCostoProductos.setCellValueFactory(new PropertyValueFactory("precioCosto"));
         colPrecioProductos.setCellValueFactory(new PropertyValueFactory("productoPrecio"));
+        colTipoProducto.setCellValueFactory(new PropertyValueFactory("tipoProdDesc"));
         limpiarText();
         desactivarControles();
         desactivarText();
         llenarComboCategoria();
         llenarComboProveedores();
+        llenarComboTipoProductos();
         cmbCategoriaProducto.setValue("");
         cmbProveedorProducto.setValue("");
         new AutoCompleteComboBoxListener(cmbCategoriaProducto);
@@ -376,6 +391,7 @@ public class ProductosViewController implements Initializable {
                         txtCostoProducto.setText(rs.getString("precioCosto"));
                         txtPrecioProducto.setText(rs.getString("productoPrecio"));
                         codigoProducto = rs.getString("productoId");
+                        cmbTipoProducto.setValue("tipoProdDesc");
                         
                     }    
                     cargarDatosPorProveedor();
@@ -421,6 +437,7 @@ public class ProductosViewController implements Initializable {
             cmbProveedorProducto.setValue(colProveedorProductos.getCellData(index));
             txtCostoProducto.setText(colCostoProductos.getCellData(index).toString());
             txtPrecioProducto.setText(colPrecioProductos.getCellData(index).toString());
+            cmbTipoProducto.setValue(colTipoProducto.getCellData(index).toString());
             codigoProducto = colCodigoProductos.getCellData(index);
             activarControles();
              activarText();
@@ -499,6 +516,38 @@ public class ProductosViewController implements Initializable {
         cmbFiltrar.setItems(listaProveedoresProductos);
     }
 
+    
+        
+    public void llenarComboTipoProductos(){
+        ArrayList<String> lista = new ArrayList();
+        String sql= "{call SpListarTipoProductos()}";
+            int x =0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("tipoProdDesc"));
+                x++;
+            }
+            
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("ERROR AL CARGAR DATOS CMB");
+            noti.text("Error al cargar la base de datos");
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();
+            noti.show();
+        }
+        listaTipoProducto = FXCollections.observableList(lista);
+        cmbTipoProducto.setItems(listaTipoProducto);
+    }
+    
+    
     public void accion(){
         switch(tipoOperacionProducto){
             case AGREGAR:
@@ -699,6 +748,7 @@ public class ProductosViewController implements Initializable {
                         cmbProveedorProducto.setValue(rs.getString("proveedorNombre"));
                         txtCostoProducto.setText(rs.getString("precioCosto"));
                         txtPrecioProducto.setText(rs.getString("productoPrecio"));
+                        cmbTipoProducto.setValue(rs.getString("tipoProdDesc"));
                         codigoProducto = rs.getString("productoId");
                         
                     }                    
@@ -925,7 +975,7 @@ public class ProductosViewController implements Initializable {
      @FXML
     private void btnAgregar(MouseEvent event) {
         if(tipoOperacionProducto == Operacion.GUARDAR){
-           if(txtCodigoProducto.getText().isEmpty() || txtNombreProducto.getText().isEmpty() || cmbCategoriaProducto.getValue().equals("") || cmbProveedorProducto.getValue().equals("") || txtPrecioProducto.getText().isEmpty()){
+           if(txtCodigoProducto.getText().isEmpty() || txtNombreProducto.getText().isEmpty() || cmbCategoriaProducto.getValue().equals("") || cmbProveedorProducto.getValue().equals("") || txtPrecioProducto.getText().isEmpty() || cmbTipoProducto.getValue().equals("")){
                     Notifications noti = Notifications.create();
                     noti.graphic(new ImageView(imgError));
                     noti.title("ERROR");
@@ -974,7 +1024,15 @@ public class ProductosViewController implements Initializable {
                    nuevoProducto.setProductoPrecio(Double.parseDouble(txtPrecioProducto.getText()));
                    nuevoProducto.setPrecioCosto(Double.parseDouble(txtCostoProducto.getText()));
                    
-                   String sql = "{call SpAgregarProductos('"+nuevoProducto.getProductoId()+"','"+nuevoProducto.getProductoDesc()+"','"+verificarProveedores(nuevoProducto.getProveedorNombre())+"'"+ ",'"+verficarCategoria(nuevoProducto.getCategoriaNombre())+"','"+nuevoProducto.getPrecioCosto()+"','"+nuevoProducto.getProductoPrecio()+"')}";
+                   int tipoProdId = 0;
+                   
+                   if(cmbTipoProducto.getValue().equals("BIEN")){
+                       tipoProdId = 1;
+                   }else{
+                        tipoProdId = 2;
+                   }
+                   
+                   String sql = "{call SpAgregarProductos('"+nuevoProducto.getProductoId()+"','"+nuevoProducto.getProductoDesc()+"','"+verificarProveedores(nuevoProducto.getProveedorNombre())+"'"+ ",'"+verficarCategoria(nuevoProducto.getCategoriaNombre())+"','"+nuevoProducto.getPrecioCosto()+"','"+nuevoProducto.getProductoPrecio()+"','"+tipoProdId+"')}";
                    tipoOperacionProducto = Operacion.GUARDAR;
                    accion(sql);   
                    }
@@ -1029,7 +1087,15 @@ public class ProductosViewController implements Initializable {
                         nuevoProducto.setProductoPrecio(Double.parseDouble(txtPrecioProducto.getText()));
                         nuevoProducto.setPrecioCosto(Double.parseDouble(txtCostoProducto.getText()));
 
-                        String sql = "{call SpActualizarProductos('"+codigoProducto+"','"+nuevoProducto.getProductoId()+"','"+nuevoProducto.getProductoDesc()+"','"+nuevoProducto.getPrecioCosto()+"'"+",'"+nuevoProducto.getProductoPrecio()+"')}";
+                        int tipoProdId = 0;
+                   
+                        if(cmbTipoProducto.getValue().equals("BIEN")){
+                            tipoProdId = 1;
+                        }else{
+                            tipoProdId = 2;
+                        }
+                        
+                   String sql = "{call SpActualizarProductos('"+codigoProducto+"','"+nuevoProducto.getProductoDesc()+"','"+nuevoProducto.getPrecioCosto()+"','"+nuevoProducto.getProductoPrecio()+"')}";
                         tipoOperacionProducto = Operacion.ACTUALIZAR;
                         accion(sql);      
                    }
