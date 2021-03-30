@@ -66,7 +66,7 @@
                                                       <Font size="13.0" />
                                                    </font>
                                                 </Label>
-                                                <JFXTextField fx:id="txtFacturaId" layoutX="21.0" layoutY="34.0" onKeyTyped="#validarLetras" prefHeight="27.0" prefWidth="239.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="17.0" />
+                                                <JFXTextField fx:id="txtFacturaId" layoutX="21.0" layoutY="34.0" onKeyReleased="#validarNumeroFactura" onKeyTyped="#validarLetras" prefHeight="27.0" prefWidth="239.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="17.0" />
                                                 <ComboBox fx:id="cmbTipoFactura" editable="true" layoutX="16.0" layoutY="62.0" onAction="#buscarCliente" prefHeight="26.0" prefWidth="240.0" promptText="ÓRDEN DE COMPRA O FACTURA" styleClass="comboOscuro" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="62.0" />
                                              </children>
                                           </AnchorPane>
@@ -288,7 +288,7 @@
                               </AnchorPane>
                             <AnchorPane fx:id="anchor4" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="anchorOscuro">
                                  <children>
-                                    <TableView fx:id="tblResultadoProducto" layoutX="23.0" layoutY="184.0" prefHeight="200.0" prefWidth="305.0" AnchorPane.bottomAnchor="64.80000000000001" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="22.599999999999966" AnchorPane.topAnchor="184.0">
+                                    <TableView fx:id="tblResultadoProducto" layoutX="22.0" layoutY="242.0" prefHeight="235.0" prefWidth="393.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="242.0">
                                         <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
@@ -310,8 +310,10 @@
                                     <Label text="NIT:" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="136.6" AnchorPane.topAnchor="42.0" />
                                     <Label text="NOMBRE:" AnchorPane.leftAnchor="23.0" AnchorPane.topAnchor="104.0" />
                                     <JFXTextField fx:id="txtResultadoNit" layoutX="20.0" layoutY="61.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.19999999999999" />
-                                    <JFXTextField fx:id="txtResultadoNombre" layoutX="23.0" layoutY="135.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.19999999999999" />
-                                    <JFXTextField fx:id="txtTotalFac" editable="false" layoutX="23.0" layoutY="473.0" prefHeight="26.0" prefWidth="398.0" promptText="Total de factura" AnchorPane.bottomAnchor="30.99999999999998" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="22.600000000000023" />
+                                    <JFXTextField fx:id="txtResultadoNombre" layoutX="19.0" layoutY="125.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="21.19999999999999" />
+                                    <JFXTextField fx:id="txtTotalFac" editable="false" layoutX="22.0" layoutY="477.0" prefHeight="26.0" prefWidth="398.0" promptText="Total de factura" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="23.600000000000023" />
+                                    <Label layoutX="23.0" layoutY="174.0" text="DIRECCIÓN" />
+                                    <JFXTextField fx:id="txtResultadodDireccion" layoutX="19.0" layoutY="195.0" prefHeight="31.0" prefWidth="399.0" />
                                  </children>
                               </AnchorPane>
                           </items>

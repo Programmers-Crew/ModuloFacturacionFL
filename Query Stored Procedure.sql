@@ -868,11 +868,10 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
-
 DELIMITER $$
 	create procedure SpBuscarClienteFacturaFecha(idBuscado int(5))
 		BEGIN	
-			select f.facturaId, c.clienteNit, c.clienteNombre, pr.productoDesc, fd.cantidad, pr.productoPrecio
+			select f.facturaId, c.clienteNit, c.clienteDireccion,c.clienteNombre, pr.productoDesc, fd.cantidad, pr.productoPrecio
 				from facturas as f
 					inner join clientes as c
 						on c.clienteId = f.clienteId
@@ -883,7 +882,7 @@ DELIMITER $$
 											where f.facturaId = idBuscado
 												order by f.facturaId asc;
         END $$
-DELMITER ;
+DELIMITER ;
 
 
 DELIMITER $$

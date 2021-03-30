@@ -109,7 +109,6 @@ public class FacturacionViewController implements Initializable {
      JFXButton btnReporteVentas;
     @FXML
      ComboBox<String> cmbTipoFactura;
-    
     @FXML
      JFXButton btnMarcarDevolucion;
     @FXML
@@ -188,6 +187,10 @@ public class FacturacionViewController implements Initializable {
     private TextField totalfacx;
     @FXML
     private TextField espaciadofac;
+    @FXML
+    private JFXButton btnCorteDeCaja1;
+    @FXML
+    private JFXTextField txtResultadodDireccion;
     
     private void cargarEstado(Event event) {
         animacion.animacion(anchor3, anchor4);
@@ -822,6 +825,36 @@ public String buscarCodigoProducto(String precioProductos){
   }
   
   @FXML
+  public void validarNumeroFactura(KeyEvent event){
+              ArrayList<String> lista = new ArrayList();
+        String sql = "{call SpvalidarFactura('"+txtFacturaId.getText()+"')}";                        
+        int x=0;
+        String id = "";
+            try{
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("facturaId"));
+                id = rs.getString("facturaId");
+                 x++;
+            }
+            
+            if(id != ""){
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("NUMERO DE FACTURA INVALIDO");
+                noti.text("Por favor verifica que el numero de factura sea correcto");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+  }
+  
+  @FXML
     private void btnAgregarFacturaBackUp(MouseEvent event) {
         if(listaBackUp.size()>8){
              Notifications noti = Notifications.create();
@@ -1211,12 +1244,12 @@ public String buscarCodigoProducto(String precioProductos){
         tblResultadoProducto.setItems(null);
         txtResultadoNit.setText("");
         txtResultadoNombre.setText("");
+        txtResultadodDireccion.setText("");
         btnCorteDeCaja.setDisable(true);
         btnReporteVentas.setDisable(true);
         btnImprimirRespaldo.setDisable(true);
     }  
     
-        @FXML
     public void cargarFacturasBuscadasELiminar(){
         tblResultadoFactura.setItems(getFacturasBuscadas());
         colNumeroFacBuscado.setCellValueFactory(new PropertyValueFactory("facturaId"));
@@ -1232,6 +1265,7 @@ public String buscarCodigoProducto(String precioProductos){
         tblResultadoProducto.setItems(null);
         txtResultadoNit.setText("");
         txtResultadoNombre.setText("");
+        txtResultadodDireccion.setText("");
         btnCorteDeCaja.setDisable(true);
         btnReporteVentas.setDisable(true);
         btnImprimirRespaldo.setDisable(true);
@@ -1654,6 +1688,7 @@ public String buscarCodigoProducto(String precioProductos){
                     while(rs.next()){
                         txtResultadoNit.setText(rs.getString("clienteNit"));
                         txtResultadoNombre.setText(rs.getString("clienteNombre"));
+                        txtResultadodDireccion.setText(rs.getString("clienteDireccion"));
 
                         clienteNit = rs.getString("clienteNit");
                         
@@ -1852,8 +1887,8 @@ public String buscarCodigoProducto(String precioProductos){
         stage.setScene(scene);
         stage.show();
         
-        Thread hilo = new Thread(runnable);
-	hilo.start();
+//        Thread hilo = new Thread(runnable);
+//	hilo.start();
     }
     
     
@@ -1997,7 +2032,8 @@ public String buscarCodigoProducto(String precioProductos){
          
         tablaordenx.setText(menu.orden.get("tablaxorden", "root")); 
         tablaordeny.setText(menu.orden.get("tablayorden", "root")); 
-         
+        
+        
         descordenx.setText(menu.orden.get("descfacxorden", "root")); 
          
         valorordenx.setText(menu.orden.get("valorxorden", "root")); 

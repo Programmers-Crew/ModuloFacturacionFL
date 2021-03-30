@@ -422,16 +422,10 @@ public class MenuPrincipalContoller implements Initializable {
         
         if(factura.get("totalfacy","root").equals("root")){
             resetearCamposFactura();
-        
-        }else{
-                resetearCamposFactura();
         }
         
         if(orden.get("totalfacyorden","root").equals("root")){
             resetearCamposOrden();
-        
-        }else{
-                resetearCamposOrden();
         }
         
         prefsRegresar.put("regresar", "menu");
@@ -451,6 +445,8 @@ public class MenuPrincipalContoller implements Initializable {
                 checkBox.setSelected(false);
         }
        
+        System.out.println(orden.get("descfacxorden", "root"));
+        
         // caja de bienvenida
          FadeTransition ft = new FadeTransition();
        ft.setFromValue(0);

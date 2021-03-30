@@ -119,6 +119,7 @@ create table Facturas(
     CONSTRAINT FK_estadoFactura FOREIGN KEY (estadoFactura) REFERENCES EstadoFactura(estadoFactura)
 );
 
+
 create table Cheque(
 	chequeCodigo int not null auto_increment,
 	chequeNo int(10)  UNSIGNED ZEROFILL,
