@@ -152,6 +152,7 @@ public class FacturacionViewController implements Initializable {
     private TextField totalordenx;
     @FXML
     private TextField totalordeny;
+    @FXML
     private TextField descordenx;
     @FXML
     private TextField valorordenx;

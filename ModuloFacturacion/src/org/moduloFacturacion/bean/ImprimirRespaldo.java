@@ -79,7 +79,7 @@ public class ImprimirRespaldo implements Printable{
         g2d.drawString(String.valueOf(fecha.getMonthValue()),mesy,mesx);
         g2d.drawString(String.valueOf(fecha.getYear()),añoy,añox);
         g2d.drawString(nombreCliente, nombrey, nombrex);
-        g2d.drawString(direccionCliente,direcciony, direccionx);
+        
         g2d.drawString(Nit,nity, nitx);
             float ancho =tablay;
             float largo = tablax;
@@ -89,18 +89,22 @@ public class ImprimirRespaldo implements Printable{
             float anchoValor = valorx;
             float anchofor = ancho+espaciado;
             
-            
-          for(int x=0; x< mensaje.size();x++){
-            String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
-            String totalp = String.valueOf(df.format(mensaje.get(x).getCantidad()*mensaje.get(x).getProductoPrecio()));
+        g2d.drawString(totalFactura, totalfacy, totalfacx);
+        Font f1 = new Font(g2d.getFont().getFontName(),Font.PLAIN, 9);
+        Font f1Rotated = f1.deriveFont(affineTransform);
+        g2d.setFont(f1Rotated);
+        g2d.drawString(direccionCliente,direcciony, direccionx);
+        for(int x=0; x< mensaje.size();x++){
+          String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
+          String totalp = String.valueOf(df.format(mensaje.get(x).getCantidad()*mensaje.get(x).getProductoPrecio()));
 
-           anchofor = anchofor-espaciado;
-           g2d.drawString(String.valueOf(mensaje.get(x).getCantidad()),anchofor, largo);
-           g2d.drawString(mensaje.get(x).getProductoDesc()+"  "+String.valueOf(precio), anchofor , anchoDesc);
-           g2d.drawString(String.valueOf(totalp), anchofor, anchoValor);
-              
-          }
-         g2d.drawString(totalFactura, totalfacy, totalfacx);
+         anchofor = anchofor-espaciado;
+         g2d.drawString(String.valueOf(mensaje.get(x).getCantidad()),anchofor, largo);
+         g2d.drawString(mensaje.get(x).getProductoDesc(), anchofor , anchoDesc);
+         g2d.drawString(String.valueOf(totalp), anchofor, anchoValor);
+
+        }
+         
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;
