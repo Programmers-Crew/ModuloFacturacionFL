@@ -868,6 +868,7 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
+
 DELIMITER $$
 	create procedure SpBuscarClienteFacturaFecha(idBuscado int(5))
 		BEGIN	
@@ -883,7 +884,6 @@ DELIMITER $$
 												order by f.facturaId asc;
         END $$
 DELIMITER ;
-
 
 DELIMITER $$
 	create procedure SpListarBusquedasFacturasPorId(idBuscado int(5))
@@ -1503,3 +1503,12 @@ create procedure SpBuscareProveedorNit(proveedor varchar(50))
 			where proveedorNombre = proveedor;
     end $$
 DELIMITER ;
+
+DELIMITER $$
+	create procedure SpvalidarFactura(idFactura int(5))
+		begin
+			select * from Facturas
+				where facturaId = idFactura;
+        end $$ 
+DELIMITER ;
+
