@@ -174,6 +174,7 @@ public class MenuPrincipalContoller implements Initializable {
     public Preferences comprobante = Preferences.userRoot().node(this.getClass().getName());
     public Preferences factura = Preferences.userRoot().node(this.getClass().getName());
     public Preferences orden = Preferences.userRoot().node(this.getClass().getName());
+    public Preferences letra = Preferences.userRoot().node(this.getClass().getName());
     ValidarStyle validar = new ValidarStyle();
     
     
@@ -403,7 +404,9 @@ public class MenuPrincipalContoller implements Initializable {
         orden.put("totalfacxorden", "240");
         orden.put("totalfacyorden", "40");
     }
-    
+    public void resetarLetra(){
+        letra.put("tamaño", "9");
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if(PfechaX.get("valor1","root").equals("root") || PfechaY.get("valor2","root").equals("root") || PordenX.get("valor3","root").equals("root") || PordenY.get("valor4","root").equals("root")
@@ -427,7 +430,9 @@ public class MenuPrincipalContoller implements Initializable {
         if(orden.get("totalfacyorden","root").equals("root")){
             resetearCamposOrden();
         }
-        
+        if(letra.get("tamaño","root").equals("root")){
+            resetarLetra();
+        }
         prefsRegresar.put("regresar", "menu");
         prefsRegresarProductos.put("regresarProducto", "menu");
          validar.validarMenu(prefs.get("dark", "root"), anchor);
