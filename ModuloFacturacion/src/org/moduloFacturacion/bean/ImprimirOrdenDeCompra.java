@@ -66,6 +66,8 @@ public class ImprimirOrdenDeCompra implements Printable{
     
     float totalfacx = Float.parseFloat(menu.orden.get("totalfacxorden", "root"));
     float totalfacy = Float.parseFloat(menu.orden.get("totalfacyorden", "root"));
+    int tamaño = Integer.parseInt(menu.letra.get("tamaño", "root"));
+    
     
     public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){   
         Font font = new Font(null, Font.PLAIN, 0);    
@@ -77,7 +79,7 @@ public class ImprimirOrdenDeCompra implements Printable{
         g2d.drawString(String.valueOf(fecha.getDayOfMonth()), diay,diax);
         g2d.drawString(String.valueOf(fecha.getMonthValue()),mesy,mesx);
         g2d.drawString(String.valueOf(fecha.getYear()),añoy,añox);
-        g2d.drawString(nombreCliente, nombrey, nombrex);
+        
         
 //        g2d.drawString(Nit,362 , 215);
             float ancho =tablay;
@@ -85,20 +87,22 @@ public class ImprimirOrdenDeCompra implements Printable{
             float anchoDesc = descfacx;
             float anchoValor = valorx;
             float anchofor = ancho+espaciado;
-        g2d.drawString(totalFactura, totalfacy, totalfacx);
-        Font f1 = new Font(g2d.getFont().getFontName(),Font.PLAIN, 9);
+        
+        Font f1 = new Font(g2d.getFont().getFontName(),Font.PLAIN, tamaño);
         Font f1Rotated = f1.deriveFont(affineTransform);
         g2d.setFont(f1Rotated);
         g2d.drawString(direccionCliente,direcciony, direccionx);
-          for(int x=0; x< mensaje.size();x++){
-              anchofor = anchofor-18;
-              String totalp = String.valueOf(df.format(mensaje.get(x).getTotalParcialBackup()));
-              String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
-              g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),anchofor, largo);
-              g2d.drawString(mensaje.get(x).getProductoDesc(), anchofor , anchoDesc);
-              g2d.drawString(String.valueOf(totalp), anchofor, anchoValor);
-              
-          }
+        g2d.drawString(nombreCliente, nombrey, nombrex);
+        for(int x=0; x< mensaje.size();x++){
+            anchofor = anchofor-18;
+            String totalp = String.valueOf(df.format(mensaje.get(x).getTotalParcialBackup()));
+            String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
+            g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),anchofor, largo);
+            g2d.drawString(mensaje.get(x).getProductoDesc(), anchofor , anchoDesc);
+            g2d.drawString(String.valueOf(totalp), anchofor, anchoValor);
+
+        }
+        g2d.drawString(totalFactura, totalfacy, totalfacx);
          
     }
     public int print(Graphics g,PageFormat pf,int pagina){

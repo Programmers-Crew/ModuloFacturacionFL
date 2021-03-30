@@ -191,6 +191,8 @@ public class FacturacionViewController implements Initializable {
     private JFXButton btnCorteDeCaja1;
     @FXML
     private JFXTextField txtResultadodDireccion;
+    @FXML
+    private TextField size;
     
     private void cargarEstado(Event event) {
         animacion.animacion(anchor3, anchor4);
@@ -1358,9 +1360,9 @@ public String buscarCodigoProducto(String precioProductos){
         double totalT = Double.parseDouble(txtTotalFac.getText());
         String tot = String.valueOf(df.format(totalT));
         if(tipoFac.equals("FACTURA")){
-            imprimir.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtDireccionCliente.getText(), date2,tot);
+            imprimir.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtResultadodDireccion.getText(), date2,tot);
         } else{
-            imprimirOrden.imprima(listaProductoBuscado, txtResultadoNit.getText(), txtResultadoNombre.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), tot);
+            imprimirOrden.imprima(listaProductoBuscado, txtResultadoNit.getText(), txtResultadoNombre.getText(), txtResultadodDireccion.getText(), date2,txtLetrasPrecio.getText(), tot);
         }
         
     }
@@ -1941,6 +1943,8 @@ public String buscarCodigoProducto(String precioProductos){
          
         menu.factura.put("totalfacx", totalfacx.getText()); 
         menu.factura.put("totalfacy", totalfacy.getText()); 
+        
+        menu.letra.put("tamaño", size.getText());
          
     } 
      
@@ -1975,6 +1979,7 @@ public String buscarCodigoProducto(String precioProductos){
          
         menu.factura.put("totalfacxorden", totalordenx.getText()); 
         menu.factura.put("totalfacyorden", totalordeny.getText()); 
+        
     } 
      
     @FXML 
@@ -2010,8 +2015,7 @@ public String buscarCodigoProducto(String precioProductos){
         totalfacx.setText(menu.factura.get("totalfacx", "root")); 
         totalfacy.setText(menu.factura.get("totalfacy", "root")); 
          
-         
-         
+                 
          
         diaordenx.setText(menu.orden.get("diaxorden", "root")); 
         diaordeny.setText(menu.orden.get("diayorden", "root")); 
@@ -2042,6 +2046,8 @@ public String buscarCodigoProducto(String precioProductos){
          
         totalordenx.setText(menu.orden.get("totalfacxorden", "root")); 
         totalordeny.setText(menu.orden.get("totalfacyorden", "root")); 
+        
+        size.setText(menu.letra.get("tamaño", "root"));
     } 
 
 }

@@ -47,7 +47,8 @@ public class Imprimir implements Printable{
     
     float totalfacx = Float.parseFloat(menu.factura.get("totalfacx", "root"));
     float totalfacy = Float.parseFloat(menu.factura.get("totalfacy", "root"));
-    
+    int tamaño = Integer.parseInt(menu.letra.get("tamaño", "root"));
+
     
     public Imprimir(){
         super();
@@ -80,10 +81,8 @@ public class Imprimir implements Printable{
         g2d.drawString(String.valueOf(fecha.getDayOfMonth()), diay,diax);
         g2d.drawString(String.valueOf(fecha.getMonthValue()),mesy,mesx);
         g2d.drawString(String.valueOf(fecha.getYear()),añoy,añox);
-        g2d.drawString(nombreCliente, nombrey, nombrex);
         
         g2d.drawString(Nit,nity , nitx);
-        g2d.drawString(totalFactura, totalfacy, totalfacx);
             float ancho =tablay;
             float largo = tablax;
             float anchoDesc = descfacx;
@@ -91,10 +90,12 @@ public class Imprimir implements Printable{
             float anchofor = ancho+espaciado;   
             DecimalFormat df = new DecimalFormat("#.00");
             System.out.println(mensaje.size());
-        Font f1 = new Font(g2d.getFont().getFontName(),Font.PLAIN, 9);
+        Font f1 = new Font(g2d.getFont().getFontName(),Font.PLAIN, tamaño);
         Font f1Rotated = f1.deriveFont(affineTransform);
         g2d.setFont(f1Rotated);
         g2d.drawString(direccionCliente,direcciony, direccionx); 
+        
+        g2d.drawString(nombreCliente, nombrey, nombrex);
         for(int x=0; x< mensaje.size();x++){
         
             anchofor = anchofor-espaciado;
@@ -106,7 +107,7 @@ public class Imprimir implements Printable{
 
               
         }
-         
+        g2d.drawString(totalFactura, totalfacy, totalfacx);
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;
