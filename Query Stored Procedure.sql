@@ -972,6 +972,15 @@ DELIMITER ;
 
 
 DELIMITER $$
+	create procedure SpBtnEliminar(idbuscado int(5), producto varchar(7))
+		begin
+			delete from facturadetallebackup
+				where (facturaDetalleIdBackup = idBuscado) and (productoIdBackup = producto);
+        end $$
+DELIMITER ;
+
+
+DELIMITER $$
 	create procedure SpTransferirBackup()
 		BEGIN 
 			insert into facturadetalle(facturaDetalleId,productoId,cantidad,totalParcial)

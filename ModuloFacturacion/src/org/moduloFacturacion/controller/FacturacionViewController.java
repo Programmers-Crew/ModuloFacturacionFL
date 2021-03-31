@@ -193,6 +193,8 @@ public class FacturacionViewController implements Initializable {
     private JFXTextField txtResultadodDireccion;
     @FXML
     private TextField size;
+    @FXML
+    private JFXButton btneliminar;
     
     private void cargarEstado(Event event) {
         animacion.animacion(anchor3, anchor4);
@@ -464,8 +466,8 @@ public class FacturacionViewController implements Initializable {
                         txtDireccionCliente.setText(rs.getString("clienteDireccion"));
                     }
                 if(rs.first()){
-                    txtNombreCliente.setEditable(false);
-                    txtDireccionCliente.setEditable(false);
+                    txtNombreCliente.setEditable(true);
+                    txtDireccionCliente.setEditable(true);
                 }else{
                     comprobarCliente=true;
                     txtNombreCliente.setText("");
@@ -908,6 +910,35 @@ public String buscarCodigoProducto(String precioProductos){
     }
     
     
+    public void actualizarCliente(){
+        ArrayList<String> lista = new ArrayList();
+        String sql = "{call SpBuscarCliente('"+txtNitCliente.getValue()+"')}";
+        int x=0;
+        String usuario = "";
+            try{
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("clienteNit"));
+                usuario = rs.getString("clienteNit");
+                 x++;
+            }
+            
+            if(usuario != ""){
+                System.out.println("cliente azt");
+                String sql1 = "{call SpUpdateClientes('"+txtNitCliente.getValue()+"','"+txtNombreCliente.getText()+"','"+txtDireccionCliente.getText()+"')}";
+                PreparedStatement ps1 = Conexion.getIntance().getConexion().prepareCall(sql1);
+                ResultSet rs1 = ps1.executeQuery();
+            }  
+            
+                System.out.println("cliente sin act");
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+        
+        
     public int getClienteId(){
         int codigoCliente=0;
             
@@ -969,6 +1000,7 @@ public String buscarCodigoProducto(String precioProductos){
        } 
        String sqlFactura = "{call SpAgregarFactura('"+txtFacturaId.getText()+"','"+getClienteId()+"','"+date2+"','"+getUsuarioId()+"','"+totalNeto+"','"+totalIva+"','"+txtTotalFactura.getText()+"','"+tipoFactura+"')}";
        String sqlTipo = "{call SpAgregarTipoDocumento('"+txtFacturaId.getText()+"','"+tipo+"')}";
+       actualizarCliente();
        try{
            
            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
@@ -1118,7 +1150,43 @@ public String buscarCodigoProducto(String precioProductos){
         }
     }
     
-    
+@FXML
+    private void btnEliminar(MouseEvent event) {
+
+            int index = tblBackUp.getSelectionModel().getSelectedIndex();
+            FacturacionDetalleBackup nuevaFactura = new FacturacionDetalleBackup();
+            nuevaFactura.setFacturaDetalleIdBackup(colCodigoFactura.getCellData(index));
+            nuevaFactura.setProductoDesc(cmbNombreProducto.getValue());            
+            
+           String sql = "{call SpBtnEliminar('"+nuevaFactura.getFacturaDetalleIdBackup()+"','"+buscarCodigoProducto(nuevaFactura.getProductoDesc())+"')}";
+           try{
+               PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+               ps.execute();
+               
+                noti.graphic(new ImageView(imgCorrecto));
+                noti.title("OPERACIÓN EXITOSA");
+                noti.text("SE HA EDITADO EXITOSAMENTE EL REGISTRO");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+                tipoOperacionFacturacion = Operacion.NINGUNO;
+                cargarDatos();
+                btnEditar.setDisable(true);
+                valorTotalFactura();
+           }catch(SQLException ex){
+               ex.printStackTrace();
+                 Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("ERROR");
+                noti.text("NO SE HA PODIDO ACTUALIZAR EL CAMPO");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+           }
+    }
+        
     @FXML
     private void seleccionarElementos(MouseEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1126,8 +1194,8 @@ public String buscarCodigoProducto(String precioProductos){
         ButtonType buttonTypeNo = new ButtonType("No");
         
         alert.setTitle("WARNING");
-        alert.setHeaderText("EDITAR REGISTRO DE FACTURA");
-        alert.setContentText("¿Está seguro que desea editar este registro?");
+        alert.setHeaderText("EDITAR/ELIMINAR REGISTRO DE FACTURA");
+        alert.setContentText("¿Está seguro que desea editar/eliminar este registro?");
 
         alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
 
@@ -1139,6 +1207,7 @@ public String buscarCodigoProducto(String precioProductos){
                 txtCantidadProducto.setText(colCantidadProductoBackUp.getCellData(index).toString());
                 
                 btnEditar.setDisable(false);
+                btneliminar.setDisable(false);
                 btnVender.setDisable(true);
                 btnImprimir.setDisable(true);
                 tipoOperacionFacturacion = Operacion.ACTUALIZAR;
