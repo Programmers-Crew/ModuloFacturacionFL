@@ -80,7 +80,6 @@ public class ImprimirRespaldo implements Printable{
         g2d.drawString(String.valueOf(fecha.getMonthValue()),mesy,mesx);
         g2d.drawString(String.valueOf(fecha.getYear()),añoy,añox);
         
-        g2d.drawString(Nit,nity, nitx);
             float ancho =tablay;
             float largo = tablax;
             float anchoDesc = descfacx;
@@ -94,6 +93,7 @@ public class ImprimirRespaldo implements Printable{
         g2d.setFont(f1Rotated);
         g2d.drawString(direccionCliente,direcciony, direccionx);
         
+        g2d.drawString(Nit,nity, nitx);
         g2d.drawString(nombreCliente, nombrey, nombrex);
         for(int x=0; x< mensaje.size();x++){
           String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
