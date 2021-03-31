@@ -436,6 +436,7 @@ DELIMITER $$
         END $$
         
 DELIMITER ;
+
 DELIMITER $$
 	CREATE PROCEDURE spVerificarProveedores(proveedor varchar(50))
 		BEGIN
@@ -1370,7 +1371,6 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
-call SpFiltrarCredito('2021-02-20','2021-03-21')
 
 DELIMITER $$
 	create procedure SpFiltrarCreditoEmpresa(fechaInicio date, fechaFinal date, proveedor varchar(25))
@@ -1458,13 +1458,14 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
+
 DELIMITER $$
-	create procedure SpValidarCredito()
+	create procedure SpValidarCredito( estado int)
 		begin
 			update creditos
 				set 
-					creditoEstado = if(creditoEstado > 1, creditoEstado = 1, creditoEstado = 3);
-
+					creditoEstado = estado
+                    where creditoDiasRestantes < 0;
         end $$
 DELIMITER ;
 

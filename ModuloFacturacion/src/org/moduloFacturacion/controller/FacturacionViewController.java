@@ -830,7 +830,7 @@ public String buscarCodigoProducto(String precioProductos){
   
   @FXML
   public void validarNumeroFactura(KeyEvent event){
-              ArrayList<String> lista = new ArrayList();
+        ArrayList<String> lista = new ArrayList();
         String sql = "{call SpvalidarFactura('"+txtFacturaId.getText()+"')}";                        
         int x=0;
         String id = "";
