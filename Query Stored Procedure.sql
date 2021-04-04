@@ -1295,8 +1295,10 @@ DELIMITER $$
                 c.creditoFechaFinal,
                 c.creditoDiasRestantes,
                 c.creditoDesc,
+                c.noFactura,
                 p.proveedorNombre,
                 c.creditoMonto,
+                p.proveedorNit,
                 ec.estadoCreditoDesc
             from Creditos as c
 				inner join proveedores as p
@@ -1315,7 +1317,9 @@ DELIMITER $$
 			c.creditoFechaFinal,
 			c.creditoDiasRestantes,
 			c.creditoDesc,
+            c.noFactura,
 			p.proveedorNombre,
+            p.proveedorNit,
 			c.creditoMonto,
 			ec.estadoCreditoDesc
 		from Creditos as c
@@ -1336,7 +1340,9 @@ DELIMITER $$
 			c.creditoFechaFinal,
 			c.creditoDiasRestantes,
 			c.creditoDesc,
+            c.noFactura,
 			p.proveedorNombre,
+            p.proveedorNit,
 			c.creditoMonto,
 			ec.estadoCreditoDesc
 		from Creditos as c
@@ -1357,8 +1363,10 @@ DELIMITER $$
 				c.creditoFechaFinal,
 				c.creditoDiasRestantes,
 				c.creditoDesc,
+                c.noFactura,
 				p.proveedorNombre,
 				c.creditoMonto,
+				p.proveedorNit,
 				ec.estadoCreditoDesc
 			from Creditos as c
 			inner join proveedores as p
@@ -1381,7 +1389,9 @@ DELIMITER $$
 				c.creditoFechaFinal,
 				c.creditoDiasRestantes,
 				c.creditoDesc,
+                c.noFactura,
 				p.proveedorNombre,
+				p.proveedorNit,
 				c.creditoMonto,
 				ec.estadoCreditoDesc
 			from Creditos as c
@@ -1430,21 +1440,22 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50), proveedor varchar(7), monto double, estado int)
+	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50), proveedor varchar(7), monto double, estado int, noFac varchar(10))
 		begin 
-			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDiasRestantes,creditoDesc,creditoProveedor,creditoMonto,creditoEstado)
-				values(inicio, final, creditoFechaFinal -creaditoFechaInicio ,descripcion, proveedor, monto, estado);
+			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDiasRestantes,creditoDesc,creditoProveedor,creditoMonto,creditoEstado, noFactura)
+				values(inicio, final, creditoFechaFinal -creaditoFechaInicio ,descripcion, proveedor, monto, estado, noFac);
         end $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpActualizarCredito(idbuscado int,inicio date, final date, descripcion varchar(50), monto double)
+	create procedure SpActualizarCredito(idbuscado int,inicio date, final date, descripcion varchar(50), monto double,nofac varchar(10))
 		begin
 			update Creditos
 				set creaditoFechaInicio = inicio,
                 creditoFechaFinal = final,
                 creditoDesc = descripcion,
-                creditoMonto = monto
+                creditoMonto = monto,
+                noFactura = nofac
 			where idCredito = idbuscado;
         end $$
 DELIMITEr ;
@@ -1514,11 +1525,4 @@ create procedure SpBuscareProveedorNit(proveedor varchar(50))
     end $$
 DELIMITER ;
 
-DELIMITER $$
-	create procedure SpvalidarFactura(idFactura int(5))
-		begin
-			select * from Facturas
-				where facturaId = idFactura;
-        end $$ 
-DELIMITER ;
 

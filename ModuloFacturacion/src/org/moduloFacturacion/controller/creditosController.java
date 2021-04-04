@@ -113,6 +113,10 @@ public class creditosController implements Initializable {
     private JFXTextField txtNitProveedor;
     @FXML
     private TableColumn<?, ?> colProveedor1;
+    @FXML
+    private JFXTextField noFac;
+    @FXML
+    private TableColumn<Creditos, String> noFacColumn;
 
     @FXML
     private void validarPrecioProducto(KeyEvent event) {
@@ -145,6 +149,7 @@ public class creditosController implements Initializable {
           txtMontoCredito.setText("");
           txtDiasrestantesCredito.setText("");
           cmbProveedorCreditos.setValue("");
+          noFac.setText("");
           cmbProveedorProducto1.setValue("");
     }
     
@@ -198,7 +203,8 @@ public class creditosController implements Initializable {
                             rs.getString("creditoDesc"),
                             rs.getString("proveedorNombre"),
                             rs.getDouble("creditoMonto"),
-                            rs.getString("estadoCreditoDesc")
+                            rs.getString("estadoCreditoDesc"),
+                            rs.getString("noFactura")
                 ));
                 comboCodigo.add(x, rs.getString("idCredito"));
                 x++;
@@ -222,7 +228,7 @@ public class creditosController implements Initializable {
         colProveedor.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
         colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
         colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
-
+        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
         new AutoCompleteComboBoxListener(cmbBuscar);
         new AutoCompleteComboBoxListener(cmbProveedorCreditos);
         new AutoCompleteComboBoxListener(cmbProveedorProducto1);
@@ -247,7 +253,8 @@ public class creditosController implements Initializable {
                             rs.getString("creditoDesc"),
                             rs.getString("proveedorNombre"),
                             rs.getDouble("creditoMonto"),
-                            rs.getString("estadoCreditoDesc")
+                            rs.getString("estadoCreditoDesc"),
+                            rs.getString("noFactura")
                 ));
                 comboCodigo.add(x, rs.getString("idCredito"));
                 x++;
@@ -273,7 +280,7 @@ public class creditosController implements Initializable {
         colProveedor.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
         colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
         colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
-
+        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
         new AutoCompleteComboBoxListener(cmbBuscar);
         new AutoCompleteComboBoxListener(cmbProveedorCreditos);
         new AutoCompleteComboBoxListener(cmbProveedorProducto1);
@@ -297,7 +304,8 @@ public class creditosController implements Initializable {
                                 rs.getString("creditoDesc"),
                                 rs.getString("proveedorNombre"),
                                 rs.getDouble("creditoMonto"),
-                                rs.getString("estadoCreditoDesc")
+                                rs.getString("estadoCreditoDesc"),
+                                rs.getString("noFactura")
                     ));
                     comboCodigo.add(x, rs.getString("idCredito"));
                     x++;
@@ -324,6 +332,7 @@ public class creditosController implements Initializable {
         colProveedor.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
         colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
         colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
+        
 
         new AutoCompleteComboBoxListener(cmbBuscar);
         new AutoCompleteComboBoxListener(cmbProveedorCreditos);
@@ -907,7 +916,7 @@ public class creditosController implements Initializable {
     @FXML
     private void btnAgregar(MouseEvent event) {
         if(tipoOperacion == Operacion.GUARDAR){
-            if(txtFechaFinalCredito.getValue().equals("") || txtfechaInicioCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty() || cmbProveedorCreditos.getValue().isEmpty() ||txtMontoCredito.getText().isEmpty() ||cmbProveedorProducto1.getValue().isEmpty()){
+            if(txtFechaFinalCredito.getValue().equals("") || txtfechaInicioCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty() || cmbProveedorCreditos.getValue().isEmpty() ||txtMontoCredito.getText().isEmpty() ||cmbProveedorProducto1.getValue().isEmpty() || noFac.getText().isEmpty()){
                 Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(imgError));
                 noti.title("ERROR");
@@ -923,7 +932,7 @@ public class creditosController implements Initializable {
                     nuevoCredito.setCreditoDesc(txtDescripcionCredito.getText());
                     nuevoCredito.setProveedorNombre(cmbProveedorCreditos.getValue());
                     nuevoCredito.setCreditoMonto(Double.parseDouble(txtMontoCredito.getText()));
-                    
+                    nuevoCredito.setNoFactura(noFac.getText());
                     Integer codigoEstado = 0;
                     if(cmbProveedorProducto1.getValue().equals("PENDIENTE")){
                         codigoEstado = 1;
@@ -936,7 +945,7 @@ public class creditosController implements Initializable {
                     System.out.println(verficarProveedor(nuevoCredito.getProveedorNombre()));
                     System.out.println(codigoEstado);
 
-                String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoDesc()+"','"+verficarProveedor(nuevoCredito.getProveedorNombre())+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado+"')}";
+                String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoDesc()+"','"+verficarProveedor(nuevoCredito.getProveedorNombre())+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado+"','"+nuevoCredito.getNoFactura()+"')}";
                     accionCreditos(sql);
                 }
         }else{
@@ -949,6 +958,7 @@ public class creditosController implements Initializable {
     private void btnEliminar(MouseEvent event) {
          if(tipoOperacion == Operacion.GUARDAR){
             tipoOperacion = Operacion.CANCELAR;
+            accionCreditos();
         }else{
             Creditos eliminarCredito = new Creditos();
 
@@ -965,7 +975,7 @@ public class creditosController implements Initializable {
     
     @FXML
     private void btnEditar(MouseEvent event) {
-                 if(txtFechaFinalCredito.getValue().equals("") || txtfechaInicioCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty()||txtMontoCredito.getText().isEmpty()){
+            if(txtFechaFinalCredito.getValue().equals("") || txtfechaInicioCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty()||txtMontoCredito.getText().isEmpty() || noFac.getText().isEmpty()){
                 Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(imgError));
                 noti.title("ERROR");
@@ -976,7 +986,6 @@ public class creditosController implements Initializable {
                 noti.show();
             }else{
                     Creditos nuevoCreditos = new Creditos();
-                    
                     int index = tableProductos.getSelectionModel().getSelectedIndex();
                     String txtCodigoCredito = listaCreditos.get(index).getIdCredito().toString();
 
@@ -984,15 +993,16 @@ public class creditosController implements Initializable {
                     nuevoCreditos.setCreditoFechaFinal(java.sql.Date.valueOf( txtFechaFinalCredito.getValue()));
                     nuevoCreditos.setCreditoDesc(txtDescripcionCredito.getText());
                     nuevoCreditos.setCreditoMonto(Double.parseDouble(txtMontoCredito.getText()));
-                    
+                    nuevoCreditos.setNoFactura(noFac.getText());
                     tipoOperacion = Operacion.ACTUALIZAR;
-                    String sql = "{call SpActualizarCredito('"+txtCodigoCredito+"','"+nuevoCreditos.getCreditoFechaFinal()+"','"+nuevoCreditos.getCreaditoFechaInicio()+"','"+nuevoCreditos.getCreditoDesc()+"','"+nuevoCreditos.getCreditoMonto()+"')}";
+                    String sql = "{call SpActualizarCredito('"+txtCodigoCredito+"','"+nuevoCreditos.getCreditoFechaFinal()+"','"+nuevoCreditos.getCreaditoFechaInicio()+"','"+nuevoCreditos.getCreditoDesc()+"','"+nuevoCreditos.getCreditoMonto()+"','"+nuevoCreditos.getNoFactura()+"')}";
                     accionCreditos(sql);
                 }                
     }
     
 
 
+    @FXML
     public void buscarNitProveedores(){
         if(cmbProveedorCreditos.getValue()!= ""){
                 try{
