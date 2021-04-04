@@ -234,6 +234,35 @@ public class ProveedoresViewController implements Initializable {
         }
     }
     
+    @FXML
+  public void validarNumeroProveedores(KeyEvent event){
+              ArrayList<String> lista = new ArrayList();
+        String sql = "{call SpValidarProveedor('"+txtCodigoProveedores.getText()+"')}";                        
+        int x=0;
+        String id = "";
+            try{
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("proveedorId"));
+                id = rs.getString("proveedorId");
+                 x++;
+            }
+            
+            if(id != ""){
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("NUMERO DE PROVEEDOR INVALIDO");
+                noti.text("Por favor verifica que el numero de proveedor sea correcto");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+  }
     
     public void accionProveedores(String sql){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

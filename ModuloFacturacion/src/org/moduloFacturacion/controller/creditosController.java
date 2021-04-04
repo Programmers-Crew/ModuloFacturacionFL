@@ -510,32 +510,54 @@ public class creditosController implements Initializable {
         cambioScene.Cambio(menu1, (Stage) anchorCreditos.getScene().getWindow());
         
     }
-      public void anuncio(){
+     
+    public void anuncio(){
         LocalDate fechaActual = LocalDate.now();
-          System.out.println(fechaActual);
-        String sql2 = "{call SpValidarCredito()}";
+        
         String sql3="{call SpRestarDias2('"+fechaActual+"')}";
         
+        Integer dias = 0;
+        Integer estado = 0;
+
         try{
             PreparedStatement ps3 = Conexion.getIntance().getConexion().prepareCall(sql3);
             ps3.execute();
             
-            PreparedStatement ps2= Conexion.getIntance().getConexion().prepareCall(sql2);
-            ResultSet rs =ps2.executeQuery();
-
-            while(rs.next()){
+            
+                estado = 3;
+                String sql2="{call SpValidarCredito('"+estado+"')}";
+                PreparedStatement ps2 = Conexion.getIntance().getConexion().prepareCall(sql2);
+                ps2.execute();
                 
+                
+                
+        ArrayList<String> lista = new ArrayList();
+        String sql = "{call SpBucarCreditosVencidos()}";                        
+        int x=0;
+        String id = "";
+            try{
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("idCredito"));
+                id = rs.getString("idCredito");
+                 x++;
             }
-            if(rs.first()){
+            
+            if(id != ""){
                 Notifications noti = Notifications.create();
-                noti.graphic(new ImageView(warning));
-                noti.title("CREDITOS");
-                noti.text("Tiene creditos Pendientes");
+                noti.graphic(new ImageView(imgError));
+                noti.title("CREDITOS PENDIENTES");
+                noti.text("Por favor verifica tus creditos");
                 noti.position(Pos.BOTTOM_RIGHT);
                 noti.hideAfter(Duration.seconds(4));
                 noti.darkStyle();
                 noti.show();
             }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+                
         }catch(SQLException ex){
             ex.printStackTrace();
         }
@@ -611,7 +633,7 @@ public class creditosController implements Initializable {
                         noti.show();
                         tipoOperacion = Operacion.CANCELAR;
                         accionCreditos();
-                        anuncio();
+                       anuncio();
                         cargarCreditos();
                         limpiarTextProveedores();
                         

@@ -75,7 +75,7 @@
                                                    </children>
                                                 </HBox>
                                                 <Label layoutX="16.0" layoutY="39.0" text="CÓDIGO:" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="138.6" AnchorPane.topAnchor="39.0" />
-                                                <JFXTextField fx:id="txtCodigoProducto" layoutX="16.0" layoutY="51.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.19999999999999" AnchorPane.topAnchor="51.0" />
+                                                <JFXTextField fx:id="txtCodigoProducto" layoutX="16.0" layoutY="51.0" onKeyReleased="#validarNumeroProductos" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.19999999999999" AnchorPane.topAnchor="51.0" />
                                                 <Label layoutX="16.0" layoutY="91.0" prefHeight="18.0" prefWidth="61.0" text="NOMBRE:" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="91.0" />
                                                 <JFXTextField fx:id="txtNombreProducto" layoutX="16.0" layoutY="105.0" prefHeight="26.0" prefWidth="170.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.19999999999999" AnchorPane.topAnchor="105.0" />
                                                 <Label layoutX="16.0" layoutY="138.0" text="CATEGORÍA:" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="138.0" />

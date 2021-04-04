@@ -53,3 +53,61 @@ DELIMITER $$
 DELIMITER ;
 
 call SpBuscarCliente("554499-9","Diego Gonzalez","San miguel Petapa");
+
+
+## Cambios 30-03-2021
+
+DELIMITER $$
+	create procedure SpValidarProducto(idbuscado varchar(8))
+		begin 
+			select * from productos
+				where  productoId= idBuscado;
+        end $$
+DELIMITER ;
+
+
+DELIMITER $$
+	create procedure SpValidarProveedor(idbuscado varchar(8))
+		begin 
+			select * from proveedores
+				where  proveedorId= idBuscado;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarProductoProv(nombre varchar(50))
+		BEGIN
+			select 
+				p.proveedorId,
+                p.proveedorNombre, 
+                pr.productoDesc
+			from 
+				Proveedores as p
+			inner join
+				productos as pr
+			on pr.proveedorId = p.proveedorId
+			where proveedorNombre = nombre
+			order by proveedorId asc;
+        END $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarPrecioProd(nombre varchar(40))
+		begin
+			select 
+				productoPrecio
+			from 
+				productos
+			where productoDesc = nombre;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBucarCreditosVencidos()
+		begin 
+			select idCredito
+				from creditos
+					where creditoDiasRestantes < 0;
+        end $$
+DELIMITER ;
+

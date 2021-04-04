@@ -825,6 +825,10 @@ public class MenuPrincipalContoller implements Initializable {
                            }else{
                                if(event.getCode() == KeyCode.F7){
                                    credito();
+                               }else{
+                                   if(event.getCode() == KeyCode.F8){
+                                      promedioProveedores();
+                                   }
                                }
                            }
                        }
@@ -1236,6 +1240,37 @@ public class MenuPrincipalContoller implements Initializable {
         });
         stage.setWidth(599);
         stage.setHeight(510);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setTitle("CONSULTA DE PRECIOS");
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    
+            @FXML
+    private void promedioProveedores() throws IOException {
+        
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("org/moduloFacturacion/view/promedioProveedores.fxml"));
+        Scene scene = new Scene(root);
+         
+        
+       root.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            }
+        });
+        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            }
+        });
+        stage.setWidth(611);
+        stage.setHeight(639);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("CONSULTA DE PRECIOS");
         stage.setScene(scene);

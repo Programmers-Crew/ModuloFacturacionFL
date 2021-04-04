@@ -938,6 +938,36 @@ public class ProductosViewController implements Initializable {
             
         }
     }
+    
+      @FXML
+  public void validarNumeroProductos(KeyEvent event){
+              ArrayList<String> lista = new ArrayList();
+        String sql = "{call SpValidarProducto('"+txtCodigoProducto.getText()+"')}";                        
+        int x=0;
+        String id = "";
+            try{
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("productoId"));
+                id = rs.getString("productoId");
+                 x++;
+            }
+            
+            if(id != ""){
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("NUMERO DE PRODUCTO INVALIDO");
+                noti.text("Por favor verifica que el numero de producto sea correcto");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+  }
 
     public String verficarCategoria(String categoria){
         String sql = "{call spVerificarCategoria('"+categoria+"')}";
