@@ -73,6 +73,8 @@ public class InventarioViewController implements Initializable {
     private JFXButton btnAgregarInventario1;
     @FXML
     private JFXButton btnBuscarInventario1;
+    @FXML
+    private JFXButton btnCargarDatos;
 
 
 
@@ -167,8 +169,9 @@ public class InventarioViewController implements Initializable {
     @FXML
     private ComboBox<String> cmbCodigoEstadoProductos;
     
-    
-    
+    String proveedorName = "";
+    String prodProveedor = "";
+    String prodProducto = "";
     //========================================== CODIGO PARA VISTA INVENTARIO =============================================================
         
     public void limpiarText(){
@@ -236,8 +239,9 @@ public class InventarioViewController implements Initializable {
                             rs.getString("productoDesc"),
                             rs.getString("estadoProductoDesc"),
                             rs.getDouble("precioCosto"),
-                            rs.getString("tipoProdDesc")
+                            rs.getString("tipoProdDesc")                        
                 ));
+                prodProducto = rs.getString("productoId");
                 comboCodigoFiltro.add(x, rs.getString("productoId"));
                 x++;
             }
@@ -303,8 +307,58 @@ public class InventarioViewController implements Initializable {
         activarTextInventario();
     }
      
+    public ObservableList<InventarioProductos> getInventarioProveedor(){
+        ArrayList<InventarioProductos> lista = new ArrayList();
+        ArrayList<String> comboCodigoFiltro = new ArrayList();
+            String sql = "{call SpListarInventarioProveedores('"+proveedorName+"')}";
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new InventarioProductos(
+                            rs.getString("productoId"),
+                            rs.getInt("inventarioProductoCant"),
+                            rs.getString("proveedorNombre"),
+                            rs.getString("productoDesc"),
+                            rs.getString("estadoProductoDesc"),
+                            rs.getDouble("precioCosto"),
+                            rs.getString("tipoProdDesc")
+                ));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+                
+        return listaInventarioProductos = FXCollections.observableList(lista);
+    }
      
-     
+    
+         public void cargarDatosProveedor(){
+        tblInventario.setItems(getInventarioProveedor());
+        activarControles();
+        activarTextInventario();
+        colCodigoProductoInventario.setCellValueFactory(new PropertyValueFactory("productoId"));
+        colCantidadInventario.setCellValueFactory(new PropertyValueFactory("inventarioProductoCant"));
+        colProductoInventario.setCellValueFactory(new PropertyValueFactory("productoDesc"));
+        colProveedorInventario.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
+        colEstadoInventario.setCellValueFactory(new PropertyValueFactory("estadoProductoDesc"));
+        colEstadoInventario.setCellValueFactory(new PropertyValueFactory("estadoProductoDesc"));
+        colPrecioInventario.setCellValueFactory(new PropertyValueFactory("precioCosto"));
+        colTipoProducto.setCellValueFactory(new PropertyValueFactory("tipoProdDesc"));
+        limpiarText();
+       
+        llenarComboEstado();
+        cmbNombreEstado.setValue("");
+        new AutoCompleteComboBoxListener(cmbFiltroCodigo);
+        new AutoCompleteComboBoxListener(cmbNombreEstado);
+        activarControles();
+        activarTextInventario();
+    }
+         
+         
     @FXML
     private void seleccionarElementosProductos(MouseEvent event) {
         int index = tblInventario.getSelectionModel().getSelectedIndex();
@@ -384,7 +438,8 @@ public class InventarioViewController implements Initializable {
                 btnEliminarInventario.setText("CANCELAR");
                 btnBuscarInventario.setDisable(true);
                 btnEliminarInventario.setDisable(false);
-                
+
+                System.out.println(proveedorName);
                 activarTextInventario();
                 limpiarText();
                 break;
@@ -433,7 +488,7 @@ public class InventarioViewController implements Initializable {
                         tipoOperacionInventario = Operacion.CANCELAR;
                         accionInventario();
                         
-                        cargarDatos();
+                        cargarDatosProveedor();
                         
                     }catch (SQLException ex) {
                         ex.printStackTrace();
@@ -758,9 +813,11 @@ public class InventarioViewController implements Initializable {
                    nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
                    nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
 
+                   proveedorName = txtProveedorInventario.getText();
+                   System.out.println(proveedorName);
                    String sql = "{call SpAgregarInventarioProductos('"+nuevoInventario.getInventarioProductoCant()+"','"+ nuevoInventario.getProductoId()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
                    tipoOperacionInventario = Operacion.GUARDAR;
-                   accion(sql);                   
+                   accion(sql);                                      
                }
                  }else{
                     tipoOperacionInventario = Operacion.AGREGAR;;
@@ -945,6 +1002,11 @@ public class InventarioViewController implements Initializable {
                 buscar();
             }
         }
+    }
+    
+   @FXML
+    private void btnVolverACargar(ActionEvent event) {
+           cargarDatos();
     }
     
     //========================================== CODIGO PARA VISTA ESTADO PRODUCTO ========================================================

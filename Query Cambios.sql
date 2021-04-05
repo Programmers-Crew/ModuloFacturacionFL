@@ -111,3 +111,33 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
+
+-- 04 - 04
+DELIMITER $$
+	create procedure SpListarInventarioProveedores(proveedor varchar(50))
+		BEGIN
+			select
+				p.productoId,
+                ip.inventarioProductoCant,
+                pr.proveedorNombre,
+                p.productoDesc,
+                ep.estadoProductoDesc,
+                p.precioCosto,
+                tp.tipoProdDesc
+		from
+			InventarioProductos as ip
+		inner join Productos as p
+			on ip.productoId = p.productoId
+		inner join EstadoProductos as ep
+			on ip.estadoProductoId = ep.estadoProductoId
+		inner join Proveedores as pr
+			on p.proveedorId = pr.proveedorId
+		inner join tipoproducto as tp
+			on p.tipoProductoId = tp.tipoProdId
+		where pr.proveedorNombre = proveedor
+		order by 
+			p.productoId ASC;
+        END $$
+DELIMITER ;
+
+call SpListarInventarioProveedores("Herramientas poderosas");
