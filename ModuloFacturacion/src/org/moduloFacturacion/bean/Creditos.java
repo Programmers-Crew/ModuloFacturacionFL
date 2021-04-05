@@ -13,11 +13,11 @@ public class Creditos {
     private String proveedorNombre;
     private Double creditoMonto;
     private String estadoCreditoDesc;
-
+    private String noFactura;
     public Creditos() {
     }
 
-    public Creditos(Integer idCredito, Date creaditoFechaInicio, Date creditoFechaFinal, Integer creditoDiasRestantes, String creditoDesc, String proveedorNombre, Double creditoMonto, String estadoCreditoDesc) {
+    public Creditos(Integer idCredito, Date creaditoFechaInicio, Date creditoFechaFinal, Integer creditoDiasRestantes, String creditoDesc, String proveedorNombre, Double creditoMonto, String estadoCreditoDesc, String noFactura) {
         this.idCredito = idCredito;
         this.creaditoFechaInicio = creaditoFechaInicio;
         this.creditoFechaFinal = creditoFechaFinal;
@@ -26,7 +26,18 @@ public class Creditos {
         this.proveedorNombre = proveedorNombre;
         this.creditoMonto = creditoMonto;
         this.estadoCreditoDesc = estadoCreditoDesc;
+        this.noFactura = noFactura;
     }
+
+    public String getNoFactura() {
+        return noFactura;
+    }
+
+    public void setNoFactura(String noFactura) {
+        this.noFactura = noFactura;
+    }
+
+   
 
     public Integer getIdCredito() {
         return idCredito;

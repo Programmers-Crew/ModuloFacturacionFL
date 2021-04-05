@@ -119,8 +119,6 @@ public class InventarioViewController implements Initializable {
     @FXML
     private JFXTextField txtProductoInventario;
     @FXML
-    private JFXTextField txtPrecioInventario;
-    @FXML
     private ComboBox<String> cmbCodigoProductoInventario;
     @FXML
     private TableView<InventarioProductos> tblInventario;
@@ -179,7 +177,6 @@ public class InventarioViewController implements Initializable {
         txtCantidadInventario.setText("");
         txtProveedorInventario.setText("");
         txtProductoInventario.setText("");
-        txtPrecioInventario.setText("");
         cmbNombreEstado.setValue("");
 
     }
@@ -198,7 +195,6 @@ public class InventarioViewController implements Initializable {
         cmbCodigoProductoInventario.setDisable(true);
         txtProveedorInventario.setEditable(false);
         txtProductoInventario.setEditable(false);
-        txtPrecioInventario.setEditable(false);
         cmbNombreEstado.setDisable(true);
                 btnEditarInventario.setDisable(false);
         btnEliminarInventario.setDisable(false);
@@ -368,7 +364,6 @@ public class InventarioViewController implements Initializable {
             txtProveedorInventario.setText(colProveedorInventario.getCellData(index));
             txtProductoInventario.setText(colProductoInventario.getCellData(index));
             cmbNombreEstado.setValue(colEstadoInventario.getCellData(index));
-            txtPrecioInventario.setText(colPrecioInventario.getCellData(index).toString());
 
             codigoProducto = colCodigoProductoInventario.getCellData(index);
             cmbNombreEstado.setDisable(false);
@@ -625,7 +620,6 @@ public class InventarioViewController implements Initializable {
                         txtProveedorInventario.setText(rs.getString("proveedorNombre"));
                         txtProductoInventario.setText(rs.getString("productoDesc"));
                         cmbNombreEstado.setValue(rs.getString("estadoProductoDesc"));
-                        txtPrecioInventario.setText(rs.getString("precioCosto"));
 
                         codigoProducto = rs.getString("productoId");
                         
@@ -883,7 +877,6 @@ public class InventarioViewController implements Initializable {
                         while(resultado.next()){
                             txtProductoInventario.setText(resultado.getString("productoDesc"));
                             txtProveedorInventario.setText(resultado.getString("proveedorNombre"));
-                            txtPrecioInventario.setText(resultado.getString("precioCosto"));
                             btnAgregarInventario.setDisable(false);
                         }  
                 }catch(Exception e){

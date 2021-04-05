@@ -140,6 +140,7 @@ create table EstadoCredito(
 
 create table Creditos(
 	idCredito int not null auto_increment,
+    noFactura varchar(10) not null,
     creaditoFechaInicio date not null,
     creditoFechaFinal date not null,
     creditoFechaActual date,

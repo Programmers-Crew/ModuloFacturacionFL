@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="494.0" prefWidth="865.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.ProductosViewController">
+<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="494.0" prefWidth="865.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.ProductosViewController">
    <children>
       <Pane layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="600.0" styleClass="bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -123,8 +123,8 @@
                                                 </GridPane>
                                                 <Label layoutX="16.0" layoutY="312.0" prefHeight="18.0" prefWidth="61.0" text="COSTO:" />
                                                 <JFXTextField fx:id="txtCostoProducto" layoutX="19.0" layoutY="322.0" onKeyReleased="#validarPrecioProducto" prefHeight="27.0" prefWidth="216.0" AnchorPane.bottomAnchor="107.38180329125828" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="21.78181694093817" AnchorPane.topAnchor="322.0" />
-                                                <Label layoutX="17.0" layoutY="370.0" prefHeight="18.0" prefWidth="61.0" text="TIPO:" />
-                                                <ComboBox fx:id="cmbTipoProducto" editable="true" layoutX="13.0" layoutY="391.0" prefHeight="31.0" prefWidth="227.0" styleClass="comboOscuro" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="391.0" />
+                                                <Label layoutX="16.0" layoutY="357.0" prefHeight="18.0" prefWidth="61.0" text="TIPO:" />
+                                                <ComboBox fx:id="cmbTipoProducto" editable="true" layoutX="18.0" layoutY="375.0" prefHeight="31.0" prefWidth="227.0" styleClass="comboOscuro" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="375.0" />
                                              </children>
                                              <padding>
                                                 <Insets left="5.0" />
@@ -150,7 +150,7 @@
                                           <TableColumn fx:id="colTipoProducto" prefWidth="91.63623046875" text="TIPO" />
                                        </columns>
                                     </TableView>
-                                    <JFXButton fx:id="btnBuscar" buttonType="RAISED" layoutX="456.0" layoutY="7.0" onMouseClicked="#btnBuscar" prefHeight="63.0" prefWidth="65.0" styleClass="boton" text="BUSCAR" textFill="WHITE" AnchorPane.rightAnchor="29.236346808820258" AnchorPane.topAnchor="7.0" />
+                                    <JFXButton fx:id="btnBuscar" buttonType="RAISED" layoutX="451.0" layoutY="14.0" onMouseClicked="#btnBuscar" prefHeight="42.0" prefWidth="75.0" styleClass="boton" text="BUSCAR" textFill="WHITE" AnchorPane.rightAnchor="26.59999999999991" AnchorPane.topAnchor="14.0" />
                                     <ComboBox fx:id="cmbFiltroProductos" editable="true" layoutX="15.0" layoutY="9.0" onAction="#comboFiltro" prefHeight="26.0" prefWidth="395.0" promptText="NOMBRE O CÓDIGO" styleClass="comboOscuro" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="117.0" AnchorPane.topAnchor="9.0" />
                                     <ComboBox fx:id="cmbBuscar" editable="true" layoutX="15.0" layoutY="43.0" onAction="#cmbBuscar" prefHeight="27.0" prefWidth="418.0" promptText="INGRESE EL VALOR A BUSCAR" styleClass="comboOscuro" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="117.65454085420987" AnchorPane.topAnchor="43.0" />
                                     <ComboBox fx:id="cmbFiltrar" editable="true" layoutX="15.0" layoutY="85.0" prefHeight="27.0" prefWidth="418.0" promptText="INGRESE EL VALOR A BUSCAR" styleClass="comboOscuro" />

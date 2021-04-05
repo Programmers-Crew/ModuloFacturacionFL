@@ -5,10 +5,8 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import java.awt.print.PrinterJob;
-import javafx.scene.control.TextField; 
 
 import java.io.IOException;
-import static java.lang.Integer.parseInt;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.PreparedStatement;

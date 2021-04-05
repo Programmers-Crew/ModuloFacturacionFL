@@ -8,8 +8,6 @@ DELIMITER $$
         end $$ 
 DELIMITER ;
 
-call SpValidarFactura();
-
 DELIMITER $$
 	create procedure SpUpdateClientes(nit varchar(9) ,nombre varchar(25), direccion varchar(100))
 		begin
@@ -52,7 +50,6 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
-call SpBuscarCliente("554499-9","Diego Gonzalez","San miguel Petapa");
 
 
 ## Cambios 30-03-2021
