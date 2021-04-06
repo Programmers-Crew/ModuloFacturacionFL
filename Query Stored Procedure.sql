@@ -367,6 +367,7 @@ select
 				pr.productoId,
                 pr.productoDesc,
                 p.proveedorNombre,
+                p.proveedorId,
                 cp.categoriaNombre,
                 pr.precioCosto,
                 pr.productoPrecio,
@@ -486,7 +487,7 @@ DELIMITER $$
 	create procedure SpActualizarInventarioProductos(idBuscado varchar(7), cant int(100),estado tinyint(1))
 		BEGIN
 			update InventarioProductos
-				set inventarioProductoCant = cant, estadoProductoId = estado
+				set  estadoProductoId = estado
 					where productoId = idBuscado;
         END $$
 DELIMITER ;
