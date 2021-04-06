@@ -1,7 +1,9 @@
 package org.moduloFacturacion.controller;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -20,10 +22,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -32,6 +38,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -39,6 +46,7 @@ import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.Animations;
 import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
+import org.moduloFacturacion.bean.Creditos;
 import org.moduloFacturacion.bean.EstadoProductos;
 import org.moduloFacturacion.bean.InventarioProductos;
 import org.moduloFacturacion.bean.ValidarStyle;
@@ -74,7 +82,11 @@ public class InventarioViewController implements Initializable {
     @FXML
     private JFXButton btnBuscarInventario1;
     @FXML
+
+    private JFXTextField noFactura;
+    @FXML
     private JFXButton btnCargarDatos;
+
 
 
 
@@ -167,9 +179,15 @@ public class InventarioViewController implements Initializable {
     @FXML
     private ComboBox<String> cmbCodigoEstadoProductos;
     
+
+    
+    double costoProducto;
+    String proveedorId;
+
     String proveedorName = "";
     String prodProveedor = "";
     String prodProducto = "";
+
     //========================================== CODIGO PARA VISTA INVENTARIO =============================================================
         
     public void limpiarText(){
@@ -367,7 +385,7 @@ public class InventarioViewController implements Initializable {
 
             codigoProducto = colCodigoProductoInventario.getCellData(index);
             cmbNombreEstado.setDisable(false);
-            
+            verificarProducto();
             activarControles();
             activarTextInventario();
         }catch(Exception ex){
@@ -481,6 +499,7 @@ public class InventarioViewController implements Initializable {
                         noti.darkStyle();
                         noti.show();
                         tipoOperacionInventario = Operacion.CANCELAR;
+                        buscarCredito();
                         accionInventario();
                         
                         cargarDatosProveedor();
@@ -489,14 +508,15 @@ public class InventarioViewController implements Initializable {
                         ex.printStackTrace();
                         noti.graphic(new ImageView(imgError));
                         noti.title("ERROR AL AGREGAR");
-                        noti.text("HA OCURRIDO UN ERROR AL GUARDAR EL REGISTRO");
+                        noti.text("HA OCURRIDO UN ERROR AL GUARDAR EL REGISTRO"+ex);
                         noti.position(Pos.BOTTOM_RIGHT);
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();
                         noti.show();
                         tipoOperacionInventario = Operacion.CANCELAR;
                         accionInventario();
-                    }
+                       
+                    } 
                 }else{
                     
                     noti.graphic(new ImageView(imgError));
@@ -689,6 +709,8 @@ public class InventarioViewController implements Initializable {
                         noti.darkStyle();
                         noti.show();
                         tipoOperacionInventario = Operacion.CANCELAR;
+                        buscarCredito();
+
                         accionInventario();
                         
                         cargarDatos();
@@ -789,40 +811,184 @@ public class InventarioViewController implements Initializable {
         return buscarCodigoEstado;
     }
 
+    
+    
+    public void actualizarCredito(String nofac, double montoFac){
+        double montoTotal =montoFac+Double.parseDouble(txtCantidadInventario.getText())*costoProducto;
+        String sql = "call SpActualizarCreditoInventario('"+montoTotal+"','"+nofac+"')";
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ps.execute();
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgCorrecto));
+            noti.title("CREDITO ACTUALIZADO");
+            noti.text("Se ha actualizado el credito de la factura: "+nofac);
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("ERROR");
+            noti.text("hubo un error en la base de datos"+ex);
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }
+    }
+    
+    public void agregarCredito(){
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Agregar Credito");
+        dialog.setHeaderText("Ingrese los campos para agregar una nueva factura en creditos.");
+        dialog.setResizable(true);
+        int codigoEstado1 = 1;
+        Label label1 = new Label("Fecha de inicio: ");
+        Label label2 = new Label("Fecha Final: ");
+        Label label3 = new Label("Descripción:");
+        
+        JFXDatePicker fechaInicio = new JFXDatePicker();
+        JFXDatePicker fechaFinal= new JFXDatePicker();
+        TextField desc = new TextField();
+        GridPane grid = new GridPane();
+        
+        grid.add(label1, 1, 1);
+        grid.add(fechaInicio, 2, 1);
+        
+        grid.add(label2, 1, 3);
+        grid.add(fechaFinal, 2, 3);
+        
+        grid.add(label3, 1, 4);
+        grid.add(desc, 2, 4);
+        
+        dialog.getDialogPane().setContent(grid);
+
+        ButtonType buttonTypeOk = new ButtonType("Guardar", ButtonData.OK_DONE);
+        ButtonType buttonTypeCancel = new ButtonType("Cancelar", ButtonData.CANCEL_CLOSE);
+        
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
+        
+        Optional<ButtonType> result = dialog.showAndWait();
+         
+        if(result.get() == buttonTypeOk){
+            Creditos nuevoCredito = new Creditos();
+            nuevoCredito.setCreaditoFechaInicio(java.sql.Date.valueOf( fechaInicio.getValue()));
+            nuevoCredito.setCreditoFechaFinal(java.sql.Date.valueOf( fechaFinal.getValue()));
+            nuevoCredito.setCreditoDesc(desc.getText());
+            nuevoCredito.setProveedorNombre(proveedorId);
+            double cantidad = Double.parseDouble(txtCantidadInventario.getText());
+            nuevoCredito.setCreditoMonto(costoProducto*cantidad);
+            nuevoCredito.setNoFactura(noFactura.getText());
+            String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getProveedorNombre()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
+            try {
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                
+                ps.execute();
+                 Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgCorrecto));
+                noti.title("CREDITO GUARDADO");
+                noti.text("Se ha agregado un nuevo credito");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();   
+                noti.show();
+            } catch (SQLException ex) {
+                 Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("ERROR");
+                noti.text("hubo un error en la base de datos"+ex);
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();   
+                noti.show();
+            }
+        }else{
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("CREDITO NO GUARDADO");
+            noti.text("NO SE HA GUARDADO EL PRODUCTO A CREDITOS");
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }
+
+
+        
+    };
+    public void buscarCredito(){
+        String noFac = noFactura.getText();
+        
+        double montoFac = 0;
+        String sql = "call SpBuscarFacCredito('"+noFac+"')";
+        
+        try {
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+             while(rs.next()){
+                montoFac = rs.getDouble("creditoMonto");
+                
+            }
+            if(rs.first()){
+                
+                actualizarCredito(noFac,montoFac);
+                
+            }else{
+                agregarCredito();
+            }
+        } catch (SQLException ex) {
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("ERROR");
+            noti.text("hubo un error en la base de datos"+ex);
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }
+        
+        
+    }
      @FXML
     private void btnAgregar(MouseEvent event) {
         if(tipoOperacionInventario == Operacion.GUARDAR){
            if(cmbCodigoProductoInventario.getValue().equals("") || txtCantidadInventario.getText().isEmpty() || cmbNombreEstado.getValue().equals("")){
-                    Notifications noti = Notifications.create();
-                    noti.graphic(new ImageView(imgError));
-                    noti.title("ERROR");
-                    noti.text("HAY CAMPOS VACÍOS");
-                    noti.position(Pos.BOTTOM_RIGHT);
-                    noti.hideAfter(Duration.seconds(4));
-                    noti.darkStyle();   
-                    noti.show();
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("ERROR");
+                noti.text("HAY CAMPOS VACÍOS");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();   
+                noti.show();
            }else{
-                   InventarioProductos nuevoInventario = new InventarioProductos();
-                   nuevoInventario.setProductoId(cmbCodigoProductoInventario.getValue());
-                   nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
-                   nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
+                InventarioProductos nuevoInventario = new InventarioProductos();
+                nuevoInventario.setProductoId(cmbCodigoProductoInventario.getValue());
+                nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
+                nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
+
 
                    proveedorName = txtProveedorInventario.getText();
                    System.out.println(proveedorName);
                    String sql = "{call SpAgregarInventarioProductos('"+nuevoInventario.getInventarioProductoCant()+"','"+ nuevoInventario.getProductoId()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
                    tipoOperacionInventario = Operacion.GUARDAR;
                    accion(sql);                                      
-               }
-                 }else{
-                    tipoOperacionInventario = Operacion.AGREGAR;;
-                    accionInventario();
-                            }
+            }
+        }else{
+            tipoOperacionInventario = Operacion.AGREGAR;;
+            accionInventario();
+        }
+
     }
     
     
          @FXML
     private void btnSumar(MouseEvent event) {
-           if(cmbCodigoProductoInventario.getValue().equals("") || txtCantidadInventario.getText().isEmpty()){
+           if(cmbCodigoProductoInventario.getValue().equals("") || txtCantidadInventario.getText().isEmpty() || noFactura.getText().isEmpty()){
                     Notifications noti = Notifications.create();
                     noti.graphic(new ImageView(imgError));
                     noti.title("ERROR");
@@ -869,6 +1035,9 @@ public class InventarioViewController implements Initializable {
     
     @FXML
     public void buscarProducto(){
+        verificarProducto();
+    }
+    public void verificarProducto(){
         if(cmbCodigoProductoInventario.getValue()!= ""){
                 try{
                      PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarProductos(?)}");
@@ -877,6 +1046,8 @@ public class InventarioViewController implements Initializable {
                         while(resultado.next()){
                             txtProductoInventario.setText(resultado.getString("productoDesc"));
                             txtProveedorInventario.setText(resultado.getString("proveedorNombre"));
+                            proveedorId = resultado.getString("proveedorId");
+                            costoProducto = resultado.getDouble("precioCosto");
                             btnAgregarInventario.setDisable(false);
                         }  
                 }catch(Exception e){
@@ -890,9 +1061,8 @@ public class InventarioViewController implements Initializable {
                     noti.show();
                     btnAgregarInventario.setDisable(true);
                 }
-            }
+        }
     }
-    
     @FXML
     private void btnEliminar(MouseEvent event) {
          if(tipoOperacionInventario == Operacion.GUARDAR){
@@ -1073,14 +1243,13 @@ public class InventarioViewController implements Initializable {
         try{
             txtCodigoEstadoProducto.setText(colCodigoEstadoCodigo.getCellData(index).toString());
             txtDescEstadoProducto.setText(colDescEstadoProductos.getCellData(index));
-                  
+            
             btnEliminarEstadoProductos.setDisable(false);
             btnEditarEstadoProductos.setDisable(false);
             cmbNombreEstado.setDisable(false);
             codigoEstado = colCodigoEstadoCodigo.getCellData(index);
             activarTextEstado();
         }catch(Exception e){
-            e.printStackTrace();
         }
     }
     
@@ -1326,6 +1495,7 @@ public class InventarioViewController implements Initializable {
                 break;
         }
     }
+    
     
     
     @FXML

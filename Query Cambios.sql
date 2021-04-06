@@ -137,4 +137,21 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
-call SpListarInventarioProveedores("Herramientas poderosas");
+DELIMITER $$
+CREATE PROCEDURE SpBuscarFacCredito(noFac varchar(10))
+	BEGIN
+		SELECT c.idCredito, creditoMonto
+        FROM creditos as c
+        WHERE noFac = c.noFactura;
+    END $$
+DELIMITER ;
+
+DELIMITER $$
+	CREATE PROCEDURE SpActualizarCreditoInventario(monto double, nofac varchar(10))
+		BEGIN
+			UPDATE creditos 
+            SET creditoMonto = monto
+            where noFactura = nofac;
+        END $$
+
+DELIMITER ;
