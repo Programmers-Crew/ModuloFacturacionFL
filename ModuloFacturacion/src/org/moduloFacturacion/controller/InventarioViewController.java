@@ -82,11 +82,11 @@ public class InventarioViewController implements Initializable {
     @FXML
     private JFXButton btnBuscarInventario1;
     @FXML
-<<<<<<< HEAD
+
     private JFXTextField noFactura;
-=======
+    @FXML
     private JFXButton btnCargarDatos;
->>>>>>> Diego-Gonzalez
+
 
 
 
@@ -179,15 +179,15 @@ public class InventarioViewController implements Initializable {
     @FXML
     private ComboBox<String> cmbCodigoEstadoProductos;
     
-<<<<<<< HEAD
+
     
     double costoProducto;
     String proveedorId;
-=======
+
     String proveedorName = "";
     String prodProveedor = "";
     String prodProducto = "";
->>>>>>> Diego-Gonzalez
+
     //========================================== CODIGO PARA VISTA INVENTARIO =============================================================
         
     public void limpiarText(){
@@ -971,28 +971,18 @@ public class InventarioViewController implements Initializable {
                 nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
                 nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
 
-<<<<<<< HEAD
-                String sql = "{call SpAgregarInventarioProductos('"+nuevoInventario.getInventarioProductoCant()+"','"+ nuevoInventario.getProductoId()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
-                tipoOperacionInventario = Operacion.GUARDAR;
-                
-                accion(sql);   
-            }
-        }else{
-           tipoOperacionInventario = Operacion.AGREGAR;;
-           accionInventario();
-       }
-=======
+
                    proveedorName = txtProveedorInventario.getText();
                    System.out.println(proveedorName);
                    String sql = "{call SpAgregarInventarioProductos('"+nuevoInventario.getInventarioProductoCant()+"','"+ nuevoInventario.getProductoId()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
                    tipoOperacionInventario = Operacion.GUARDAR;
                    accion(sql);                                      
-               }
-                 }else{
-                    tipoOperacionInventario = Operacion.AGREGAR;;
-                    accionInventario();
-                            }
->>>>>>> Diego-Gonzalez
+            }
+        }else{
+            tipoOperacionInventario = Operacion.AGREGAR;;
+            accionInventario();
+        }
+
     }
     
     
