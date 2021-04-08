@@ -360,6 +360,7 @@ public class FacturacionViewController implements Initializable {
         llenarComboTipoFactura();
         cargarDatos();
         btnEditar.setDisable(true);
+        btneliminar.setDisable(true);
         valorTotalFactura();
         animacion.animacion(anchor1, anchor2);
         txtNitCliente.setValue("");
@@ -672,11 +673,11 @@ public String buscarCodigoProducto(String precioProductos){
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 lista.add(new FacturacionDetalleBackup(
-                            rs.getInt("facturaDetalleIdBackup"),
-                            rs.getString("productoDesc"),
-                            rs.getInt("cantidadBackup"),
-                            rs.getDouble("productoPrecio"),
-                            rs.getDouble("totalParcialBackup")
+                    rs.getInt("facturaDetalleIdBackup"),
+                    rs.getString("productoDesc"),
+                    rs.getInt("cantidadBackup"),
+                    rs.getDouble("productoPrecio"),
+                    rs.getDouble("totalParcialBackup")
                 ));
                 totalParcial = rs.getDouble("totalParcialBackup");
             }
@@ -790,6 +791,7 @@ public String buscarCodigoProducto(String precioProductos){
            valor=false;
        }else{
            int total = cantidad -Integer.parseInt(txtCantidadProducto.getText());
+           
            if(total<0){
                valor = false;
                Notifications noti = Notifications.create();
@@ -810,9 +812,10 @@ public String buscarCodigoProducto(String precioProductos){
                     noti.darkStyle();   
                     noti.show();
                     valor = true;
-                    sql1="{call SpActualizarInventarioProductos('"+codigoProducto1+"','"+total+"','"+validarEstadoProducto("AGOTADO")+"')}";
+                    sql1="{call SpActualizarInventarioProductosFacturacion('"+codigoProducto1+"','"+total+"','"+validarEstadoProducto("AGOTADO")+"')}";
                }else{
-                   sql1="{call SpActualizarInventarioProductos('"+codigoProducto1+"','"+total+"','"+validarEstadoProducto(estado)+"')}";
+                   sql1="{call SpActualizarInventarioProductosFacturacion('"+codigoProducto1+"','"+total+"','"+validarEstadoProducto(estado)+"')}";
+                   
                    valor = true;
                }
                try{
@@ -892,13 +895,13 @@ public String buscarCodigoProducto(String precioProductos){
                    txtLetrasPrecio.setText(letras.Convertir(twoDForm.format(Double.parseDouble(txtTotalFactura.getText())), true));
                 }else{
                     Notifications noti = Notifications.create();
-                noti.graphic(new ImageView(imgError));
-                noti.title("ERROR");
-                noti.text("ESTE PRODUCTO NO POSEE EXISTENCIAS, ACTUALICE EL INVENTARIO");
-                noti.position(Pos.BOTTOM_RIGHT);
-                noti.hideAfter(Duration.seconds(4));
-                noti.darkStyle();   
-                noti.show();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR");
+                    noti.text("ESTE PRODUCTO NO POSEE EXISTENCIAS, ACTUALICE EL INVENTARIO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();   
+                    noti.show();
                 }
                    
             }
@@ -959,7 +962,6 @@ public String buscarCodigoProducto(String precioProductos){
     
     public int getUsuarioId(){
         int codigoUsuario=0;
-        System.out.println(login.prefsUsuario.get("usuario", "root"));
         String sql = "{call SpBuscarUsuarioId('"+login.prefsUsuario.get("usuario", "root")+"')}";
         
         try{
@@ -1133,6 +1135,7 @@ public String buscarCodigoProducto(String precioProductos){
                 tipoOperacionFacturacion = Operacion.NINGUNO;
                 cargarDatos();
                 btnEditar.setDisable(true);
+                btneliminar.setDisable(true);
                 valorTotalFactura();
            }catch(SQLException ex){
                ex.printStackTrace();
@@ -1147,7 +1150,59 @@ public String buscarCodigoProducto(String precioProductos){
            }
         }
     }
-    
+    public void sumarInventario(){
+         String codigoProducto1 = buscarCodigoProducto(cmbNombreProducto.getValue());
+       String sql = "{call SpBuscarInventarioProductos('"+codigoProducto1+"')}";
+       int cantidad=0;
+       boolean valor=false;
+       String estado="";
+       try{
+           PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+           ResultSet rs = ps.executeQuery();
+           
+           while(rs.next()){
+               cantidad = rs.getInt("inventarioProductoCant");
+               estado = rs.getString("estadoProductoDesc");
+           }
+       }catch(SQLException ex){
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("ERROR");
+                noti.text(ex.toString());
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();   
+                noti.show();
+       }
+       
+       String sql1="";
+       int total = cantidad +Integer.parseInt(txtCantidadProducto.getText());
+       if(estado.equalsIgnoreCase("AGOTADO")){
+           
+       }else{
+           
+            if(total==0){
+                 noti.graphic(new ImageView(imgError));
+                 noti.title("ATENCIÓN");
+                 noti.text("ESTE PRODUCTO SE HA CAMBIADO DE ESTADO");
+                 noti.position(Pos.BOTTOM_RIGHT);
+                 noti.hideAfter(Duration.seconds(4));
+                 noti.darkStyle();   
+                 noti.show();
+                 sql1="{call SpActualizarInventarioProductosFacturacion('"+codigoProducto1+"','"+total+"','"+1+"')}";
+            }else{
+                sql1="{call SpActualizarInventarioProductosFacturacion('"+codigoProducto1+"','"+total+"','"+validarEstadoProducto(estado)+"')}";
+
+            }
+            try{
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql1);
+                ps.execute();
+            }catch(SQLException ex){
+                ex.printStackTrace();
+            }
+        }
+       
+    }
 @FXML
     private void btnEliminar(MouseEvent event) {
 
@@ -1160,7 +1215,7 @@ public String buscarCodigoProducto(String precioProductos){
            try{
                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
                ps.execute();
-               
+               sumarInventario();
                 noti.graphic(new ImageView(imgCorrecto));
                 noti.title("OPERACIÓN EXITOSA");
                 noti.text("SE HA EDITADO EXITOSAMENTE EL REGISTRO");
@@ -1171,6 +1226,7 @@ public String buscarCodigoProducto(String precioProductos){
                 tipoOperacionFacturacion = Operacion.NINGUNO;
                 cargarDatos();
                 btnEditar.setDisable(true);
+                btneliminar.setDisable(true);
                 valorTotalFactura();
            }catch(SQLException ex){
                ex.printStackTrace();
