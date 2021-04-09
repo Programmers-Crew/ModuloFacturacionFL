@@ -13,6 +13,7 @@ import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterJob;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -80,16 +81,17 @@ public class imprimirCheque implements Printable{
     }
     // Método que traza la imagen para imprimir
     public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){
-        
-        g2d.drawImage(image, 25,25,400, 500,null);
+        DecimalFormat formatea = new DecimalFormat("###,###.##");
+        String vt = String.valueOf(formatea.format(Double.parseDouble(valorTotal)));
+        g2d.drawImage(image, 25,25,500, 500,null);
         g2d.drawString(chequeNo,chequeNoX,chequeNoY);
         g2d.drawString(lugarYfecha,fechaX, fechaY);
         g2d.drawString(ordenDe,ordenX,ordenY);
         g2d.drawString(String.valueOf(suma),totalX,totalY);     
-        g2d.drawString(valorTotal, letrasX, letrasY);
-        g2d.drawString(String.valueOf(fechaActual), 136, 495);
+        g2d.drawString(vt, letrasX, letrasY);
+        g2d.drawString(String.valueOf(fechaActual), 170, 495);
          String[] arreglo = desc.split("\\n");
-         float x= 136;
+         float x= descX;
          float y = 290;
          for (String arreglo1 : arreglo) {
              g2d.drawString(arreglo1, x, y);

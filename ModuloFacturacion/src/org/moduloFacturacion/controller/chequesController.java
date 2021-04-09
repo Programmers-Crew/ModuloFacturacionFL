@@ -929,10 +929,25 @@ public class chequesController implements Initializable {
         stage.setScene(scene);
         stage.show();
         
+        Thread hilo = new Thread(runnable);
+	hilo.start();
     }
     
     
-    
+    Runnable runnable = new Runnable() {
+    @Override
+	public void run() {
+            while (true) {
+		try {
+                    Thread.sleep(1000);
+                    cargarChequesBuscadas2();
+		} catch (InterruptedException e) {
+                    e.printStackTrace();
+					}
+				}
+			}
+        
+		};
 
     
 }
