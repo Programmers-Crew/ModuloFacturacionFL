@@ -86,6 +86,8 @@ public class InventarioViewController implements Initializable {
     private JFXTextField noFactura;
     @FXML
     private JFXButton btnCargarDatos;
+    @FXML
+    private JFXTextField txtCostoNuevo;
 
 
 
@@ -371,23 +373,26 @@ public class InventarioViewController implements Initializable {
         activarControles();
         activarTextInventario();
     }
-         
+    Double costoAntiguo = 0.00;
          
     @FXML
     private void seleccionarElementosProductos(MouseEvent event) {
         int index = tblInventario.getSelectionModel().getSelectedIndex();
         try{
+            
             cmbCodigoProductoInventario.setValue(colCodigoProductoInventario.getCellData(index));
             txtCantidadInventario.setText(colCantidadInventario.getCellData(index).toString());
             txtProveedorInventario.setText(colProveedorInventario.getCellData(index));
             txtProductoInventario.setText(colProductoInventario.getCellData(index));
             cmbNombreEstado.setValue(colEstadoInventario.getCellData(index));
+            txtCostoNuevo.setText(colPrecioInventario.getCellData(index).toString());
 
             codigoProducto = colCodigoProductoInventario.getCellData(index);
             cmbNombreEstado.setDisable(false);
             verificarProducto();
             activarControles();
             activarTextInventario();
+            
         }catch(Exception ex){
              ex.printStackTrace();
         }
@@ -1078,12 +1083,24 @@ public class InventarioViewController implements Initializable {
     }
     
     @FXML
-    private void btnEditar(MouseEvent event) {
+    private void btnEditar(MouseEvent event) throws SQLException {
        InventarioProductos nuevoInventario = new InventarioProductos();
        nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
        nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
 
        String sql = "{call SpActualizarInventarioProductos('"+codigoProducto+"','"+nuevoInventario.getInventarioProductoCant()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
+       
+       if(txtCantidadInventario.getText().equals("0")){                
+            String sql3 = "{call SpCostoPromedioSinCantidad('"+codigoProducto+"','"+txtCostoNuevo.getText()+"')}";     
+            PreparedStatement ps3 = Conexion.getIntance().getConexion().prepareCall(sql3);
+            ResultSet rs2 = ps3.executeQuery();
+       }else if(txtCantidadInventario.getText() != "0"){
+           String sql2 = "{call SpCostoPromedio('"+codigoProducto+"','"+txtCostoNuevo.getText()+"')}";     
+           PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql2);
+           ResultSet rs = ps.executeQuery();   
+       }
+       
+
        tipoOperacionInventario = Operacion.ACTUALIZAR;
        accion(sql);                   
     }
@@ -1244,6 +1261,7 @@ public class InventarioViewController implements Initializable {
         try{
             txtCodigoEstadoProducto.setText(colCodigoEstadoCodigo.getCellData(index).toString());
             txtDescEstadoProducto.setText(colDescEstadoProductos.getCellData(index));
+            
             
             btnEliminarEstadoProductos.setDisable(false);
             btnEditarEstadoProductos.setDisable(false);
