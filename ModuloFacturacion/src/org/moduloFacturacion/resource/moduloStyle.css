@@ -150,6 +150,20 @@
     -fx-effect: dropshadow(three-pass-box, derive(black, -10%), 10, 0, 0, 0);
 }
 
+.paneConfig{
+    -fx-background-image: url(../img/ajustesBlanco.png);
+    -fx-background-size: stretch;
+}
+
+.paneConfig:hover{
+   -fx-effect: dropshadow(three-pass-box, derive(black, -10%), 10, 0, 2, 2);
+    
+}
+.paneConfig:pressed{
+    -fx-effect: dropshadow(three-pass-box, derive(black, -10%), 10, 0, 0, 0);
+}
+
+
 .combo{
     
     -fx-background-color: transparent;

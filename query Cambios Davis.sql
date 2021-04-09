@@ -7,3 +7,5 @@ DELIMITER $$
 					where productoId = idBuscado;
         END $$
 DELIMITER ;
+
+SET SQL_SAFE_UPDATES = 0;
