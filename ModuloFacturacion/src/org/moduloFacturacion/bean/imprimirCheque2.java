@@ -10,6 +10,7 @@ import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterJob;
+import java.text.DecimalFormat;
 import org.moduloFacturacion.controller.MenuPrincipalContoller;
 
 /**
@@ -56,6 +57,8 @@ public class imprimirCheque2 implements Printable{
     }
     // Método que traza la imagen para imprimir
     public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){ 
+        DecimalFormat formatea = new DecimalFormat("###,###.##");
+        String vt = String.valueOf(formatea.format(Double.parseDouble(valorTotal)));
         pf.setOrientation(PageFormat.LANDSCAPE);
          Font font = new Font(null, Font.PLAIN, 0);    
         AffineTransform affineTransform = new AffineTransform();
@@ -66,7 +69,7 @@ public class imprimirCheque2 implements Printable{
         
         g2d.drawString(ordenDe,ordenY, ordenX);
         g2d.drawString(String.valueOf(suma),totalY,totalX);
-        g2d.drawString(valorTotal,letrasY,letrasX);
+        g2d.drawString(vt,letrasY,letrasX);
         
     }
     
