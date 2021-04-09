@@ -98,10 +98,10 @@ create table EstadoFactura(
     estadoFacturaDesc varchar(25),
     PRIMARY KEY (estadoFactura) 
 );
-
 create table Facturas(
 	codigo int(5) UNSIGNED ZEROFILL PRIMARY KEY auto_increment,
-	facturaId int(5) UNSIGNED ZEROFILL,
+    facturaSerie varchar(5),
+	facturaId int(5) UNSIGNED ZEROFILL not null,
 	facturaDetalleId int(5) UNSIGNED ZEROFILL not null, 
     clienteId int(5) UNSIGNED ZEROFILL not null,
     facturaFecha date not null,

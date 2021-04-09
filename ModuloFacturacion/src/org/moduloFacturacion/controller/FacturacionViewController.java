@@ -193,6 +193,10 @@ public class FacturacionViewController implements Initializable {
     private TextField size;
     @FXML
     private JFXButton btneliminar;
+    @FXML
+    private JFXTextField txtSerieIdBuscado;
+
+
     
     private void cargarEstado(Event event) {
         animacion.animacion(anchor3, anchor4);
@@ -262,13 +266,16 @@ public class FacturacionViewController implements Initializable {
     @FXML
     private ComboBox<String> txtNitCliente;
     @FXML
-    private JFXButton btnImprimir;
+    private JFXTextField txtSerieId;
+    @FXML
+    private JFXTextField txtCantidadProducto;
     @FXML
     private JFXTextField txtPrecioProducto;
     @FXML
     private ComboBox<String> cmbNombreProducto;
+
     @FXML
-    private JFXTextField txtCantidadProducto;
+    private JFXButton btnImprimir;
     
     LocalDate date2 = LocalDate.now();
     
@@ -291,6 +298,8 @@ public class FacturacionViewController implements Initializable {
     double totalFactura=0;
     
     // ============================ PROPIEDADES DE BUSQUEDA DE FACTURAS 
+   @FXML
+    private TableColumn<FacturasBuscadas, String> colSerieFacturaBuscada;
     @FXML
      TableView<FacturasBuscadas> tblResultadoFactura;
     @FXML
@@ -364,6 +373,8 @@ public class FacturacionViewController implements Initializable {
         valorTotalFactura();
         animacion.animacion(anchor1, anchor2);
         txtNitCliente.setValue("");
+        txtSerieId.setText("");
+        txtSerieId.setEditable(true);
     }    
 
     @FXML
@@ -832,7 +843,7 @@ public String buscarCodigoProducto(String precioProductos){
   @FXML
   public void validarNumeroFactura(KeyEvent event){
         ArrayList<String> lista = new ArrayList();
-        String sql = "{call SpvalidarFactura('"+txtFacturaId.getText()+"')}";                        
+        String sql = "{call SpvalidarFactura('"+txtSerieId.getText()+"','"+txtFacturaId.getText()+"')}";                        
         int x=0;
         String id = "";
             try{
@@ -998,7 +1009,7 @@ public String buscarCodigoProducto(String precioProductos){
        }else{
            tipoFactura=2;
        } 
-       String sqlFactura = "{call SpAgregarFactura('"+txtFacturaId.getText()+"','"+getClienteId()+"','"+date2+"','"+getUsuarioId()+"','"+totalNeto+"','"+totalIva+"','"+txtTotalFactura.getText()+"','"+tipoFactura+"')}";
+       String sqlFactura = "{call SpAgregarFactura('"+txtSerieId.getText()+"','"+txtFacturaId.getText()+"','"+getClienteId()+"','"+date2+"','"+getUsuarioId()+"','"+totalNeto+"','"+totalIva+"','"+txtTotalFactura.getText()+"','"+tipoFactura+"')}";
        String sqlTipo = "{call SpAgregarTipoDocumento('"+txtFacturaId.getText()+"','"+tipo+"')}";
        actualizarCliente();
        try{
@@ -1332,6 +1343,7 @@ public String buscarCodigoProducto(String precioProductos){
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 lista.add(new FacturasBuscadas(
+                            rs.getString("facturaSerie"),
                             rs.getString("facturaId"),
                             rs.getDouble("facturaTotalNeto"),
                             rs.getDouble("facturaTotalIva"),
@@ -1356,7 +1368,8 @@ public String buscarCodigoProducto(String precioProductos){
     public void cargarFacturasBuscadas(){
         animacion.animacion(anchor3, anchor4);
         tblResultadoFactura.setItems(getFacturasBuscadas());
-        colNumeroFacBuscado.setCellValueFactory(new PropertyValueFactory("facturaId"));
+        colSerieFacturaBuscada.setCellValueFactory(new PropertyValueFactory("facturaSerie") );      
+        colNumeroFacBuscado.setCellValueFactory(new PropertyValueFactory("facturaId") );
         colTotlalNeto.setCellValueFactory(new PropertyValueFactory("facturaTotalNeto"));  
         colTotalIva.setCellValueFactory(new PropertyValueFactory("facturaTotalIva"));
         colTotalBuscado.setCellValueFactory(new PropertyValueFactory("facturaTotal"));
@@ -1377,6 +1390,7 @@ public String buscarCodigoProducto(String precioProductos){
     
     public void cargarFacturasBuscadasELiminar(){
         tblResultadoFactura.setItems(getFacturasBuscadas());
+        colSerieFacturaBuscada.setCellValueFactory(new PropertyValueFactory("facturaSerie") );      
         colNumeroFacBuscado.setCellValueFactory(new PropertyValueFactory("facturaId"));
         colTotlalNeto.setCellValueFactory(new PropertyValueFactory("facturaTotalNeto"));  
         colTotalIva.setCellValueFactory(new PropertyValueFactory("facturaTotalIva"));
@@ -1384,22 +1398,12 @@ public String buscarCodigoProducto(String precioProductos){
         colFechaBuscada.setCellValueFactory(new PropertyValueFactory("facturaFecha"));
         colTipoFactura.setCellValueFactory(new PropertyValueFactory("tipoFacturaDesc"));
         new AutoCompleteComboBoxListener(txtBusquedaCodigoFac);
-        txtBusquedaCodigoFac.setValue("");
-        txtFechaInicio.setValue(null);
-        txtFechaFinal.setValue(null);
-        tblResultadoProducto.setItems(null);
-        txtResultadoNit.setText("");
-        txtResultadoNombre.setText("");
-        txtResultadodDireccion.setText("");
-        btnCorteDeCaja.setDisable(true);
-        btnReporteVentas.setDisable(true);
-        btnImprimirRespaldo.setDisable(true);
     }  
         
     public ObservableList<FacturasBuscadas> getFacturasBuscadasPorId(){
         ArrayList<FacturasBuscadas> lista = new ArrayList();
         ArrayList<String> comboNumeroFacturas = new ArrayList();
-        String sql = "{call SpListarBusquedasFacturasPorId('"+txtBusquedaCodigoFac.getValue()+"')}";
+        String sql = "{call SpListarBusquedasFacturasPorId('"+txtSerieIdBuscado.getText()+"','"+txtBusquedaCodigoFac.getValue()+"')}";
         int x=0;
         
         try{
@@ -1407,6 +1411,7 @@ public String buscarCodigoProducto(String precioProductos){
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 lista.add(new FacturasBuscadas(
+                            rs.getString("facturaSerie"),                        
                             rs.getString("facturaId"),
                             rs.getDouble("facturaTotalNeto"),
                             rs.getDouble("facturaTotalIva"),
@@ -1423,7 +1428,7 @@ public String buscarCodigoProducto(String precioProductos){
     
     public void cargarFacturasBuscadasPorId(){
         tblResultadoFactura.setItems(getFacturasBuscadasPorId());
-        
+        colSerieFacturaBuscada.setCellValueFactory(new PropertyValueFactory("facturaSerie") );      
         colNumeroFacBuscado.setCellValueFactory(new PropertyValueFactory("facturaId"));
         colTotlalNeto.setCellValueFactory(new PropertyValueFactory("facturaTotalNeto"));  
         colTotalIva.setCellValueFactory(new PropertyValueFactory("facturaTotalIva"));
@@ -1446,6 +1451,7 @@ public String buscarCodigoProducto(String precioProductos){
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 lista.add(new FacturasBuscadas(
+                            rs.getString("facturaSerie"),                        
                             rs.getString("facturaId"),
                             rs.getDouble("facturaTotalNeto"),
                             rs.getDouble("facturaTotalIva"),
@@ -1462,7 +1468,7 @@ public String buscarCodigoProducto(String precioProductos){
         
     public void cargarFacturasBuscadasPorFecha(){
         tblResultadoFactura.setItems(getFacturasBuscadasPorFecha());
-        
+        colSerieFacturaBuscada.setCellValueFactory(new PropertyValueFactory("facturaSerie") );      
         colNumeroFacBuscado.setCellValueFactory(new PropertyValueFactory("facturaId"));
         colTotlalNeto.setCellValueFactory(new PropertyValueFactory("facturaTotalNeto"));  
         colTotalIva.setCellValueFactory(new PropertyValueFactory("facturaTotalIva"));
@@ -1493,8 +1499,8 @@ public String buscarCodigoProducto(String precioProductos){
     public ObservableList<ProductoBuscado> getProductoBuscado(){
         ArrayList<ProductoBuscado> listaProducto = new ArrayList();
         
-        String sql = "{call SpBuscarClienteFacturaFecha('"+txtBusquedaCodigoFac.getValue()+"')}";
-        
+        String sql = "{call SpBuscarClienteFacturaFecha('"+txtSerieIdBuscado.getText()+"','"+txtBusquedaCodigoFac.getValue()+"')}";
+        System.out.println(sql);
         try{
             PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
             ResultSet rs = ps.executeQuery();
@@ -1781,15 +1787,15 @@ public String buscarCodigoProducto(String precioProductos){
                     
                     if(resultEliminar.get() == buttonTypeSi){
                         int codigoFac = Integer.parseInt(txtBusquedaCodigoFac.getValue());
-                        String sql = "{call Sp_DevolucionProductosProd('"+txtBusquedaCodigoFac.getValue()+"')}";
-                        String sql2 = "{call Sp_CancelarFac('"+txtBusquedaCodigoFac.getValue()+"')}";
+                        String sql = "{call Sp_DevolucionProductosProd('"+txtSerieIdBuscado.getText()+"','"+txtBusquedaCodigoFac.getValue()+"')}";
+                        String sql2 = "{call Sp_CancelarFac('"+txtSerieIdBuscado.getText()+"','"+txtBusquedaCodigoFac.getValue()+"')}";
                         tipoOperacionBusquedaFacturas = Operacion.DEVOLUCION;
                         accion(sql); 
                         accion(sql2);
                     }else{
                         int codigoFac = Integer.parseInt(txtBusquedaCodigoFac.getValue());
-                        String sql = "{call Sp_DevolucionProductos('"+txtBusquedaCodigoFac.getValue()+"')}";
-                        String sql2 = "{call Sp_CancelarFac('"+txtBusquedaCodigoFac.getValue()+"')}";
+                        String sql = "{call Sp_DevolucionProductos('"+txtSerieIdBuscado.getText()+"','"+txtBusquedaCodigoFac.getValue()+"')}";
+                        String sql2 = "{call Sp_CancelarFac('"+txtSerieIdBuscado.getText()+"','"+txtBusquedaCodigoFac.getValue()+"')}";
                         tipoOperacionBusquedaFacturas = Operacion.DEVOLUCION;
                         accion(sql); 
                         accion(sql2);   
@@ -1861,14 +1867,16 @@ public String buscarCodigoProducto(String precioProductos){
     public void seleccionarFacturasBuscadas2(){
         int index = tblResultadoFactura.getSelectionModel().getSelectedIndex();
         try{
-
+            
+            txtSerieIdBuscado.setText(colSerieFacturaBuscada.getCellData(index).toString());
             txtBusquedaCodigoFac.setValue(colNumeroFacBuscado.getCellData(index).toString());
+            
             txtTotalFac.setText(colTotalBuscado.getCellData(index).toString());
             buscarProducto();
             btnImprimirRespaldo.setDisable(false);
             
             codigoFactura = Integer.parseInt(colNumeroFacBuscado.getCellData(index).toString());
-            System.out.println(codigoFactura);
+            
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -2012,8 +2020,8 @@ public String buscarCodigoProducto(String precioProductos){
         stage.setScene(scene);
         stage.show();
         
-//        Thread hilo = new Thread(runnable);
-//	hilo.start();
+        Thread hilo = new Thread(runnable);
+        hilo.start();
     }
     
     

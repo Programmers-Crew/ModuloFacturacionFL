@@ -649,10 +649,10 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarFacturas(id int(100), cliente int(100), fecha date, usuario int(100), neto decimal(10,2), iva decimal(10,2), total decimal(10,2))
+	create procedure SpAgregarFacturas(serie varchar(5),id int(100), cliente int(100), fecha date, usuario int(100), neto decimal(10,2), iva decimal(10,2), total decimal(10,2))
 		BEGIN
-			insert into Facturas(facturaId, clienteId, facturaFecha, usuarioId, facturaTotalNeto, facturaTotalIva, facturaTotal)
-				values(id, cliente, fecha, usuario, neto, iva, total);
+			insert into Facturas(facturaSerie,facturaId, clienteId, facturaFecha, usuarioId, facturaTotalNeto, facturaTotalIva, facturaTotal)
+				values(serie,id, cliente, fecha, usuario, neto, iva, total);
         END $$
 DELIMITER ;
 
@@ -692,10 +692,10 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpEliminarFac(numero int)
+	create procedure SpEliminarFac(serie varchar(5),numero int)
 		begin
 			delete from facturas
-				where codigo = numero;
+				where (facturaSerie = serie) and (facturaId = numero);
         end$$
 DELIMITER ;
 
@@ -862,7 +862,7 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpBuscarDetalleFacturasFecha(fechaInicio date, FechaFinal date)
 		BEGIN
-			select distinct f.facturaId, f.facturaFecha, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, ft.tipoFacturaDesc
+			select distinct f.facturaSerie, f.facturaId, f.facturaFecha, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, ft.tipoFacturaDesc
 				from facturas as f
 					inner join tipofactua as ft
 						on f.facturaTipo = ft.tipoFactura
@@ -870,10 +870,9 @@ DELIMITER $$
 						order by f.facturaId asc;
         END $$
 DELIMITER ;
-
-
+call ()
 DELIMITER $$
-	create procedure SpBuscarClienteFacturaFecha(idBuscado int(5))
+	create procedure SpBuscarClienteFacturaFecha(serie varchar(5),idBuscado int(5))
 		BEGIN	
 			select f.facturaId, c.clienteNit, c.clienteDireccion,c.clienteNombre, pr.productoDesc, fd.cantidad, pr.productoPrecio
 				from facturas as f
@@ -887,24 +886,22 @@ DELIMITER $$
 												order by f.facturaId asc;
         END $$
 DELIMITER ;
-
 DELIMITER $$
-	create procedure SpListarBusquedasFacturasPorId(idBuscado int(5))
+	create procedure SpListarBusquedasFacturasPorId(serie varchar(5),idBuscado int(5))
 		BEGIN
-			select distinct f.facturaId, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, f.facturaFecha, ft.tipoFacturaDesc
+			select distinct f.facturaSerie ,f.facturaId, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, f.facturaFecha, ft.tipoFacturaDesc
 				from facturas as f
                 inner join tipofactua as ft
 						on f.facturaTipo = ft.tipoFactura
-					where f.facturaId = idBuscado
+					where f.facturaSerie = serie and f.facturaId = idBuscado
                      order by f.facturaId asc;
         END $$
 DELIMITER ;
 
-call SpListarBusquedasFacturas()
 DELIMITER $$
 	create procedure SpListarBusquedasFacturas()
 		BEGIN
-			select distinct f.facturaId, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, f.facturaFecha,ft.tipoFacturaDesc
+			select distinct f.facturaSerie,f.facturaId, f.facturaTotalNeto, f.facturaTotalIva, f.facturaTotal, f.facturaFecha,ft.tipoFacturaDesc
 				from facturas as f
 					inner join tipofactua as ft
 						on f.facturaTipo = ft.tipoFactura
@@ -1000,10 +997,10 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarFactura(codigoFactura int(5),clienteId int(5), facturaFecha date, usuarioId int(5), facturaTotalNeto decimal(10,2), facturaTotalIva decimal(10,2), facturaTotal decimal(10,2), tipo int)
+	create procedure SpAgregarFactura(serie varchar(5),codigoFactura int(5),clienteId int(5), facturaFecha date, usuarioId int(5), facturaTotalNeto decimal(10,2), facturaTotalIva decimal(10,2), facturaTotal decimal(10,2), tipo int)
 		BEGIN 
-			insert into facturas (facturaId, facturaDetalleId, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal, facturaTipo)
-				select codigoFactura, fb.facturaDetalleIdBackup, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal, tipo
+			insert into facturas (facturaSerie,facturaId, facturaDetalleId, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal, facturaTipo)
+				select serie,codigoFactura, fb.facturaDetalleIdBackup, clienteId, facturaFecha, usuarioId,facturaTotalNeto,facturaTotalIva,facturaTotal, tipo
 					from facturadetallebackup as fb;
 		END $$
 DELIMITER ;
@@ -1236,7 +1233,7 @@ insert into EstadoCredito values(1, "PENDIENTE"),(2, "PAGADO"),(3, "VENCIDO");
 insert into tipoproducto values (1,'BIEN'),(2,'SERVICIO');
 
 DELIMITER $$
-	create procedure Sp_DevolucionProductos(idBuscado int)
+	create procedure Sp_DevolucionProductos(serie varchar(5),idBuscado int)
 		begin
 			update inventarioproductos as ip
 				inner join productos as p
@@ -1247,12 +1244,12 @@ DELIMITER $$
 				  on f.facturaDetalleId = fd.facturaDetalleId
 					set ip.inventarioProductoCant = fd.cantidad + ip.inventarioProductoCant,
 						f.estadoFactura = 2
-						where facturaId = idBuscado;
+						where facturaSerie = serie and  facturaId = idBuscado;
         end $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure Sp_DevolucionProductosProd(idBuscado int)
+	create procedure Sp_DevolucionProductosProd(serie varchar(5),idBuscado int)
 		begin
 			update inventarioproductos as ip
 				inner join productos as p
@@ -1263,15 +1260,16 @@ DELIMITER $$
 				  on f.facturaDetalleId = fd.facturaDetalleId
 					set 
 						f.estadoFactura = 2
-						where facturaId = idBuscado;
+						where facturaSerie = serie and  facturaId = idBuscado;
         end $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure Sp_CancelarFac(idBuscado int)
+	create procedure Sp_CancelarFac(serie varchar(5),idBuscado int)
 		begin 
 			update facturas 
-				set estadoFactura = 2;
+				set estadoFactura = 2
+					where facturaSerie = serie and facturaId = idBuscado;
         end $$
 DELIMITER ;
 

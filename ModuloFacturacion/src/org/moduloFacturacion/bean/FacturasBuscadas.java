@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class FacturasBuscadas {
     
+    private String facturaSerie;
     private String facturaId;
     private double facturaTotalNeto;
     private double facturaTotalIva;
@@ -14,7 +15,8 @@ public class FacturasBuscadas {
     public FacturasBuscadas() {
     }
 
-    public FacturasBuscadas(String facturaId, double facturaTotalNeto, double facturaTotalIva, double facturaTotal, Date facturaFecha, String tipoFacturaDesc) {
+    public FacturasBuscadas(String facturaSerie, String facturaId, double facturaTotalNeto, double facturaTotalIva, double facturaTotal, Date facturaFecha, String tipoFacturaDesc) {
+        this.facturaSerie = facturaSerie;
         this.facturaId = facturaId;
         this.facturaTotalNeto = facturaTotalNeto;
         this.facturaTotalIva = facturaTotalIva;
@@ -23,6 +25,16 @@ public class FacturasBuscadas {
         this.tipoFacturaDesc = tipoFacturaDesc;
     }
 
+    public String getFacturaSerie() {
+        return facturaSerie;
+    }
+
+    public void setFacturaSerie(String facturaSerie) {
+        this.facturaSerie = facturaSerie;
+    }
+
+
+    
     public String getTipoFacturaDesc() {
         return tipoFacturaDesc;
     }

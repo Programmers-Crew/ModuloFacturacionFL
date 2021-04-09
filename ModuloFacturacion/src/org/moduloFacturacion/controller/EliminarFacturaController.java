@@ -57,6 +57,8 @@ public class EliminarFacturaController implements Initializable {
         ObservableList<String> listaNumeroFactura;
         ObservableList<FacturasBuscadas> listaFacturasBuscadas;
         ObservableList<ProductoBuscado> listaProductoBuscado;
+    @FXML
+    private JFXTextField txtSerieFactura;
 
     
     @Override
@@ -67,6 +69,7 @@ public class EliminarFacturaController implements Initializable {
         txtAdministrador.setEditable(true);
         txtContrasena.setEditable(true);
         txtNumeroFactura.setEditable(true);
+        txtSerieFactura.setEditable(true);
     }    
 
    
@@ -98,7 +101,10 @@ public class EliminarFacturaController implements Initializable {
                         noti.show();
 
             }else{
-                 String sql2 = "{call SpEliminarFac('"+txtNumeroFactura.getText()+"')}";
+                System.out.println(txtSerieFactura.getText() + "serie");
+                                System.out.println(txtNumeroFactura.getText() + "id");
+
+                 String sql2 = "{call SpEliminarFac('"+txtSerieFactura.getText()+"','"+txtNumeroFactura.getText()+"')}";
                 ps = Conexion.getIntance().getConexion().prepareCall(sql2);
                 rs = ps.executeQuery();
                 

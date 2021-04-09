@@ -496,6 +496,8 @@ public class creditosController implements Initializable {
         
         int index = tableProductos.getSelectionModel().getSelectedIndex();
         try{
+           
+            noFac.setText(noFacColumn.getCellData(index));
             txtFechaFinalCredito.setValue(LocalDate.parse(colFechaInicio.getCellData(index).toString()));
             txtfechaInicioCredito.setValue(LocalDate.parse(colFechaFinal.getCellData(index).toString()));
             txtDiasrestantesCredito.setText(colDiasRestantes.getCellData(index).toString());
