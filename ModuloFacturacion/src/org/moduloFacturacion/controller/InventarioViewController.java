@@ -919,7 +919,8 @@ public class InventarioViewController implements Initializable {
 
 
         
-    };
+    }
+    
     public void buscarCredito(){
         String noFac = noFactura.getText();
         
