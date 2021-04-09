@@ -493,6 +493,7 @@ DELIMITER $$
 DELIMITER ;
 
 
+
 DELIMITER $$
 	create procedure SpBuscarInventarioProductos(idBuscado varchar(7))
 		BEGIN
@@ -998,7 +999,6 @@ DELIMITER $$
 		END $$
 DELIMITER ;
 
-drop procedure SpAgregarFactura
 DELIMITER $$
 	create procedure SpAgregarFactura(codigoFactura int(5),clienteId int(5), facturaFecha date, usuarioId int(5), facturaTotalNeto decimal(10,2), facturaTotalIva decimal(10,2), facturaTotal decimal(10,2), tipo int)
 		BEGIN 

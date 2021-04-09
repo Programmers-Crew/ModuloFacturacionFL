@@ -2,11 +2,9 @@ package org.moduloFacturacion.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +15,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -932,25 +929,10 @@ public class chequesController implements Initializable {
         stage.setScene(scene);
         stage.show();
         
-        Thread hilo = new Thread(runnable);
-	hilo.start();
     }
     
     
-    Runnable runnable = new Runnable() {
-    @Override
-	public void run() {
-            while (true) {
-		try {
-                    Thread.sleep(1000);
-                    cargarChequesBuscadas2();
-		} catch (InterruptedException e) {
-                    e.printStackTrace();
-					}
-				}
-			}
-        
-		};
+    
 
     
 }
