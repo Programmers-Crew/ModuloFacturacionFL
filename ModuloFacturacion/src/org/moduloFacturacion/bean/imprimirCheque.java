@@ -87,14 +87,14 @@ public class imprimirCheque implements Printable{
         g2d.drawString(ordenDe,ordenX,ordenY);
         g2d.drawString(String.valueOf(suma),totalX,totalY);     
         g2d.drawString(valorTotal, letrasX, letrasY);
-         g2d.drawString(desc, descX, descY);
         g2d.drawString(String.valueOf(fechaActual), 136, 495);
-         String[] arreglo = desc.split("\n");
+         String[] arreglo = desc.split("\\n");
          float x= 136;
          float y = 290;
          for (String arreglo1 : arreglo) {
              g2d.drawString(arreglo1, x, y);
-             y=y+10;
+             y=y+12;
+             
          }
     }
     
