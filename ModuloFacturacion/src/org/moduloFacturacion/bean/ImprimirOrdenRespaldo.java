@@ -91,7 +91,7 @@ public class ImprimirOrdenRespaldo implements Printable{
             float ancho =tablay;
             float largo = tablax;
             float anchoDesc = descfacx;
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("###,###.00");
         Font f1 = new Font(g2d.getFont().getFontName(),Font.PLAIN, tamaño);
         Font f1Rotated = f1.deriveFont(affineTransform);
         g2d.setFont(f1Rotated);
@@ -109,7 +109,7 @@ public class ImprimirOrdenRespaldo implements Printable{
               g2d.drawString(String.valueOf(totalp), anchofor, anchoValor);
               
           }
-        g2d.drawString(totalFactura, totalfacy, totalfacx);
+        g2d.drawString(df.format(Double.parseDouble(totalFactura)), totalfacy, totalfacx);
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;

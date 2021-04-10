@@ -30,6 +30,17 @@ public class MainApp extends Application {
             System.out.println("CONEXIO CORRECTA 1");
         }else{
             System.out.println("CONEXION INCORRECTA");
+            Stage st = new Stage();
+            Parent root1 = FXMLLoader.load(getClass().getClassLoader().getResource("org/moduloFacturacion/view/ERRORCONEXION.fxml"));
+            Scene scene1 = new Scene(root1);
+            st.setTitle("PROGRAMMERS BILLING");
+            st.getIcons().add(new Image(getClass().getResource("/org/moduloFacturacion/img/LogoGrande.png").toExternalForm()));
+            st.setWidth(500);
+            st.setHeight(300);
+            st.setScene(scene1);
+            st.setAlwaysOnTop(true);
+            
+            st.show();
         }        
         Parent root;
        if(pc.prefsValidacion.get("program", "root").equals("true")){

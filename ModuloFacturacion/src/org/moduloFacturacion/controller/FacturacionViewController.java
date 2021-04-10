@@ -62,6 +62,7 @@ import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.FacturacionDetalleBackup;
 import org.moduloFacturacion.bean.FacturasBuscadas;
 import org.moduloFacturacion.bean.Imprimir;
+import org.moduloFacturacion.bean.ImprimirFacA;
 import org.moduloFacturacion.bean.ImprimirOrdenDeCompra;
 import org.moduloFacturacion.bean.ImprimirOrdenRespaldo;
 import org.moduloFacturacion.bean.ImprimirRespaldo;
@@ -200,6 +201,46 @@ public class FacturacionViewController implements Initializable {
     private JFXButton btneliminar;
     @FXML
     private JFXTextField txtSerieIdBuscado;
+    @FXML
+    private TextField diafacx1;
+    @FXML
+    private TextField diafacy1;
+    @FXML
+    private TextField mesfacx1;
+    @FXML
+    private TextField mesfacy1;
+    @FXML
+    private TextField añofacx1;
+    @FXML
+    private TextField añofacy1;
+    @FXML
+    private TextField nombrefacx1;
+    @FXML
+    private TextField nombrefacy1;
+    @FXML
+    private TextField direccionfacx1;
+    @FXML
+    private TextField direccionfacy1;
+    @FXML
+    private TextField nitfacx1;
+    @FXML
+    private TextField nitfacy1;
+    @FXML
+    private TextField tablafacx1;
+    @FXML
+    private TextField tablafacy1;
+    @FXML
+    private TextField descfacx1;
+    @FXML
+    private TextField valorfacx1;
+    @FXML
+    private TextField espaciadofac1;
+    @FXML
+    private TextField totalfacx1;
+    @FXML
+    private TextField totalfacy1;
+    @FXML
+    private TextField size1;
 
 
     
@@ -389,12 +430,12 @@ public class FacturacionViewController implements Initializable {
     }
     
     JFXDatePicker fechaInicio = new JFXDatePicker();
-    GridPane grid = new GridPane();
+   
 
     
     @FXML
-    private void nuevaFecha(MouseEvent event) throws IOException {
-        
+    private void nuevaFecha(MouseEvent event) {
+         GridPane grid = new GridPane();
         Dialog dialog = new Dialog();
         dialog.setTitle("Cambiar fecha");
         dialog.setHeaderText("Por favor seleccionar la fecha");
@@ -1139,12 +1180,24 @@ public String buscarCodigoProducto(String precioProductos){
     public void imprimir(){
         Imprimir imprimir = new Imprimir();
         ImprimirOrdenDeCompra imprimirOrden = new ImprimirOrdenDeCompra();
+        
+        ImprimirFacA impA = new ImprimirFacA();
         DecimalFormat df = new DecimalFormat("#.00");
         double total = Double.parseDouble( txtTotalFactura.getText());
         String st =String.valueOf(df.format(total));
         if(cmbTipoFactura.getValue().equals("FACTURA")){
-            imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
-            imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
+            if(txtSerieId.getText().charAt(0) == 'A' || txtSerieId.getText().charAt(0) == 'a'){
+                System.out.println(txtSerieId.getText().charAt(0));
+                System.out.println("se está imprimiendo A");
+                impA.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
+                impA.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
+            }else{
+                System.out.println(txtSerieId.getText().charAt(0));
+                System.out.println("se está imprimiendo B");
+                imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
+                imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
+            }
+            
         }else{
             imprimirOrden.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(),st);
         }
@@ -1569,7 +1622,20 @@ public String buscarCodigoProducto(String precioProductos){
         double totalT = Double.parseDouble(txtTotalFac.getText());
         String tot = String.valueOf(df.format(totalT));
         if(tipoFac.equals("FACTURA")){
-            imprimir.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtResultadodDireccion.getText(), date2,tot);
+            if(date2 == null){
+                noti.graphic(new ImageView(imgError));
+                noti.title("ERROR AL IMPRIMIR");
+                noti.text("NO SE HA SELECCIONADO FECHA");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+            }else{
+                imprimir.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtResultadodDireccion.getText(), date2,tot);
+            }
+                
+            
+           
         } else{
             imprimirOrden.imprima(listaProductoBuscado, txtResultadoNit.getText(), txtResultadoNombre.getText(), txtResultadodDireccion.getText(), date2,txtLetrasPrecio.getText(), tot);
         }
@@ -2102,7 +2168,7 @@ public String buscarCodigoProducto(String precioProductos){
         stage.show();
         
         Thread hilo = new Thread(runnable);
-        hilo.start();
+       // hilo.start();
     }
     
     
@@ -2120,6 +2186,46 @@ public String buscarCodigoProducto(String precioProductos){
 			}
         
 		};
+
+    
+    
+    @FXML
+    private void guardarPreferencesFacturaA(MouseEvent event) {
+        menu.facA.put("diax1", diafacx1.getText()); 
+        menu.facA.put("diay1", diafacy1.getText()); 
+         
+        menu.facA.put("mesx1", mesfacx1.getText()); 
+        menu.facA.put("mesy1", mesfacy1.getText()); 
+         
+        menu.facA.put("añox1", añofacx1.getText()); 
+        menu.facA.put("añoy1", añofacy1.getText()); 
+         
+        menu.facA.put("nombrex1", nombrefacx1.getText()); 
+        menu.facA.put("nombrey1", nombrefacy1.getText()); 
+         
+        menu.facA.put("direccionx1", direccionfacx1.getText()); 
+        menu.facA.put("direcciony1", direccionfacy1.getText()); 
+         
+        menu.facA.put("nitx1", nitfacx1.getText()); 
+        menu.facA.put("nity1", nitfacy1.getText()); 
+         
+        menu.facA.put("tablax1", tablafacx1.getText()); 
+        menu.facA.put("tablay1", tablafacy1.getText()); 
+         
+        menu.facA.put("descfacx1", descfacx1.getText()); 
+         
+         
+        menu.facA.put("valorx1", valorfacx1.getText()); 
+         
+         
+        menu.facA.put("espaciado1", espaciadofac1.getText()); 
+         
+        menu.facA.put("totalfacx1", totalfacx1.getText()); 
+        menu.facA.put("totalfacy1", totalfacy1.getText()); 
+        
+        menu.facA.put("tamaño1", size1.getText());
+    
+    }
 
     
 @FXML 
@@ -2196,6 +2302,8 @@ public String buscarCodigoProducto(String precioProductos){
      
     @FXML 
     private void preferencesCargar(Event event) { 
+        
+        //fac b
         diafacx.setText(menu.factura.get("diax", "root")); 
         diafacy.setText(menu.factura.get("diay", "root")); 
          
@@ -2228,7 +2336,42 @@ public String buscarCodigoProducto(String precioProductos){
         totalfacy.setText(menu.factura.get("totalfacy", "root")); 
          
                  
+        //fac A
+        diafacx1.setText(menu.facA.get("diax1", "root")); 
+        diafacy1.setText(menu.facA.get("diay1", "root")); 
          
+        mesfacx1.setText(menu.facA.get("mesx1", "root")); 
+        mesfacy1.setText(menu.facA.get("mesy1", "root")); 
+         
+         
+        añofacx1.setText(menu.facA.get("añox1", "root")); 
+        añofacy1.setText(menu.facA.get("añoy1", "root")); 
+         
+        nombrefacx1.setText(menu.facA.get("nombrex1", "root")); 
+        nombrefacy1.setText(menu.facA.get("nombrey1", "root")); 
+         
+        direccionfacx1.setText(menu.facA.get("direccionx1", "root")); 
+        direccionfacy1.setText(menu.facA.get("direcciony1", "root")); 
+         
+        nitfacx1.setText(menu.facA.get("nitx1", "root")); 
+        nitfacy1.setText(menu.facA.get("nity1", "root")); 
+         
+        tablafacx1.setText(menu.facA.get("tablax1", "root")); 
+        tablafacy1.setText(menu.facA.get("tablay1", "root")); 
+         
+        descfacx1.setText(menu.facA.get("descfacx1", "root")); 
+         
+        valorfacx1.setText(menu.facA.get("valorx1", "root")); 
+         
+        espaciadofac1.setText(menu.facA.get("espaciado1", "root")); 
+         
+        totalfacx1.setText(menu.facA.get("totalfacx1", "root")); 
+        totalfacy1.setText(menu.facA.get("totalfacy1", "root")); 
+        size1.setText(menu.facA.get("tamaño1", "root"));
+        System.out.println("hola"+menu.facA.get("tamaño1", "root"));
+        //orden
+        
+        
         diaordenx.setText(menu.orden.get("diaxorden", "root")); 
         diaordeny.setText(menu.orden.get("diayorden", "root")); 
          

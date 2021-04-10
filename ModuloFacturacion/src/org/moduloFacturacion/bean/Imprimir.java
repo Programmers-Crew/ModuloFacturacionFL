@@ -87,7 +87,7 @@ public class Imprimir implements Printable{
             float anchoDesc = descfacx;
             float anchoValor = valorx;
             float anchofor = ancho+espaciado;   
-            DecimalFormat df = new DecimalFormat("#.00");
+            DecimalFormat df = new DecimalFormat("###,###.00");
             System.out.println(mensaje.size());
         Font f1 = new Font(g2d.getFont().getFontName(),Font.PLAIN, tamaño);
         Font f1Rotated = f1.deriveFont(affineTransform);
@@ -107,7 +107,7 @@ public class Imprimir implements Printable{
 
               
         }
-        g2d.drawString(totalFactura, totalfacy, totalfacx);
+        g2d.drawString(df.format(Double.parseDouble(totalFactura)), totalfacy, totalfacx);
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;

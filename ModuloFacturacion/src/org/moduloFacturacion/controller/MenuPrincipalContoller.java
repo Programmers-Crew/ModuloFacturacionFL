@@ -19,8 +19,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 import org.moduloFacturacion.report.GenerarReporte;
-
-
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
@@ -171,6 +169,7 @@ public class MenuPrincipalContoller implements Initializable {
     public Preferences PLetrasY = Preferences.userRoot().node(this.getClass().getName());
     
     public Preferences comprobante = Preferences.userRoot().node(this.getClass().getName());
+    public Preferences facA = Preferences.userRoot().node(this.getClass().getName());
     public Preferences factura = Preferences.userRoot().node(this.getClass().getName());
     public Preferences orden = Preferences.userRoot().node(this.getClass().getName());
     public Preferences letra = Preferences.userRoot().node(this.getClass().getName());
@@ -373,6 +372,40 @@ public class MenuPrincipalContoller implements Initializable {
         factura.put("totalfacx", "232");
         factura.put("totalfacy", "55");
     }
+     
+    public void resetearCamposFacturaA(){
+        facA.put("diax1", "28");
+        facA.put("diay1", "395");
+        
+        facA.put("mesx1", "68");
+        facA.put("mesy1", "395");
+        
+        facA.put("añox1", "110");
+        facA.put("añoy1", "395");
+        
+        facA.put("nombrex1", "70");
+        facA.put("nombrey1", "370");
+        
+        facA.put("direccionx1", "65");
+        facA.put("direcciony1", "360");
+        
+        facA.put("nitx1", "218");
+        facA.put("nity1", "360");
+        
+        facA.put("tablax1", "25");
+        facA.put("tablay1", "320");
+        
+        facA.put("descfacx1", "70");
+        
+        facA.put("valorx1", "227");
+        
+        facA.put("espaciado1", "18");
+        
+        facA.put("totalfacx1", "232");
+        facA.put("totalfacy1", "55");
+        
+    }
+    
     
      public void resetearCamposOrden(){
         orden.put("diaxorden", "28");
@@ -406,6 +439,10 @@ public class MenuPrincipalContoller implements Initializable {
     public void resetarLetra(){
         letra.put("tamaño", "9");
     }
+    public void resetarLetraA(){
+        facA.put("tamaño1", "9");
+       
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if(PfechaX.get("valor1","root").equals("root") || PfechaY.get("valor2","root").equals("root") || PordenX.get("valor3","root").equals("root") || PordenY.get("valor4","root").equals("root")
@@ -426,12 +463,20 @@ public class MenuPrincipalContoller implements Initializable {
             resetearCamposFactura();
         }
         
+        if(facA.get("totalfacy1","root").equals("root")){
+            resetearCamposFacturaA();
+        }
+         
         if(orden.get("totalfacyorden","root").equals("root")){
             resetearCamposOrden();
         }
         if(letra.get("tamaño","root").equals("root")){
             resetarLetra();
         }
+        if(facA.get("tamaño1","root").equals("root")){
+            resetarLetraA();
+        }
+        
         prefsRegresar.put("regresar", "menu");
         prefsRegresarProductos.put("regresarProducto", "menu");
          validar.validarMenu(prefs.get("dark", "root"), anchor);
