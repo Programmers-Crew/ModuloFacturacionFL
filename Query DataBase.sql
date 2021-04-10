@@ -37,6 +37,7 @@ create table Productos(
     productoDesc varchar(50) not null,
 	proveedorId varchar(7) not null,
     categoriaId varchar(7) not null,
+    costoAntiguo decimal(10,2),
 	precioCosto decimal(10,2) not null,
     productoPrecio decimal(10,2) not null,
     tipoProductoId int not null,

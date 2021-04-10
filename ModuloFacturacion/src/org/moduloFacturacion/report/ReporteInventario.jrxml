@@ -24,7 +24,13 @@
 	<field name="estadoProductoDesc" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="costoAntiguo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="precioCosto" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipoProdDesc" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -139,7 +145,14 @@
 				<text><![CDATA[PROVEEDOR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="605" y="3" width="67" height="24" uuid="dba03604-8b5a-4e0a-a608-efe122110f28"/>
+				<reportElement x="681" y="3" width="67" height="24" uuid="dba03604-8b5a-4e0a-a608-efe122110f28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROMEDIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="604" y="3" width="67" height="27" uuid="b35a19a1-a49f-4886-a2cc-72872b273c67"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -150,7 +163,7 @@
 	<detail>
 		<band height="42" splitType="Stretch">
 			<textField>
-				<reportElement x="605" y="0" width="67" height="20" uuid="424f5a37-e7ea-4f67-81c2-862e7c3b3f45"/>
+				<reportElement x="681" y="0" width="67" height="20" uuid="424f5a37-e7ea-4f67-81c2-862e7c3b3f45"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{precioCosto}]]></textFieldExpression>
 			</textField>
@@ -178,6 +191,11 @@
 				<reportElement x="7" y="0" width="83" height="20" uuid="ca2b4983-4841-44b1-a653-ffc34e4a8a44"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{productoId}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="604" y="0" width="67" height="20" uuid="2298407a-0526-4297-8ffd-c0ea3f207daa"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{costoAntiguo}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

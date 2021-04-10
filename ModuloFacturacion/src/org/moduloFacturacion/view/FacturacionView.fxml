@@ -45,7 +45,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Pane>
-            <Pane layoutX="119.0" layoutY="5.0" onMouseClicked="#vistaProducto" prefHeight="27.0" prefWidth="31.0" styleClass="paneConfig">
+            <Pane layoutX="119.0" layoutY="5.0" onMouseClicked="#nuevaFecha" prefHeight="27.0" prefWidth="31.0" styleClass="paneConfig">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

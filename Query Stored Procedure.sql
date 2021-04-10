@@ -458,6 +458,7 @@ DELIMITER $$
                 pr.proveedorNombre,
                 p.productoDesc,
                 ep.estadoProductoDesc,
+                P.costoAntiguo,
                 p.precioCosto,
                 tp.tipoProdDesc
 		from
@@ -870,7 +871,7 @@ DELIMITER $$
 						order by f.facturaId asc;
         END $$
 DELIMITER ;
-call ()
+
 DELIMITER $$
 	create procedure SpBuscarClienteFacturaFecha(serie varchar(5),idBuscado int(5))
 		BEGIN	
@@ -882,10 +883,11 @@ DELIMITER $$
 								on f.facturaDetalleId = fd.facturaDetalleId
 									inner join productos as pr
 										on pr.productoId = fd.productoId
-											where f.facturaId = idBuscado
+											where facturaSerie = serie and f.facturaId = idBuscado
 												order by f.facturaId asc;
         END $$
 DELIMITER ;
+
 DELIMITER $$
 	create procedure SpListarBusquedasFacturasPorId(serie varchar(5),idBuscado int(5))
 		BEGIN

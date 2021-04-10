@@ -9,6 +9,7 @@ import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import static java.sql.JDBCType.NULL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,8 +34,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -46,6 +50,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -277,7 +282,7 @@ public class FacturacionViewController implements Initializable {
     @FXML
     private JFXButton btnImprimir;
     
-    LocalDate date2 = LocalDate.now();
+    LocalDate date2;
     
     MenuPrincipalContoller menu = new MenuPrincipalContoller();
     LoginViewController login = new LoginViewController();
@@ -381,6 +386,53 @@ public class FacturacionViewController implements Initializable {
     private void regresar(MouseEvent event) throws IOException {
          String menu = "org/moduloFacturacion/view/menuPrincipal.fxml";
         cambioScene.Cambio(menu,(Stage) anchor.getScene().getWindow());
+    }
+    
+    JFXDatePicker fechaInicio = new JFXDatePicker();
+    GridPane grid = new GridPane();
+
+    
+    @FXML
+    private void nuevaFecha(MouseEvent event) throws IOException {
+        
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Cambiar fecha");
+        dialog.setHeaderText("Por favor seleccionar la fecha");
+        dialog.setResizable(true);
+        
+        Label label1 = new Label("Fecha de nueva: ");
+
+        grid.add(label1, 1, 1);
+        grid.add(fechaInicio, 2, 1);
+
+ 
+        
+        dialog.getDialogPane().setContent(grid);
+
+        ButtonType buttonTypeOk = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
+        ButtonType buttonTypeCancel = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
+        
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if(result.get() == buttonTypeOk){             
+            date2 = fechaInicio.getValue();
+            System.out.println(date2);
+        }else if(result.get() == buttonTypeCancel){
+            date2 = LocalDate.now();
+            System.out.println(date2);
+        }else{
+         Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgCorrecto));
+                noti.title("ERRRO EN LA BASE DE DATOS");
+                noti.text("Por favor intenta de nuevo");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();   
+                noti.show();
+        }
     }
     
     // =================== CODIGO FACTURACION
@@ -590,6 +642,8 @@ public class FacturacionViewController implements Initializable {
             }
         }
     }
+    
+    
     
     
     public void llenarComboTipoFactura(){
@@ -870,8 +924,32 @@ public String buscarCodigoProducto(String precioProductos){
         }
   }
   
+  public void ValidacionFecha(){
+      Notifications noti = Notifications.create();
+        
+      if(fechaInicio.getValue() != null){
+                noti.graphic(new ImageView(imgCorrecto));
+                noti.title("OPERACIÓN EXITOSA");
+                noti.text("Fecha seleccionada correctamente");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+       }else{
+                noti.graphic(new ImageView(imgError));
+                noti.title("DEBE SELECCIONAR FECHA");
+                noti.text("Por favor verifica que haya seleccionado la fecha correctamente");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+       }
+  
+  }
+  
   @FXML
     private void btnAgregarFacturaBackUp(MouseEvent event) {
+        ValidacionFecha();
         if(listaBackUp.size()>8){
              Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
@@ -1009,6 +1087,8 @@ public String buscarCodigoProducto(String precioProductos){
        }else{
            tipoFactura=2;
        } 
+              
+       System.out.println(date2);
        String sqlFactura = "{call SpAgregarFactura('"+txtSerieId.getText()+"','"+txtFacturaId.getText()+"','"+getClienteId()+"','"+date2+"','"+getUsuarioId()+"','"+totalNeto+"','"+totalIva+"','"+txtTotalFactura.getText()+"','"+tipoFactura+"')}";
        String sqlTipo = "{call SpAgregarTipoDocumento('"+txtFacturaId.getText()+"','"+tipo+"')}";
        actualizarCliente();
@@ -1803,9 +1883,9 @@ public String buscarCodigoProducto(String precioProductos){
                    }
     }
     
+    
     public void buscarProducto(){
-
-            String sql = "{call SpBuscarClienteFacturaFecha('"+txtBusquedaCodigoFac.getValue()+"')}";
+            String sql = "{call SpBuscarClienteFacturaFecha('"+txtSerieIdBuscado.getText()+"','"+txtBusquedaCodigoFac.getValue()+"')}";     
             accion(sql);
             
             PreparedStatement ps;
@@ -1862,6 +1942,7 @@ public String buscarCodigoProducto(String precioProductos){
     @FXML
     private void seleccionarElementosFacturasBuscadas(MouseEvent event) {
         seleccionarFacturasBuscadas2();
+        System.out.println(txtSerieIdBuscado.getText());
     }
     
     public void seleccionarFacturasBuscadas2(){
