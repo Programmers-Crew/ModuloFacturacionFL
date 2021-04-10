@@ -81,7 +81,7 @@ public class imprimirCheque implements Printable{
     }
     // Método que traza la imagen para imprimir
     public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){
-        DecimalFormat formatea = new DecimalFormat("###,###.##");
+        DecimalFormat formatea = new DecimalFormat("###,###.00");
         String vt = String.valueOf(formatea.format(Double.parseDouble(valorTotal)));
         g2d.drawImage(image, 25,25,500, 500,null);
         g2d.drawString(chequeNo,chequeNoX,chequeNoY);

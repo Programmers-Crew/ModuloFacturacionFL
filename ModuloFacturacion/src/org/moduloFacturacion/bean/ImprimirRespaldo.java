@@ -84,7 +84,7 @@ public class ImprimirRespaldo implements Printable{
             float largo = tablax;
             float anchoDesc = descfacx;
             
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("###,###.00");
             float anchoValor = valorx;
             float anchofor = ancho+espaciado;
             
@@ -106,7 +106,7 @@ public class ImprimirRespaldo implements Printable{
 
         }
          
-        g2d.drawString(totalFactura, totalfacy, totalfacx);
+        g2d.drawString(df.format(Double.parseDouble(totalFactura)), totalfacy, totalfacx);
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;
