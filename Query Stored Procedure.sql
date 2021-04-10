@@ -458,6 +458,7 @@ DELIMITER $$
                 pr.proveedorNombre,
                 p.productoDesc,
                 ep.estadoProductoDesc,
+                P.costoAntiguo,
                 p.precioCosto,
                 tp.tipoProdDesc
 		from

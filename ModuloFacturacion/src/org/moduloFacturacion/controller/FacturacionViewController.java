@@ -9,6 +9,7 @@ import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import static java.sql.JDBCType.NULL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -643,6 +644,8 @@ public class FacturacionViewController implements Initializable {
     }
     
     
+    
+    
     public void llenarComboTipoFactura(){
         ArrayList<String> lista = new ArrayList();
         String sql= "{call Sp_ListarTipo()}";
@@ -921,8 +924,32 @@ public String buscarCodigoProducto(String precioProductos){
         }
   }
   
+  public void ValidacionFecha(){
+      Notifications noti = Notifications.create();
+        
+      if(fechaInicio.getValue() != null){
+                noti.graphic(new ImageView(imgCorrecto));
+                noti.title("OPERACIÓN EXITOSA");
+                noti.text("Fecha seleccionada correctamente");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+       }else{
+                noti.graphic(new ImageView(imgError));
+                noti.title("DEBE SELECCIONAR FECHA");
+                noti.text("Por favor verifica que haya seleccionado la fecha correctamente");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();
+                noti.show();
+       }
+  
+  }
+  
   @FXML
     private void btnAgregarFacturaBackUp(MouseEvent event) {
+        ValidacionFecha();
         if(listaBackUp.size()>8){
              Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
