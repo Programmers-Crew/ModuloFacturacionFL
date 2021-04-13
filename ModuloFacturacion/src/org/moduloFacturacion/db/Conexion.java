@@ -14,8 +14,8 @@ public class Conexion {
         try{
           
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            //192.168.1.2
-                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ProgrammersBilling?useSSL=False", "ProgrammersL1" , "ProgrammersLicenciaUno");
+            //
+                conexion = DriverManager.getConnection("jdbc:mysql://192.168.1.2:3306/ProgrammersBilling?useSSL=False", "ProgrammersL1" , "ProgrammersLicenciaUno");
                     }catch(ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e){
                             e.printStackTrace();
                     }
