@@ -1292,66 +1292,57 @@ DELIMITER $$
 		begin
 			select 
 				c.idCredito,
+				c.noFactura,
                 c.creaditoFechaInicio,
                 c.creditoFechaFinal,
                 c.creditoDiasRestantes,
                 c.creditoDesc,
-                c.noFactura,
-                p.proveedorNombre,
                 c.creditoMonto,
-                p.proveedorNit,
                 ec.estadoCreditoDesc
             from Creditos as c
-				inner join proveedores as p
-					on c.creditoProveedor = p.proveedorId
 			inner join EstadoCredito as ec
-				on c.creditoEstado = ec.estadoCreditoId;
+				on c.creditoEstado = ec.estadoCreditoId
+                group by c.idCredito;
         end $$
 DELIMITER ;
 
 DELIMITER $$
 	create procedure SpBuscarCredito(idBuscado int)
     begin
-		select 
-			c.idCredito,
-			c.creaditoFechaInicio,
-			c.creditoFechaFinal,
-			c.creditoDiasRestantes,
-			c.creditoDesc,
-            c.noFactura,
-			p.proveedorNombre,
-            p.proveedorNit,
-			c.creditoMonto,
-			ec.estadoCreditoDesc
-		from Creditos as c
-		inner join proveedores as p
-			on c.creditoProveedor = p.proveedorId
-		inner join EstadoCredito as ec
-			on c.creditoEstado = ec.estadoCreditoId
-				where c.idCredito = idBuscado;
+			select 
+				c.idCredito,
+				c.noFactura,
+                c.creaditoFechaInicio,
+                c.creditoFechaFinal,
+                c.creditoDiasRestantes,
+                c.creditoDesc,
+                c.creditoMonto,
+                ec.estadoCreditoDesc
+            from Creditos as c
+			inner join EstadoCredito as ec
+				on c.creditoEstado = ec.estadoCreditoId
+				where c.idCredito = idBuscado
+                group by c.idCredito;
     end $$
 DELIMITER ;
 
 DELIMITER $$
 	create procedure SpBuscarCreditoProveedor(proveedor varchar(25))
     begin
-		select 
-			c.idCredito,
-			c.creaditoFechaInicio,
-			c.creditoFechaFinal,
-			c.creditoDiasRestantes,
-			c.creditoDesc,
-            c.noFactura,
-			p.proveedorNombre,
-            p.proveedorNit,
-			c.creditoMonto,
-			ec.estadoCreditoDesc
-		from Creditos as c
-		inner join proveedores as p
-			on c.creditoProveedor = p.proveedorId
-		inner join EstadoCredito as ec
-			on c.creditoEstado = ec.estadoCreditoId
-				where p.proveedorNombre = proveedor;
+			select 
+				c.idCredito,
+				c.noFactura,
+                c.creaditoFechaInicio,
+                c.creditoFechaFinal,
+                c.creditoDiasRestantes,
+                c.creditoDesc,
+                c.creditoMonto,
+                ec.estadoCreditoDesc
+            from Creditos as c
+			inner join EstadoCredito as ec
+				on c.creditoEstado = ec.estadoCreditoId
+				where p.proveedorNombre = proveedor
+                group by c.idCredito;
     end $$
 DELIMITER ;
 
@@ -1360,23 +1351,21 @@ DELIMITER $$
 		begin
 			select 
 				c.idCredito,
-				c.creaditoFechaInicio,
-				c.creditoFechaFinal,
-				c.creditoDiasRestantes,
-				c.creditoDesc,
-                c.noFactura,
-				p.proveedorNombre,
-				c.creditoMonto,
-				p.proveedorNit,
-				ec.estadoCreditoDesc
-			from Creditos as c
-			inner join proveedores as p
-				on c.creditoProveedor = p.proveedorId
+				c.noFactura,
+                c.creaditoFechaInicio,
+                c.creditoFechaFinal,
+                c.creditoDiasRestantes,
+                c.creditoDesc,
+                c.creditoMonto,
+                ec.estadoCreditoDesc
+            from Creditos as c
 			inner join EstadoCredito as ec
 				on c.creditoEstado = ec.estadoCreditoId
 					where (c.creaditoFechaInicio between fechaInicio and fechaFinal)
 							and (creditoEstado = 1 or 2 or 3)
-                            order by idCredito desc;
+                            group by c.idCredito
+                            order by idCredito desc
+                            ;
         end $$
 DELIMITER ;
 
@@ -1386,23 +1375,20 @@ DELIMITER $$
 		begin
 			select 
 				c.idCredito,
-				c.creaditoFechaInicio,
-				c.creditoFechaFinal,
-				c.creditoDiasRestantes,
-				c.creditoDesc,
-                c.noFactura,
-				p.proveedorNombre,
-				p.proveedorNit,
-				c.creditoMonto,
-				ec.estadoCreditoDesc
-			from Creditos as c
-			inner join proveedores as p
-				on c.creditoProveedor = p.proveedorId
+				c.noFactura,
+                c.creaditoFechaInicio,
+                c.creditoFechaFinal,
+                c.creditoDiasRestantes,
+                c.creditoDesc,
+                c.creditoMonto,
+                ec.estadoCreditoDesc
+            from Creditos as c
 			inner join EstadoCredito as ec
 				on c.creditoEstado = ec.estadoCreditoId
 					where (c.creaditoFechaInicio between fechaInicio and fechaFinal)
                           and (p.proveedorNombre = proveedor)
-                          group by ec.estadoCreditoDesc order by  ec.estadoCreditoDesc asc;
+                          group by ec.estadoCreditoDesc and c.idCredito order by  ec.estadoCreditoDesc asc
+                          ;
         end $$
 DELIMITER ;
 
@@ -1441,22 +1427,21 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50), proveedor varchar(7), monto double, estado int, noFac varchar(10))
+	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50), monto double, estado int, noFac varchar(10), creditoDesc int)
 		begin 
-			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDiasRestantes,creditoDesc,creditoProveedor,creditoMonto,creditoEstado, noFactura)
-				values(inicio, final, creditoFechaFinal -creaditoFechaInicio ,descripcion, proveedor, monto, estado, noFac);
+			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDiasRestantes,creditoDesc,creditoProveedor,creditoMonto,creditoEstado, noFactura, creditoDetalle)
+				values(inicio, final, creditoFechaFinal -creaditoFechaInicio ,descripcion, proveedor, monto, estado, noFac, creditoDesc);
         end $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpActualizarCredito(idbuscado int,inicio date, final date, descripcion varchar(50), monto double,nofac varchar(10))
+	create procedure SpActualizarCredito(idbuscado int,inicio date, final date, descripcion varchar(50), monto double)
 		begin
 			update Creditos
 				set creaditoFechaInicio = inicio,
                 creditoFechaFinal = final,
                 creditoDesc = descripcion,
-                creditoMonto = monto,
-                noFactura = nofac
+                creditoMonto = monto
 			where idCredito = idbuscado;
         end $$
 DELIMITEr ;
@@ -1526,4 +1511,28 @@ create procedure SpBuscareProveedorNit(proveedor varchar(50))
     end $$
 DELIMITER ;
 
+-- DETALLE CREDITO
+DELIMITER $$
+	create procedure SpAgregarCreditoDetalle(productoId int, cantidad double, totalParcial double)
+		begin
+			insert into CreditoDetalle(productoId,cantidadDetalle,totalParcialDetalle)
+				value(productoId, cantidad, totalParcial);
+        end $$
+DELIMITER ;
 
+DELIMITER $$
+		create procedure SpListarCreditoDetalle(detalleId int)
+			begin
+				select 
+					cd.idCreditoDetalle,
+                    p.productoDesc,
+                    pr.proveedorNombre,
+                    cd.cantidadDetalle,
+                    cd.totalParcialDetalle
+                from CreditoDetalle as cd
+				inner join Productos as p
+					on cd.productoId = p.productoId
+				inner join Proveedores as pr
+					on p.proveedorId = pr.proveedorId;
+            end $$
+DELIMITER ;

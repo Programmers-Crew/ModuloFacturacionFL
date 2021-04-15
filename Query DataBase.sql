@@ -139,6 +139,14 @@ create table EstadoCredito(
 	PRIMARY KEY (estadoCreditoId)
 );
 
+create table CreditoDetalle(
+	idCreditoDetalle int not null auto_increment primary key,
+    productoId varchar(7) not null,
+    cantidadDetalle double not null,
+    totalParcialDetalle double not null,
+	CONSTRAINT FK_CreditosDetalleProd FOREIGN KEY (productoId) REFERENCES Productos(productoId)
+);
+
 create table Creditos(
 	idCredito int not null auto_increment,
     noFactura varchar(10) not null,
@@ -147,11 +155,11 @@ create table Creditos(
     creditoFechaActual date,
     creditoDiasRestantes int not null,
 	creditoDesc varchar(50) not null,
-    creditoProveedor varchar(50) not null,
     creditoMonto double not null,
     creditoEstado int not null,
+    creditoDetalle int not null,
 	PRIMARY KEY (idCredito),
-    CONSTRAINT FK_CreditosProveedor FOREIGN KEY (creditoProveedor) REFERENCES Proveedores(proveedorId),
-	CONSTRAINT FK_CreditosEstados FOREIGN KEY (creditoEstado) REFERENCES EstadoCredito(estadoCreditoId)
+	CONSTRAINT FK_CreditosEstados FOREIGN KEY (creditoEstado) REFERENCES EstadoCredito(estadoCreditoId),
+    CONSTRAINT FK_CreditosDetalle FOREIGN KEY (creditoDetalle) REFERENCES CreditoDetalle(idCreditoDetalle)
 );
 
