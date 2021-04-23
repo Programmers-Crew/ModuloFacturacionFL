@@ -242,6 +242,10 @@ public class FacturacionViewController implements Initializable {
     private TextField totalfacy1;
     @FXML
     private TextField size1;
+    @FXML
+    private JFXTextField txtExistencias;
+    @FXML
+    private JFXTextField txtProveedor;
 
 
     
@@ -603,11 +607,13 @@ public class FacturacionViewController implements Initializable {
         if(cmbNombreProducto.getValue()!= ""){
                
                 try{
-                     PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarProductos(?)}");
+                     PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarProductosFac(?)}");
                     sp.setString(1, buscarCodigoProducto(cmbNombreProducto.getValue()));
                      ResultSet resultado = sp.executeQuery(); 
                         while(resultado.next()){
                             txtPrecioProducto.setText(resultado.getString("productoPrecio"));
+                            txtExistencias.setText(resultado.getString("inventarioProductoCant"));
+                            txtProveedor.setText(resultado.getString("proveedorNombre"));
                         }  
                         if(resultado.first()){
                             txtPrecioProducto.setEditable(false);
@@ -719,7 +725,7 @@ public class FacturacionViewController implements Initializable {
         new AutoCompleteComboBoxListener(cmbTipoFactura);
     }
 
-public String buscarCodigoProducto(String precioProductos){    
+    public String buscarCodigoProducto(String precioProductos){    
         try{
             PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarcodigoProducto(?)}");
             sp.setString(1, precioProductos);
@@ -739,7 +745,7 @@ public String buscarCodigoProducto(String precioProductos){
     
     public void llenarComboProdcutos(){
         ArrayList<String> lista = new ArrayList();
-        String sql= "{call SpListarProductos()}";
+        String sql= "{call SpListarProductosFac()}";
             int x =0;
         
         try{
@@ -1056,14 +1062,11 @@ public String buscarCodigoProducto(String precioProductos){
                  x++;
             }
             
-            if(usuario != ""){
-                System.out.println("cliente azt");
+            if(usuario != ""){;
                 String sql1 = "{call SpUpdateClientes('"+txtNitCliente.getValue()+"','"+txtNombreCliente.getText()+"','"+txtDireccionCliente.getText()+"')}";
                 PreparedStatement ps1 = Conexion.getIntance().getConexion().prepareCall(sql1);
                 ResultSet rs1 = ps1.executeQuery();
             }  
-            
-                System.out.println("cliente sin act");
         }catch(SQLException ex){
             ex.printStackTrace();
         }
@@ -1105,7 +1108,6 @@ public String buscarCodigoProducto(String precioProductos){
         }catch(SQLException ex){
             ex.printStackTrace();
         }
-        System.out.println(codigoUsuario);
         return codigoUsuario;
     }
     
@@ -1130,7 +1132,6 @@ public String buscarCodigoProducto(String precioProductos){
            tipoFactura=2;
        } 
               
-       System.out.println(date2);
        String sqlFactura = "{call SpAgregarFactura('"+txtSerieId.getText()+"','"+txtFacturaId.getText()+"','"+getClienteId()+"','"+date2+"','"+getUsuarioId()+"','"+totalNeto+"','"+totalIva+"','"+txtTotalFactura.getText()+"','"+tipoFactura+"')}";
        String sqlTipo = "{call SpAgregarTipoDocumento('"+txtFacturaId.getText()+"','"+tipo+"')}";
        actualizarCliente();
@@ -1167,7 +1168,6 @@ public String buscarCodigoProducto(String precioProductos){
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
             noti.text("HUBO UN ERROR AL REGISTRAR EN LA BASE DE DATOS");
-            System.out.println(sqlFactura);
             noti.position(Pos.BOTTOM_RIGHT);
             noti.hideAfter(Duration.seconds(4));
             noti.darkStyle();
@@ -1188,13 +1188,11 @@ public String buscarCodigoProducto(String precioProductos){
         String st =String.valueOf(df.format(total));
         if(cmbTipoFactura.getValue().equals("FACTURA")){
             if(txtSerieId.getText().charAt(0) == 'A' || txtSerieId.getText().charAt(0) == 'a'){
-                System.out.println(txtSerieId.getText().charAt(0));
-                System.out.println("se está imprimiendo A");
+                
                 impA.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
                 impA.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
             }else{
-                System.out.println(txtSerieId.getText().charAt(0));
-                System.out.println("se está imprimiendo B");
+                
                 imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
                 imprimir.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
             }
@@ -1655,7 +1653,7 @@ public String buscarCodigoProducto(String precioProductos){
         ArrayList<ProductoBuscado> listaProducto = new ArrayList();
         
         String sql = "{call SpBuscarClienteFacturaFecha('"+txtSerieIdBuscado.getText()+"','"+txtBusquedaCodigoFac.getValue()+"')}";
-        System.out.println(sql);
+        
         try{
             PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
             ResultSet rs = ps.executeQuery();
@@ -2017,7 +2015,6 @@ public String buscarCodigoProducto(String precioProductos){
     @FXML
     private void seleccionarElementosFacturasBuscadas(MouseEvent event) {
         seleccionarFacturasBuscadas2();
-        System.out.println(txtSerieIdBuscado.getText());
     }
     
     public void seleccionarFacturasBuscadas2(){
@@ -2099,23 +2096,23 @@ public String buscarCodigoProducto(String precioProductos){
            
     }
     
-        public void imprimirCierreDeCaja(){
-            try{
-                Map parametros = new HashMap();
+    public void imprimirCierreDeCaja(){
+        try{
+            Map parametros = new HashMap();
 
-                 String FechaCorte = txtFechaInicio.getValue().toString();
-                String repuesta = "'"+FechaCorte+"'";
-                
-                parametros.put("FechaCorte", "'"+FechaCorte+"'");
-                 GenerarReporte.mostrarReporte("CierreDeCaja.jasper", "CIERRE DE CAJA", parametros);
-                 
-                 txtFechaInicio.setValue(null);
-                 btnReporteVentas.setDisable(true);
-                 btnCorteDeCaja.setDisable(true);
-                }catch(Exception e){
-                    e.printStackTrace();
-                    
-                }
+             String FechaCorte = txtFechaInicio.getValue().toString();
+            String repuesta = "'"+FechaCorte+"'";
+
+            parametros.put("FechaCorte", "'"+FechaCorte+"'");
+             GenerarReporte.mostrarReporte("CierreDeCaja.jasper", "CIERRE DE CAJA", parametros);
+
+             txtFechaInicio.setValue(null);
+             btnReporteVentas.setDisable(true);
+             btnCorteDeCaja.setDisable(true);
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
     }
     
     @FXML
@@ -2377,9 +2374,8 @@ public String buscarCodigoProducto(String precioProductos){
         totalfacx1.setText(menu.facA.get("totalfacx1", "root")); 
         totalfacy1.setText(menu.facA.get("totalfacy1", "root")); 
         size1.setText(menu.facA.get("tamaño1", "root"));
-        System.out.println("hola"+menu.facA.get("tamaño1", "root"));
-        //orden
         
+        //orden
         
         diaordenx.setText(menu.orden.get("diaxorden", "root")); 
         diaordeny.setText(menu.orden.get("diayorden", "root")); 

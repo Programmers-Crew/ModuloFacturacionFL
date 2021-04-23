@@ -27,4 +27,76 @@ DELIMITER $$
 					where c.noFactura = idBuscado;
         end $$
 DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarProductosFac(idBuscado varchar(7))
+		BEGIN
+			select 
+				pr.productoId,
+                pr.productoDesc,
+                p.proveedorNombre,
+                p.proveedorId,
+                cp.categoriaNombre,
+                pr.precioCosto,
+                pr.productoPrecio,
+                tp.tipoProdDesc,
+                ip.inventarioProductoCant
+			from 
+				Productos as pr
+			inner join
+				Proveedores as p
+			on 
+				pr.proveedorId = p.proveedorId
+			inner join 
+				CategoriaProductos as cp
+			on
+				pr.categoriaId = cp.categoriaId 
+			inner join 
+				tipoProducto as tp
+			on 
+				pr.tipoProductoId = tp.tipoProdId
+			inner join
+				inventarioproductos as ip
+			on pr.productoId = ip.productoId
+            
+			where pr.productoId = idBuscado and ip.estadoProductoId = 1
+			order by pr.productoId ASC;
+        END $$
+DELIMITER ;
+
+
+DELIMITER $$
+	create procedure SpListarProductosFac()
+		BEGIN
+			select 
+				pr.productoId,
+                pr.productoDesc,
+                p.proveedorNombre,
+                cp.categoriaNombre,
+                pr.precioCosto,
+                pr.productoPrecio,
+                tp.tipoProdDesc,
+                ip.inventarioProductoCant
+			from 
+				Productos as pr
+			inner join
+				Proveedores as p
+			on 
+				pr.proveedorId = p.proveedorId
+			inner join 
+				CategoriaProductos as cp
+			on
+				pr.categoriaId = cp.categoriaId 
+			inner join 
+				tipoProducto as tp
+			on 
+				pr.tipoProductoId = tp.tipoProdId
+			inner join
+				inventarioproductos as ip
+			on pr.productoId = ip.productoId
+            where ip.estadoProductoId = 1
+			order by
+				pr.productoId ASC;
+        END $$
+DELIMITER ;
         
