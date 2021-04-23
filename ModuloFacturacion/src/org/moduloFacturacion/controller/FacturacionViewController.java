@@ -66,6 +66,7 @@ import org.moduloFacturacion.bean.ImprimirFacA;
 import org.moduloFacturacion.bean.ImprimirOrdenDeCompra;
 import org.moduloFacturacion.bean.ImprimirOrdenRespaldo;
 import org.moduloFacturacion.bean.ImprimirRespaldo;
+import org.moduloFacturacion.bean.ImprimirRespaldoA;
 import org.moduloFacturacion.bean.Letras;
 import org.moduloFacturacion.bean.ProductoBuscado;
 
@@ -1617,6 +1618,7 @@ public String buscarCodigoProducto(String precioProductos){
         int index = tblResultadoFactura.getSelectionModel().getSelectedIndex();
         String tipoFac = colTipoFactura.getCellData(index);
         ImprimirRespaldo imprimir = new ImprimirRespaldo();
+        ImprimirRespaldoA imprimirA = new ImprimirRespaldoA();
         ImprimirOrdenRespaldo imprimirOrden = new ImprimirOrdenRespaldo();
         DecimalFormat df = new DecimalFormat("#.00");
         double totalT = Double.parseDouble(txtTotalFac.getText());
@@ -1631,7 +1633,14 @@ public String buscarCodigoProducto(String precioProductos){
                 noti.darkStyle();
                 noti.show();
             }else{
-                imprimir.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtResultadodDireccion.getText(), date2,tot);
+                if(txtSerieIdBuscado.getText().charAt(0) == 'A' || txtSerieIdBuscado.getText().charAt(0) == 'a'){
+                    imprimirA.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtResultadodDireccion.getText(), date2,tot);
+                }else{
+                    imprimir.imprima(listaProductoBuscado,txtResultadoNit.getText(), txtResultadoNombre.getText(), txtResultadodDireccion.getText(), date2,tot);
+                    
+                }
+                
+                
             }
                 
             

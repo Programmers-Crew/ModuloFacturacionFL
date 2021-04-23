@@ -11,48 +11,49 @@ import java.time.LocalDate;
 import javafx.collections.ObservableList;
 import org.moduloFacturacion.controller.MenuPrincipalContoller;
 
-public class ImprimirRespaldo implements Printable{
+public class ImprimirRespaldoA implements Printable{
     PrinterJob printerJob;
     ObservableList<ProductoBuscado> mensaje;   
     String Nit, nombreCliente, direccionCliente,totalFactura;
     LocalDate fecha;
-    public ImprimirRespaldo(){
+    public ImprimirRespaldoA(){
         super();
         printerJob=PrinterJob.getPrinterJob();
         printerJob.setPrintable(this);       
     }
     MenuPrincipalContoller menu = new MenuPrincipalContoller();
     
-    float diax = Float.parseFloat(menu.factura.get("diax", "root"));
-    float diay = Float.parseFloat(menu.factura.get("diay", "root"));
+    float diax = Float.parseFloat(menu.facA.get("diax1", "root"));
+    float diay = Float.parseFloat(menu.facA.get("diay1", "root"));
     
-    float mesx = Float.parseFloat(menu.factura.get("mesx", "root"));
-    float mesy = Float.parseFloat(menu.factura.get("mesy", "root"));
+    float mesx = Float.parseFloat(menu.facA.get("mesx1", "root"));
+    float mesy = Float.parseFloat(menu.facA.get("mesy1", "root"));
     
-    float añox = Float.parseFloat(menu.factura.get("añox", "root"));
-    float añoy = Float.parseFloat(menu.factura.get("añoy", "root"));
+    float añox = Float.parseFloat(menu.facA.get("añox1", "root"));
+    float añoy = Float.parseFloat(menu.facA.get("añoy1", "root"));
     
-    float nombrex = Float.parseFloat(menu.factura.get("nombrex", "root"));
-    float nombrey = Float.parseFloat(menu.factura.get("nombrey", "root"));
+    float nombrex = Float.parseFloat(menu.facA.get("nombrex1", "root"));
+    float nombrey = Float.parseFloat(menu.facA.get("nombrey1", "root"));
     
-    float direccionx = Float.parseFloat(menu.factura.get("direccionx", "root"));
-    float direcciony = Float.parseFloat(menu.factura.get("direcciony", "root"));
+    float direccionx = Float.parseFloat(menu.facA.get("direccionx1", "root"));
+    float direcciony = Float.parseFloat(menu.facA.get("direcciony1", "root"));
     
-    float nitx = Float.parseFloat(menu.factura.get("nitx", "root"));
-    float nity = Float.parseFloat(menu.factura.get("nity", "root"));
+    float nitx = Float.parseFloat(menu.facA.get("nitx1", "root"));
+    float nity = Float.parseFloat(menu.facA.get("nity1", "root"));
     
-    float tablax = Float.parseFloat(menu.factura.get("tablax", "root"));
-    float tablay = Float.parseFloat(menu.factura.get("tablay", "root"));
+    float tablax = Float.parseFloat(menu.facA.get("tablax1", "root"));
+    float tablay = Float.parseFloat(menu.facA.get("tablay1", "root"));
     
-    float descfacx = Float.parseFloat(menu.factura.get("descfacx", "root"));
+    float descfacx = Float.parseFloat(menu.facA.get("descfacx1", "root"));
     
-    float valorx = Float.parseFloat(menu.factura.get("valorx", "root"));
+    float valorx = Float.parseFloat(menu.facA.get("valorx1", "root"));
     
-    float espaciado = Float.parseFloat(menu.factura.get("espaciado", "root"));
+    float espaciado = Float.parseFloat(menu.facA.get("espaciado1", "root"));
     
-    float totalfacx = Float.parseFloat(menu.factura.get("totalfacx", "root"));
-    float totalfacy = Float.parseFloat(menu.factura.get("totalfacy", "root"));
-    int tamaño = Integer.parseInt(menu.letra.get("tamaño", "root"));
+    float totalfacx = Float.parseFloat(menu.facA.get("totalfacx1", "root"));
+    float totalfacy = Float.parseFloat(menu.facA.get("totalfacy1", "root"));
+    int tamaño = Integer.parseInt(menu.facA.get("tamaño1", "root"));
+
 
     
     public void imprima(ObservableList<ProductoBuscado> mensaje, String Nit, String nombreCliente, String direccionCliente,LocalDate fecha, String totalFactura){
@@ -128,25 +129,25 @@ public class ImprimirRespaldo implements Printable{
          
         String totalF = df.format(Double.parseDouble(totalFactura));
         int tamañoFacE = totalF.length();
-        
+        System.out.println(tamañoFacE);
          switch(tamañoFacE)  {
                 case 4:
-                    g2d.drawString(totalF, totalfacy, totalfacx+20);
+                    g2d.drawString(totalF, totalfacy, totalfacx+25);
                     break;
                 case 5:
-                    g2d.drawString(totalF, totalfacy, totalfacx+15);
+                    g2d.drawString(totalF, totalfacy, totalfacx+20);
                     break;
                 case 6:
-                    g2d.drawString(totalF, totalfacy, totalfacx+10);
+                    g2d.drawString(totalF, totalfacy, totalfacx+16);
                     break;
                 case 8:
-                    g2d.drawString(totalF, totalfacy, totalfacx+2);
+                    g2d.drawString(totalF, totalfacy, totalfacx+8);
                     break;
                 case 9:
-                    g2d.drawString(totalF, totalfacy, totalfacx-7);
+                    g2d.drawString(totalF, totalfacy, totalfacx+2);
                     break;
                 case 10:
-                    g2d.drawString(totalF, totalfacy, totalfacx-9);
+                    g2d.drawString(totalF, totalfacy, totalfacx-2);
                     break;
             }
     }
