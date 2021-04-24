@@ -40,6 +40,7 @@ import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.Creditos;
+import org.moduloFacturacion.bean.CreditosBuscados;
 import org.moduloFacturacion.db.Conexion;
 
 public class creditosController implements Initializable {
@@ -47,14 +48,6 @@ public class creditosController implements Initializable {
     Image warning= new Image("org/moduloFacturacion/img/warning.png");
     @FXML
     private Pane buttonInicio;
-    @FXML
-    private AnchorPane anchor1;
-    @FXML
-    private JFXButton btnAgregar;
-    @FXML
-    private JFXButton btnEliminar;
-    @FXML
-    private JFXButton btnEditar;
     @FXML
     private AnchorPane anchor2;
     @FXML
@@ -94,29 +87,40 @@ public class creditosController implements Initializable {
     @FXML
     private AnchorPane anchorCreditos;
     @FXML
-    private JFXTextField txtNitProveedor;
-    @FXML
-    private TableColumn<?, ?> colProveedor1;
-    @FXML
     private TableColumn<Creditos, String> noFacColumn;
-
+    
+    
+    //BUSQUEDA CREDITOS
     @FXML
-    private void validarPrecioProducto(KeyEvent event) {
-    }
+    private TableView<CreditosBuscados> tableProductosBuscados;
+    @FXML
+    private TableColumn<CreditosBuscados, String> colProducto;
+    @FXML
+    private TableColumn<CreditosBuscados, Double> colCantidad;
+    @FXML
+    private TableColumn<CreditosBuscados, Double> colParcial;
+    @FXML
+    private JFXTextField txtProveedor;
+    @FXML
+    private JFXTextField colNitProveedor;
+    @FXML
+    private JFXButton btnCargarDatos;
+    @FXML
+    private JFXButton btnEliminarCredito;
     
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,FILTRAR,NINGUNO};
     public Operacion tipoOperacion= Operacion.NINGUNO;
     public Operacion cancelar = Operacion.NINGUNO;
 
-    ObservableList<String> listaProveedores;
-    ObservableList<String> listaEstadoCredito;
     ObservableList<String> listaFiltroCredito;
     ObservableList<Creditos> listaCreditos;
+    ObservableList<CreditosBuscados> listaCreditosBuscados;
     ObservableList<String> listaCmbCodigoCreditos;
     ObservableList<String> listaCmbBuscar;
     ObservableList<String> listaCmbFiltro;
     ObservableList<String> listaCmbFechaFinal;
 
+    Integer FacBuscadaNo = 0;
 
     @FXML
     private JFXDatePicker txtFechaInicio;
@@ -127,18 +131,6 @@ public class creditosController implements Initializable {
     
      //EVENTOS DE LA VISTA DE PROVEEDORES
 
-    
-    public void desactivarControlesCreditos(){    
-        btnEditar.setDisable(true);
-        btnEliminar.setDisable(true);
-    }
-    
-    public void activarControlesCreditos(){        
-        btnEditar.setDisable(true);
-        btnEliminar.setDisable(true);
-    }
-
-    
     public ObservableList<Creditos> getCreditos(){
         ArrayList<Creditos> lista = new ArrayList();
         ArrayList<String> comboCodigo = new ArrayList();
@@ -158,7 +150,7 @@ public class creditosController implements Initializable {
                             rs.getString("estadoCreditoDesc"),
                             rs.getString("noFactura")
                 ));
-                comboCodigo.add(x, rs.getString("idCredito"));
+                comboCodigo.add(x, rs.getString("noFactura"));
                 x++;
             }
         }catch(SQLException ex){
@@ -173,16 +165,69 @@ public class creditosController implements Initializable {
     public void cargarCreditos(){
         tableProductos.setItems(getCreditos());
         
+        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
         colFechaInicio.setCellValueFactory(new PropertyValueFactory("creaditoFechaInicio"));
         colFechaFinal.setCellValueFactory(new PropertyValueFactory("creditoFechaFinal"));  
         colDiasRestantes.setCellValueFactory(new PropertyValueFactory("creditoDiasRestantes"));
         colDescripcion.setCellValueFactory(new PropertyValueFactory("creditoDesc"));
         colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
         colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
-        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
         new AutoCompleteComboBoxListener(cmbBuscar);
     }  
 
+        public ObservableList<CreditosBuscados> getCreditosBuscados(){
+        ArrayList<CreditosBuscados> lista = new ArrayList();
+        String sql = "{call SpListarCreditoDetalle('"+FacBuscadaNo+"')}"; 
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new CreditosBuscados(
+                            rs.getString("productoDesc"),
+                            rs.getDouble("cantidadDetalle"),
+                            rs.getDouble("totalParcialDetalle")
+                ));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return listaCreditosBuscados = FXCollections.observableList(lista);
+    }
+    
+        public void cargarCreditosBuscados(){
+        tableProductosBuscados.setItems(getCreditosBuscados());
+        
+        colProducto.setCellValueFactory(new PropertyValueFactory("productoDesc"));
+        colCantidad.setCellValueFactory(new PropertyValueFactory("cantidadDetalle"));
+        colParcial.setCellValueFactory(new PropertyValueFactory("totalParcialDetalle"));
+        
+    }  
+        
+         public void buscarProducto(){
+           String sql = "{call SpListarCreditoDetalle('"+FacBuscadaNo+"')}"; 
+            PreparedStatement ps;
+            ResultSet rs;
+            
+            try{
+                    ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                    rs = ps.executeQuery();
+                    int numero=0;
+                    
+                    while(rs.next()){
+                        txtProveedor.setText(rs.getString("proveedorNombre"));
+                        colNitProveedor.setText(rs.getString("proveedorNit"));
+                        
+                    }
+                    cargarCreditosBuscados();
+
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
+        } 
+         
     /* FILTRAR POR FECHAS*/
         public ObservableList<Creditos> getFiltroCreditos(){
         ArrayList<Creditos> lista = new ArrayList();
@@ -228,10 +273,11 @@ public class creditosController implements Initializable {
         colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
         noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
     }  
+    
+    
     /* FILTRO DE  PROVEEDORES*/
     public ObservableList<Creditos> getFiltroCreditospProveedor(){
         ArrayList<Creditos> lista = new ArrayList();
-        ArrayList<String> comboCodigo = new ArrayList();
         
          String sql = "{call SpFiltrarCreditoEmpresa('"+txtFechaInicio.getValue()+"','"+txtFechaFinal.getValue()+"','"+cmbBuscar.getValue()+"')}";
                     int x=0;  
@@ -248,14 +294,11 @@ public class creditosController implements Initializable {
                                 rs.getString("estadoCreditoDesc"),
                                 rs.getString("noFactura")
                     ));
-                    comboCodigo.add(x, rs.getString("idCredito"));
                     x++;
                 }
             }catch(SQLException ex){
                 ex.printStackTrace();
             }
-            listaCmbCodigoCreditos = FXCollections.observableList(comboCodigo);
-            cmbBuscar.setItems(listaCmbCodigoCreditos);
             System.out.println("FILTRO EMPRESA");
             System.out.println(sql);
         
@@ -333,7 +376,6 @@ public class creditosController implements Initializable {
     
     @FXML
     private void limpiarBuscar(MouseEvent event) {
-        desactivarControlesCreditos();
     }
     
     @FXML
@@ -355,7 +397,7 @@ public class creditosController implements Initializable {
             
             while(rs.next()){
                  if(cmbFiltroCredito.getValue().equals("CÓDIGO")){
-                     lista.add(x, rs.getString("idCredito"));
+                     lista.add(x, rs.getString("noFactura"));
                      
                 }else if(cmbFiltroCredito.getValue().equals("PROVEEDOR")){
                     lista.add(x, rs.getString("proveedorNombre"));
@@ -372,7 +414,10 @@ public class creditosController implements Initializable {
     
     @FXML
     private void seleccionarElementos(MouseEvent event) {
+        int index = tableProductos.getSelectionModel().getSelectedIndex();
 
+        FacBuscadaNo = Integer.parseInt(noFacColumn.getCellData(index).toString());
+        buscarProducto();
     }
     
       @FXML
@@ -603,8 +648,7 @@ public class creditosController implements Initializable {
         marcarPagado();
     }
     
-
-    @FXML
+@FXML
     private void btnEliminar(MouseEvent event) {
          if(tipoOperacion == Operacion.GUARDAR){
             tipoOperacion = Operacion.CANCELAR;
@@ -628,8 +672,100 @@ public class creditosController implements Initializable {
 
     @FXML
     private void cmbBuscar(ActionEvent event) {
+        
+            if(cmbFiltroCredito.getValue().equals("CÓDIGO")){
+                cargarCreditosPorCodigo();
+            }else if(cmbFiltroCredito.getValue().equals("PROVEEDOR")){
+                cargarCreditosPorProveedor();
+            }
     }
 
+    public ObservableList<Creditos> getCreditosPorCodigo(){
+        ArrayList<Creditos> lista = new ArrayList();
+        ArrayList<String> comboCodigo = new ArrayList();
+        String sql = "{call SpBuscarCredito('"+cmbBuscar.getValue()+"')}";
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Creditos(
+                            rs.getDate("creaditoFechaInicio"),
+                            rs.getDate("creditoFechaFinal"),
+                            rs.getInt("creditoDiasRestantes"),
+                            rs.getString("creditoDesc"),
+                            rs.getDouble("creditoMonto"),
+                            rs.getString("estadoCreditoDesc"),
+                            rs.getString("noFactura")
+                ));
+                comboCodigo.add(x, rs.getString("noFactura"));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        listaCmbCodigoCreditos = FXCollections.observableList(comboCodigo);
+        cmbBuscar.setItems(listaCmbCodigoCreditos);
+
+        return listaCreditos = FXCollections.observableList(lista);
+    }
+
+    public void cargarCreditosPorCodigo(){
+        tableProductos.setItems(getCreditosPorCodigo());
+        
+        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
+        colFechaInicio.setCellValueFactory(new PropertyValueFactory("creaditoFechaInicio"));
+        colFechaFinal.setCellValueFactory(new PropertyValueFactory("creditoFechaFinal"));  
+        colDiasRestantes.setCellValueFactory(new PropertyValueFactory("creditoDiasRestantes"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory("creditoDesc"));
+        colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
+        colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
+    }  
+    
+    public ObservableList<Creditos> getCreditosPorProveedor(){
+        ArrayList<Creditos> lista = new ArrayList();
+        ArrayList<String> comboCodigo = new ArrayList();
+        String sql = "{call SpBuscarCreditoProveedor('"+cmbBuscar.getValue()+"')}";
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Creditos(
+                            rs.getDate("creaditoFechaInicio"),
+                            rs.getDate("creditoFechaFinal"),
+                            rs.getInt("creditoDiasRestantes"),
+                            rs.getString("creditoDesc"),
+                            rs.getDouble("creditoMonto"),
+                            rs.getString("estadoCreditoDesc"),
+                            rs.getString("noFactura")
+                ));
+                comboCodigo.add(x, rs.getString("noFactura"));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        listaCmbCodigoCreditos = FXCollections.observableList(comboCodigo);
+        cmbBuscar.setItems(listaCmbCodigoCreditos);
+
+        return listaCreditos = FXCollections.observableList(lista);
+    }
+
+    public void cargarCreditosPorProveedor(){
+        tableProductos.setItems(getCreditosPorProveedor());
+        
+        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
+        colFechaInicio.setCellValueFactory(new PropertyValueFactory("creaditoFechaInicio"));
+        colFechaFinal.setCellValueFactory(new PropertyValueFactory("creditoFechaFinal"));  
+        colDiasRestantes.setCellValueFactory(new PropertyValueFactory("creditoDiasRestantes"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory("creditoDesc"));
+        colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
+        colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
+    }  
+    
     @FXML
     private void atajosProductos(KeyEvent event) {
     }
@@ -703,6 +839,12 @@ public class creditosController implements Initializable {
                 imprimirReporteCreditosEmpresas();
             
         }
+    }
+    
+    
+    @FXML
+    private void cmbCargar(ActionEvent event) {
+        cargarCreditos();
     }
     
 }

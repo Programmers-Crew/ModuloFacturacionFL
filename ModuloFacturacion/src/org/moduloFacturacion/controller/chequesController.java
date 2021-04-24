@@ -504,10 +504,10 @@ public class chequesController implements Initializable {
             nuevoCredito.setCreaditoFechaInicio(java.sql.Date.valueOf( fechaInicio.getValue()));
             nuevoCredito.setCreditoFechaFinal(java.sql.Date.valueOf( fechaFinal.getValue()));
             nuevoCredito.setCreditoDesc(desc.getText());
-            nuevoCredito.setProveedorNombre(verificarProveedores(com.getValue()));
+ //           nuevoCredito.setProveedorNombre(verificarProveedores(com.getValue()));
             nuevoCredito.setCreditoMonto(Double.parseDouble(totalValor.getText()));
             nuevoCredito.setNoFactura(creditoCancelar.getValue());
-            String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getProveedorNombre()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
+            String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
             try {
                 PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
                 

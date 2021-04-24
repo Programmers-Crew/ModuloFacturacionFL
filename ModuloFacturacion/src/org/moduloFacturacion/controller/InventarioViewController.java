@@ -889,12 +889,8 @@ public class InventarioViewController implements Initializable {
             double cantidad = Double.parseDouble(txtCantidadInventario.getText());
             nuevoCredito.setCreditoMonto(costoProducto*cantidad);
             nuevoCredito.setNoFactura(noFactura.getText());
-<<<<<<< Updated upstream
-            String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getProveedorNombre()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
+            String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
             System.out.println(sql);
-=======
-        String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
->>>>>>> Stashed changes
             try {
                 PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
                 
