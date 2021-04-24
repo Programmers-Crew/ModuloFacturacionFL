@@ -198,6 +198,7 @@ public class InventarioViewController implements Initializable {
         txtProveedorInventario.setText("");
         txtProductoInventario.setText("");
         cmbNombreEstado.setValue("");
+        txtCostoNuevo.setText("");
 
     }
     
@@ -885,12 +886,15 @@ public class InventarioViewController implements Initializable {
             nuevoCredito.setCreaditoFechaInicio(java.sql.Date.valueOf( fechaInicio.getValue()));
             nuevoCredito.setCreditoFechaFinal(java.sql.Date.valueOf( fechaFinal.getValue()));
             nuevoCredito.setCreditoDesc(desc.getText());
-            nuevoCredito.setProveedorNombre(proveedorId);
             double cantidad = Double.parseDouble(txtCantidadInventario.getText());
             nuevoCredito.setCreditoMonto(costoProducto*cantidad);
             nuevoCredito.setNoFactura(noFactura.getText());
+<<<<<<< Updated upstream
             String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getProveedorNombre()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
             System.out.println(sql);
+=======
+        String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
+>>>>>>> Stashed changes
             try {
                 PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
                 
@@ -1057,6 +1061,7 @@ public class InventarioViewController implements Initializable {
                             txtProductoInventario.setText(resultado.getString("productoDesc"));
                             txtProveedorInventario.setText(resultado.getString("proveedorNombre"));
                             proveedorId = resultado.getString("proveedorId");
+                            txtCostoNuevo.setText(resultado.getString("precioCosto"));
                             costoProducto = resultado.getDouble("precioCosto");
                             btnAgregarInventario.setDisable(false);
                         }  
@@ -1114,6 +1119,7 @@ public class InventarioViewController implements Initializable {
         
         lista.add(0,"CÓDIGO");
         lista.add(1,"NOMBRE");
+        lista.add(2,"PROVEEDOR");
         
         listaFiltro = FXCollections.observableList(lista);
         
@@ -1123,8 +1129,15 @@ public class InventarioViewController implements Initializable {
     @FXML
     private void comboFiltro(ActionEvent event) {
         btnBuscarInventario.setDisable(false);
-        ArrayList<String> lista = new ArrayList();
-        String sql ="{call SpListarInventarioProductos()}";
+        ArrayList<String> lista = new ArrayList();        
+        String sql ="";
+        
+        if(cmbFiltroCodigo.getValue().equals("CÓDIGO") || cmbFiltroCodigo.getValue().equals("NOMBRE")){
+            sql = "{call SpListarInventarioProductos()}";
+        }else if(cmbFiltroCodigo.getValue().equals("PROVEEDOR")){
+            sql = "{call SpListarInventarioProductosProv()}";
+        }
+        
         int x=0;
         try{
             PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
@@ -1134,8 +1147,11 @@ public class InventarioViewController implements Initializable {
                  if(cmbFiltroCodigo.getValue().equals("CÓDIGO")){
                      lista.add(x, rs.getString("productoId"));
                      
-                }else if(cmbFiltroCodigo.getValue().equals("NOMBRE")){
+                }else if(cmbFiltroCodigo.getValue().equals("NOMBRE")){                   
                     lista.add(x, rs.getString("productoDesc"));
+                }else if(cmbFiltroCodigo.getValue().equals("PROVEEDOR")){
+                     System.out.println(sql);
+                    lista.add(x, rs.getString("proveedorNombre"));
                 }
                  x++;
             }
@@ -1166,6 +1182,10 @@ public class InventarioViewController implements Initializable {
                     tipoOperacionInventario = Operacion.BUSCAR;
                     String sql = "{ call SpBuscarInventarioProductosNombre('"+cmbBuscar.getValue()+"')}";
                     accion(sql);
+            }else if(cmbFiltroCodigo.getValue().equals("PROVEEDOR")){                
+                proveedorName = cmbBuscar.getValue();
+                cargarDatosProveedor();
+                limpiarText();
             }
         }  
     }
@@ -1727,6 +1747,36 @@ public class InventarioViewController implements Initializable {
            
         }
     }
+    
+        
+    //CARDEX 
+    @FXML
+    private AnchorPane anchor41;
+    @FXML
+    private TableView<?> tblCardex;
+    @FXML
+    private TableColumn<?, ?> colFechaCardex;
+    @FXML
+    private TableColumn<?, ?> colNoCardex;
+    @FXML
+    private TableColumn<?, ?> colDescripcionCardex;
+    @FXML
+    private TableColumn<?, ?> colEntradaCardex;
+    @FXML
+    private TableColumn<?, ?> colSalidaCardex;
+    @FXML
+    private TableColumn<?, ?> colTotalCardex;
+    @FXML
+    private TableColumn<?, ?> colSaldoCardex;
+    @FXML
+    private JFXButton btnBuscarCardex;
+    @FXML
+    private ComboBox<?> cmbFiltroCardex;
+    @FXML
+    private ComboBox<?> cmbFiltroBuscarCardex;
+    @FXML
+    private JFXButton btnReporteCardex;
+    
     
 }
 

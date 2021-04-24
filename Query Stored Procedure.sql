@@ -470,8 +470,37 @@ DELIMITER $$
 		inner join Proveedores as pr
 			on p.proveedorId = pr.proveedorId
 		inner join tipoproducto as tp
-			on p.tipoProductoId = tp.tipoProdId
-		order by 
+        group by 
+         p.productoId
+		order by         
+			p.productoId ASC;
+        END $$
+DELIMITER ;
+call SpListarInventarioProductosProv();
+DELIMITER $$
+	create procedure SpListarInventarioProductosProv()
+		BEGIN
+			select
+				p.productoId,
+                ip.inventarioProductoCant,
+                pr.proveedorNombre,
+                p.productoDesc,
+                ep.estadoProductoDesc,
+                P.costoAntiguo,
+                p.precioCosto,
+                tp.tipoProdDesc
+		from
+			InventarioProductos as ip
+		inner join Productos as p
+			on ip.productoId = p.productoId
+		inner join EstadoProductos as ep
+			on ip.estadoProductoId = ep.estadoProductoId
+		inner join Proveedores as pr
+			on p.proveedorId = pr.proveedorId
+		inner join tipoproducto as tp
+        group by 
+			pr.proveedorNombre
+		order by         
 			p.productoId ASC;
         END $$
 DELIMITER ;
@@ -543,6 +572,32 @@ DELIMITER $$
 		inner join tipoproducto as tp
 			on p.tipoProductoId = tp.tipoProdId
 		where p.productoDesc = nombre
+		order by p.productoId ASC;
+        END $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpBuscarInventarioProductosProveedor(proveedor varchar(100))
+		BEGIN
+			select
+				p.productoId,
+                ip.inventarioProductoCant,
+                pr.proveedorNombre,
+                p.productoDesc,
+                ep.estadoProductoDesc,
+                p.precioCosto,
+                tp.tipoProdDesc
+		from
+			InventarioProductos as ip
+		inner join Productos as p
+			on ip.productoId = p.productoId
+		inner join EstadoProductos as ep
+			on ip.estadoProductoId = ep.estadoProductoId
+		inner join Proveedores as pr
+			on p.proveedorId = pr.proveedorId
+		inner join tipoproducto as tp
+			on p.tipoProductoId = tp.tipoProdId
+		where pr.proveedorNombre = proveedor
 		order by p.productoId ASC;
         END $$
 DELIMITER ;
@@ -1427,10 +1482,10 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50), monto double, estado int, noFac varchar(10), creditoDesc int)
+	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50), proveedor varchar(7),monto double, estado int, noFac varchar(10))
 		begin 
-			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDiasRestantes,creditoDesc,creditoProveedor,creditoMonto,creditoEstado, noFactura, creditoDetalle)
-				values(inicio, final, creditoFechaFinal -creaditoFechaInicio ,descripcion, proveedor, monto, estado, noFac, creditoDesc);
+			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDiasRestantes,creditoDesc,creditoProveedor,creditoMonto,creditoEstado, noFactura)
+				values(inicio, final, creditoFechaFinal -creaditoFechaInicio ,descripcion, proveedor, monto, estado, noFac);
         end $$
 DELIMITER ;
 
