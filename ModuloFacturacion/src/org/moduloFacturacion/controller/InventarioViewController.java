@@ -516,6 +516,7 @@ public class InventarioViewController implements Initializable {
                         noti.text("HA OCURRIDO UN ERROR AL GUARDAR EL REGISTRO"+ex);
                         noti.position(Pos.BOTTOM_RIGHT);
                         noti.hideAfter(Duration.seconds(4));
+                        
                         noti.darkStyle();
                         noti.show();
                         tipoOperacionInventario = Operacion.CANCELAR;
@@ -889,6 +890,7 @@ public class InventarioViewController implements Initializable {
             nuevoCredito.setCreditoMonto(costoProducto*cantidad);
             nuevoCredito.setNoFactura(noFactura.getText());
             String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getProveedorNombre()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
+            System.out.println(sql);
             try {
                 PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
                 
@@ -906,6 +908,7 @@ public class InventarioViewController implements Initializable {
                 noti.graphic(new ImageView(imgError));
                 noti.title("ERROR");
                 noti.text("hubo un error en la base de datos"+ex);
+                ex.printStackTrace();
                 noti.position(Pos.BOTTOM_RIGHT);
                 noti.hideAfter(Duration.seconds(4));
                 noti.darkStyle();   
@@ -951,6 +954,7 @@ public class InventarioViewController implements Initializable {
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
             noti.text("hubo un error en la base de datos"+ex);
+            ex.printStackTrace();
             noti.position(Pos.BOTTOM_RIGHT);
             noti.hideAfter(Duration.seconds(4));
             noti.darkStyle();   

@@ -1,10 +1,7 @@
 package org.moduloFacturacion.system;
 
 
-import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventType;
+import javafx.application.Application; 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -50,13 +47,11 @@ public class MainApp extends Application {
             Scene scene = new Scene(root);
             stage.setTitle("PROGRAMMERS BILLING");
             stage.getIcons().add(new Image(getClass().getResource("/org/moduloFacturacion/img/LogoGrande.png").toExternalForm()));
-            stage.setWidth(1100);
-            stage.setHeight(597);
-            stage.setMinWidth(1100);
-            stage.setMinHeight(597);
+            stage.setWidth(1500);
+            stage.setHeight(800);
+            stage.setMinWidth(1500);
+            stage.setMinHeight(800);
             stage.setScene(scene);
-            
-            
             stage.show();
             
           

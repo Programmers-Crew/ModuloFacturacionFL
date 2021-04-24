@@ -154,8 +154,8 @@ public class LoginViewController implements Initializable {
                     Stage primaryStage= new Stage();
                     Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("org/moduloFacturacion/view/menuPrincipal.fxml"));
                     Scene scene = new Scene(root);
-                    primaryStage.setWidth(1100);
-                    primaryStage.setHeight(590);
+                    primaryStage.setWidth(1500);
+                    primaryStage.setHeight(800);
                     primaryStage.setScene(scene);
                     primaryStage.setTitle("PROGRAMMERS BILLING");
                     primaryStage.getIcons().add(new Image(getClass().getResource("/org/moduloFacturacion/img/LogoGrande.png").toExternalForm()));

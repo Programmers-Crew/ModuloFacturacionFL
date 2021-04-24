@@ -24,14 +24,8 @@ public class CambioScene {
         
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-       
-        
         primaryStage.show();
         
         
-    }
-    public void hola(){
-    
-        System.out.println("hola");
     }
 }

@@ -100,14 +100,58 @@ public class ImprimirFacA implements Printable{
         
             anchofor = anchofor-espaciado;
               String totalp = String.valueOf(df.format(mensaje.get(x).getTotalParcialBackup()));
-//              String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
+
             g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),anchofor, largo);
             g2d.drawString(mensaje.get(x).getProductoDesc(), anchofor , anchoDesc);
-            g2d.drawString(String.valueOf(totalp), anchofor, anchoValor);
-
+            
+            
+              int tamañoTotal = totalp.length();
+            switch(tamañoTotal)  {
+                case 4:
+                    g2d.drawString(totalp, anchofor, anchoValor+16);
+                    break;
+                case 5:
+                    g2d.drawString(totalp, anchofor, anchoValor+11);
+                    break;
+                case 6:
+                    g2d.drawString(totalp, anchofor, anchoValor+6);
+                    break;
+                case 8:
+                    g2d.drawString(totalp, anchofor, anchoValor-1);
+                    break;
+                case 9:
+                    g2d.drawString(totalp, anchofor, anchoValor-7);
+                    break;
+                case 10:
+                    g2d.drawString(totalp, anchofor, anchoValor-12);
+                    break;
+            }
               
         }
-        g2d.drawString(df.format(Double.parseDouble(totalFactura)), totalfacy, totalfacx);
+        
+        String totalF = df.format(Double.parseDouble(totalFactura));
+        int tamañoFacE = totalF.length();
+        System.out.println(tamañoFacE);
+         switch(tamañoFacE)  {
+                case 4:
+                    g2d.drawString(totalF, totalfacy, totalfacx+25);
+                    break;
+                case 5:
+                    g2d.drawString(totalF, totalfacy, totalfacx+20);
+                    break;
+                case 6:
+                    g2d.drawString(totalF, totalfacy, totalfacx+16);
+                    break;
+                case 8:
+                    g2d.drawString(totalF, totalfacy, totalfacx+8);
+                    break;
+                case 9:
+                    g2d.drawString(totalF, totalfacy, totalfacx+2);
+                    break;
+                case 10:
+                    g2d.drawString(totalF, totalfacy, totalfacx-2);
+                    break;
+            }
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;
