@@ -9,13 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -23,12 +21,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.FacturasBuscadas;
 import org.moduloFacturacion.bean.ProductoBuscado;
 import org.moduloFacturacion.bean.ValidarStyle;
 import org.moduloFacturacion.db.Conexion;
-import org.moduloFacturacion.controller.FacturacionViewController;
 
 public class EliminarFacturaController implements Initializable {
 
@@ -101,10 +97,10 @@ public class EliminarFacturaController implements Initializable {
                         noti.show();
 
             }else{
-                System.out.println(txtSerieFactura.getText() + "serie");
-                                System.out.println(txtNumeroFactura.getText() + "id");
-
-                 String sql2 = "{call SpEliminarFac('"+txtSerieFactura.getText()+"','"+txtNumeroFactura.getText()+"')}";
+                String sql1 = "{call Sp_DevolucionProductos('"+txtSerieFactura.getText()+"','"+txtNumeroFactura.getText()+"')}";
+                PreparedStatement ps1 = Conexion.getIntance().getConexion().prepareCall(sql1);
+                ps1.execute();
+                String sql2 = "{call SpEliminarFac('"+txtSerieFactura.getText()+"','"+txtNumeroFactura.getText()+"')}";
                 ps = Conexion.getIntance().getConexion().prepareCall(sql2);
                 rs = ps.executeQuery();
                 

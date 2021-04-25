@@ -9,7 +9,6 @@ import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
-import static java.sql.JDBCType.NULL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,6 +33,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -79,6 +79,7 @@ import org.moduloFacturacion.report.GenerarReporte;
 
 public class FacturacionViewController implements Initializable {
     CambioScene cambioScene = new CambioScene();    
+     LoginViewController login = new LoginViewController();
      Image imgError = new Image("org/moduloFacturacion/img/error.png");
     Image imgCorrecto= new Image("org/moduloFacturacion/img/correcto.png");
     Image imgWarning = new Image("org/moduloFacturacion/img/warning.png");
@@ -246,6 +247,84 @@ public class FacturacionViewController implements Initializable {
     private JFXTextField txtExistencias;
     @FXML
     private JFXTextField txtProveedor;
+    @FXML
+    private TextField cuatroB;
+    @FXML
+    private Button cifrasB;
+    @FXML
+    private TextField cincoB;
+    @FXML
+    private TextField seisB;
+    @FXML
+    private TextField ochoB;
+    @FXML
+    private TextField nueveB;
+    @FXML
+    private TextField diezB;
+    @FXML
+    private TextField cuatroBT;
+    @FXML
+    private TextField cincoBT;
+    @FXML
+    private TextField seisBT;
+    @FXML
+    private TextField ochoBT;
+    @FXML
+    private TextField nueveBT;
+    @FXML
+    private TextField diezBT;
+    @FXML
+    private TextField cuatroA;
+    @FXML
+    private Button cifrasA;
+    @FXML
+    private TextField cincoA;
+    @FXML
+    private TextField seisA;
+    @FXML
+    private TextField ochoA;
+    @FXML
+    private TextField nueveA;
+    @FXML
+    private TextField diezA;
+    @FXML
+    private TextField cuatroAT;
+    @FXML
+    private TextField cincoAT;
+    @FXML
+    private TextField seisAT;
+    @FXML
+    private TextField ochoAT;
+    @FXML
+    private TextField nueveAT;
+    @FXML
+    private TextField diezAT;
+    @FXML
+    private TextField cuatroO;
+    @FXML
+    private Button cifrasOrden;
+    @FXML
+    private TextField cincoO;
+    @FXML
+    private TextField seisO;
+    @FXML
+    private TextField ochoO;
+    @FXML
+    private TextField nueveO;
+    @FXML
+    private TextField diezO;
+    @FXML
+    private TextField cuatroOT;
+    @FXML
+    private TextField cincoOT;
+    @FXML
+    private TextField seisOT;
+    @FXML
+    private TextField ochoOT;
+    @FXML
+    private TextField nueveOT;
+    @FXML
+    private TextField diezOT;
 
 
     
@@ -271,7 +350,6 @@ public class FacturacionViewController implements Initializable {
         cambioScene.Cambio(menu1,(Stage) anchor.getScene().getWindow());
     }
 
-   
    
 
 
@@ -331,7 +409,6 @@ public class FacturacionViewController implements Initializable {
     LocalDate date2;
     
     MenuPrincipalContoller menu = new MenuPrincipalContoller();
-    LoginViewController login = new LoginViewController();
     
     ValidarStyle validar = new ValidarStyle();
 
@@ -777,8 +854,9 @@ public class FacturacionViewController implements Initializable {
     
     
     public ObservableList<FacturacionDetalleBackup> getBackUp(){
+        String user = login.prefsUsuario.get("usuario", "root");
         ArrayList<FacturacionDetalleBackup> lista = new ArrayList();
-        String sql = "{call SpListarBackup()}";
+        String sql = "{call SpListarBackup('"+user+"')}";
         int x=0;
         double totalParcial=0;
         
@@ -2317,6 +2395,52 @@ public class FacturacionViewController implements Initializable {
      
     @FXML 
     private void preferencesCargar(Event event) { 
+        //cifras B
+        cuatroB.setText(menu.cifras.get("4", "root"));
+        cincoB.setText(menu.cifras.get("5", "root"));
+        seisB.setText(menu.cifras.get("6", "root"));
+        ochoB.setText(menu.cifras.get("8", "root"));
+        nueveB.setText(menu.cifras.get("9", "root"));
+        diezB.setText(menu.cifras.get("10", "root"));
+        
+        cuatroBT.setText(menu.cifras.get("4T", "root"));
+        cincoBT.setText(menu.cifras.get("5T", "root"));
+        seisBT.setText(menu.cifras.get("6T", "root"));
+        ochoBT.setText(menu.cifras.get("8T", "root"));
+        nueveBT.setText(menu.cifras.get("9T", "root"));
+        diezBT.setText(menu.cifras.get("10T", "root"));
+        
+        //cifras A
+        cuatroA.setText(menu.cifras.get("4A", "root"));
+        cincoA.setText(menu.cifras.get("5A", "root"));
+        seisA.setText(menu.cifras.get("6A", "root"));
+        ochoA.setText(menu.cifras.get("8A", "root"));
+        nueveA.setText(menu.cifras.get("9A", "root"));
+        diezA.setText(menu.cifras.get("10A", "root"));
+        
+        cuatroAT.setText(menu.cifras.get("4AT", "root"));
+        cincoAT.setText(menu.cifras.get("5AT", "root"));
+        seisAT.setText(menu.cifras.get("6AT", "root"));
+        ochoAT.setText(menu.cifras.get("8AT", "root"));
+        nueveAT.setText(menu.cifras.get("9AT", "root"));
+        diezAT.setText(menu.cifras.get("10AT", "root"));
+        
+        
+        //orden de Compra
+//        cuatroO.setText(menu.cifras.get("4O", "root"));
+//        cincoO.setText(menu.cifras.get("5O", "root"));
+//        seisO.setText(menu.cifras.get("6O", "root"));
+//        ochoO.setText(menu.cifras.get("8O", "root"));
+//        nueveO.setText(menu.cifras.get("9O", "root"));
+//        diezO.setText(menu.cifras.get("10O", "root"));
+//        
+//        cuatroOT.setText(menu.cifras.get("4OT", "root"));
+//        cincoOT.setText(menu.cifras.get("5OT", "root"));
+//        seisOT.setText(menu.cifras.get("6OT", "root"));
+//        ochoOT.setText(menu.cifras.get("8OT", "root"));
+//        nueveOT.setText(menu.cifras.get("9OT", "root"));
+//        diezOT.setText(menu.cifras.get("10OT", "root"));
+        
         
         //fac b
         diafacx.setText(menu.factura.get("diax", "root")); 
@@ -2418,5 +2542,51 @@ public class FacturacionViewController implements Initializable {
         
         size.setText(menu.letra.get("tamaño", "root"));
     } 
+    
+    @FXML
+    private void cifrasB(MouseEvent event) {
+        menu.cifras.put("4", cuatroB.getText());
+        menu.cifras.put("5", cincoB.getText());
+        menu.cifras.put("6", seisB.getText());
+        menu.cifras.put("8", ochoB.getText());
+        menu.cifras.put("9", nueveB.getText());
+        menu.cifras.put("10", diezB.getText());
+        
+        menu.cifras.put("4T", cuatroBT.getText());
+        menu.cifras.put("5T", cincoBT.getText());
+        menu.cifras.put("6T", seisBT.getText());
+        menu.cifras.put("8T", ochoBT.getText());
+        menu.cifras.put("9T", nueveBT.getText());
+        menu.cifras.put("10T", diezBT.getText());
+        
+        
+        
+        
+    }
 
+    @FXML
+    private void cifrasA(MouseEvent event) {
+        menu.cifras.put("4A", cuatroA.getText());
+        menu.cifras.put("5A", cincoA.getText());
+        menu.cifras.put("6A", seisA.getText());
+        menu.cifras.put("8A", ochoA.getText());
+        menu.cifras.put("9A", nueveA.getText());
+        menu.cifras.put("10A", diezA.getText());
+        
+        menu.cifras.put("4AT", cuatroAT.getText());
+        menu.cifras.put("5AT", cincoAT.getText());
+        menu.cifras.put("6AT", seisAT.getText());
+        menu.cifras.put("8AT", ochoAT.getText());
+        menu.cifras.put("9AT", nueveAT.getText());
+        menu.cifras.put("10AT", diezAT.getText());
+        
+        
+        
+    }
+
+    @FXML
+    private void cifrasOrden(MouseEvent event) {
+    }
+
+   
 }

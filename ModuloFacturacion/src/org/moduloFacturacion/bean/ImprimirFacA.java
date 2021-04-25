@@ -48,7 +48,25 @@ public class ImprimirFacA implements Printable{
     float totalfacx = Float.parseFloat(menu.facA.get("totalfacx1", "root"));
     float totalfacy = Float.parseFloat(menu.facA.get("totalfacy1", "root"));
     int tamaño = Integer.parseInt(menu.facA.get("tamaño1", "root"));
-
+    
+    
+    
+    float cuatro = Float.parseFloat(menu.cifras.get("4A","root"));
+    float cinco = Float.parseFloat(menu.cifras.get("5A","root"));
+    float seis = Float.parseFloat(menu.cifras.get("6A","root"));
+    float ocho = Float.parseFloat(menu.cifras.get("8A","root"));
+    float nueve = Float.parseFloat(menu.cifras.get("9A","root"));
+    float diez = Float.parseFloat(menu.cifras.get("10A","root"));
+    
+    float cuatroT = Float.parseFloat(menu.cifras.get("4AT","root"));
+    float cincoT = Float.parseFloat(menu.cifras.get("5AT","root"));
+    float seisT = Float.parseFloat(menu.cifras.get("6AT","root"));
+    float ochoT = Float.parseFloat(menu.cifras.get("8AT","root"));
+    float nueveT = Float.parseFloat(menu.cifras.get("9AT","root"));
+    float diezT = Float.parseFloat(menu.cifras.get("10AT","root"));
+    
+    
+    
     
     public ImprimirFacA(){
         super();
