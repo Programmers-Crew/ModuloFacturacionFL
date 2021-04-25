@@ -89,9 +89,6 @@ DELIMITER $$
 		END $$
 DELIMITER ;
 
-call spAgregarEstadoProducto("EN EXISTENCIA");
-call spAgregarEstadoProducto("AGOTADO");
-
 DELIMITER $$
 	create procedure SpActualizarEstadoProducto(idBuscado tinyint(1), nuevaDesc varchar(100))
 		BEGIN
@@ -477,7 +474,10 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Diego-Gonzalez
 DELIMITER $$
 	create procedure SpListarInventarioProductosProv()
 		BEGIN
@@ -1491,12 +1491,13 @@ DELIMITER $$
 					where c.idCredito = idBuscado;
         end $$
 DELIMITER ;
-
+drop procedure SpAgregarCredito
 DELIMITER $$
-	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50), proveedor varchar(7),monto double, estado int, noFac varchar(10))
+	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50),monto double, estado int, noFac varchar(10))
 		begin 
-			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDiasRestantes,creditoDesc,creditoProveedor,creditoMonto,creditoEstado, noFactura)
-				values(inicio, final, creditoFechaFinal -creaditoFechaInicio ,descripcion, proveedor, monto, estado, noFac);
+			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDesc,creditoMonto,creditoEstado, noFactura, creditoDetalle)
+				select inicio, final,descripcion, monto, estado, noFac, cdb.idCreditoDetalle
+				from CreditoDetalleBackUp as cdb;
         end $$
 DELIMITER ;
 
@@ -1508,7 +1509,7 @@ DELIMITER $$
                 creditoFechaFinal = final,
                 creditoDesc = descripcion,
                 creditoMonto = monto
-			where idCredito = idbuscado;
+			where noFactura = idbuscado;
         end $$
 DELIMITEr ;
  
@@ -1519,6 +1520,21 @@ DELIMITER $$
 			delete from Creditos 
 				where noFactura = idbuscado;
         end $$
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 DELIMITER ;
 
 
@@ -1578,11 +1594,28 @@ create procedure SpBuscareProveedorNit(proveedor varchar(50))
 DELIMITER ;
 
 -- DETALLE CREDITO
+
 DELIMITER $$
-	create procedure SpAgregarCreditoDetalle(productoId int, cantidad double, totalParcial double)
+	create procedure SpAgregarCreditoDetalleBackUp(productoId varchar(7), cantidad double, totalParcial double)
 		begin
-			insert into CreditoDetalle(productoId,cantidadDetalle,totalParcialDetalle)
+			insert into CreditoDetalleBackUp(productoId,cantidadDetalle,totalParcialDetalle)
 				value(productoId, cantidad, totalParcial);
+        end $$
+DELIMITER ;
+call SpEliminarBackupCredito()
+DELIMITER $$
+	create procedure SpEliminarBackupCredito()
+		begin 
+			delete from CreditoDetalleBackUp;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpAgregarCreditoDetalle()
+		begin
+			insert into CreditoDetalle(idCreditoDetalle,productoId,cantidadDetalle,totalParcialDetalle)
+				select idCreditoDetalle,productoId,cantidadDetalle,totalParcialDetalle
+					from CreditoDetalleBackUp;
         end $$
 DELIMITER ;
 

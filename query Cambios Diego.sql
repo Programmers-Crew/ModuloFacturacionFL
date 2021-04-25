@@ -19,6 +19,7 @@ DELIMITER $$
 DELIMITER ;
 
 # QUERYS PARA REALIZAR EL CARDEX
+
 DELIMITER $$
 create procedure SpListarCardex(nombreProducto varchar(50))
 	begin 

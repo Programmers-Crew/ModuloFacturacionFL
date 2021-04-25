@@ -139,6 +139,14 @@ create table EstadoCredito(
 	PRIMARY KEY (estadoCreditoId)
 );
 
+create table CreditoDetalleBackUp(
+	idCreditoDetalle int not null auto_increment primary key,
+    productoId varchar(7) not null,
+    cantidadDetalle double not null,
+    totalParcialDetalle double not null,
+	CONSTRAINT FK_CreditosDetalleProdBackUp FOREIGN KEY (productoId) REFERENCES Productos(productoId)
+);
+
 create table CreditoDetalle(
 	idCreditoDetalle int not null auto_increment primary key,
     productoId varchar(7) not null,
