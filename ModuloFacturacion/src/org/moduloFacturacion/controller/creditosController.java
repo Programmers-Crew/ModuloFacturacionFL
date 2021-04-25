@@ -40,6 +40,7 @@ import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.Creditos;
+import org.moduloFacturacion.bean.CreditosBuscados;
 import org.moduloFacturacion.db.Conexion;
 
 public class creditosController implements Initializable {
@@ -47,24 +48,6 @@ public class creditosController implements Initializable {
     Image warning= new Image("org/moduloFacturacion/img/warning.png");
     @FXML
     private Pane buttonInicio;
-    @FXML
-    private AnchorPane anchor1;
-    @FXML
-    private JFXDatePicker txtfechaInicioCredito;
-    @FXML
-    private JFXTextField txtMontoCredito;
-    @FXML
-    private JFXButton btnAgregar;
-    @FXML
-    private JFXButton btnEliminar;
-    @FXML
-    private JFXButton btnEditar;
-    @FXML
-    private JFXTextField txtDiasrestantesCredito;
-    @FXML
-    private JFXDatePicker txtFechaFinalCredito;
-    @FXML
-    private TextArea txtDescripcionCredito; 
     @FXML
     private AnchorPane anchor2;
     @FXML
@@ -78,15 +61,9 @@ public class creditosController implements Initializable {
     @FXML
     private TableColumn<Creditos, String> colDescripcion;
     @FXML
-    private TableColumn<Creditos, String> colProveedor;
-    @FXML
     private TableColumn<Creditos, Double> colMonto;
     @FXML
     private TableColumn<Creditos, String> colEstadoCredito;
-    @FXML
-    private ComboBox<String> cmbProveedorProducto1;
-    @FXML
-    private ComboBox<String> cmbProveedorCreditos;
     @FXML
     private JFXButton btnBuscar;
     @FXML
@@ -97,7 +74,6 @@ public class creditosController implements Initializable {
     private JFXButton btnPagado;
     private AnchorPane anchor;
 
-    
 
     Image imgError = new Image("org/moduloFacturacion/img/error.png");
     Image imgCorrecto= new Image("org/moduloFacturacion/img/correcto.png");
@@ -105,36 +81,46 @@ public class creditosController implements Initializable {
     CambioScene cambioScene = new CambioScene();
     
     String codigo = "";
+    
     @FXML
     private JFXButton btnReporte;
     @FXML
     private AnchorPane anchorCreditos;
     @FXML
-    private JFXTextField txtNitProveedor;
-    @FXML
-    private TableColumn<?, ?> colProveedor1;
-    @FXML
-    private JFXTextField noFac;
-    @FXML
     private TableColumn<Creditos, String> noFacColumn;
-
+    
+    
+    //BUSQUEDA CREDITOS
     @FXML
-    private void validarPrecioProducto(KeyEvent event) {
-    }
+    private TableView<CreditosBuscados> tableProductosBuscados;
+    @FXML
+    private TableColumn<CreditosBuscados, String> colProducto;
+    @FXML
+    private TableColumn<CreditosBuscados, Double> colCantidad;
+    @FXML
+    private TableColumn<CreditosBuscados, Double> colParcial;
+    @FXML
+    private JFXTextField txtProveedor;
+    @FXML
+    private JFXTextField colNitProveedor;
+    @FXML
+    private JFXButton btnCargarDatos;
+    @FXML
+    private JFXButton btnEliminarCredito;
     
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,FILTRAR,NINGUNO};
     public Operacion tipoOperacion= Operacion.NINGUNO;
     public Operacion cancelar = Operacion.NINGUNO;
 
-    ObservableList<String> listaProveedores;
-    ObservableList<String> listaEstadoCredito;
     ObservableList<String> listaFiltroCredito;
     ObservableList<Creditos> listaCreditos;
+    ObservableList<CreditosBuscados> listaCreditosBuscados;
     ObservableList<String> listaCmbCodigoCreditos;
     ObservableList<String> listaCmbBuscar;
     ObservableList<String> listaCmbFiltro;
     ObservableList<String> listaCmbFechaFinal;
 
+    Integer FacBuscadaNo = 0;
 
     @FXML
     private JFXDatePicker txtFechaInicio;
@@ -144,47 +130,7 @@ public class creditosController implements Initializable {
     private JFXButton btnFiltrar;
     
      //EVENTOS DE LA VISTA DE PROVEEDORES
-    public void limpiarTextProveedores(){
-          txtDescripcionCredito.setText("");
-          txtMontoCredito.setText("");
-          txtDiasrestantesCredito.setText("");
-          cmbProveedorCreditos.setValue("");
-          noFac.setText("");
-          cmbProveedorProducto1.setValue("");
-    }
-    
-    public void desactivarControlesCreditos(){    
-        btnEditar.setDisable(true);
-        btnEliminar.setDisable(true);
-    }
-    
-    public void activarControlesCreditos(){        
-        btnEditar.setDisable(true);
-        btnEliminar.setDisable(true);
-    }
-    
-    public void desactivarTextCreditos(){
-          txtfechaInicioCredito.setEditable(false);
-          txtFechaFinalCredito.setEditable(false);
-          txtDescripcionCredito.setEditable(false);
-          txtMontoCredito.setEditable(false);
-          txtDiasrestantesCredito.setEditable(false);
-          cmbProveedorCreditos.setDisable(true);
-          cmbProveedorProducto1.setDisable(true);
-        
-    }
-    
-    public void activarTextCreditos(){
-          txtfechaInicioCredito.setEditable(true);
-          txtFechaFinalCredito.setEditable(true);
-          txtDescripcionCredito.setEditable(true);
-          txtMontoCredito.setEditable(true);
-          txtDiasrestantesCredito.setEditable(true);
-          cmbProveedorCreditos.setDisable(false);
-          cmbProveedorProducto1.setDisable(false);
-    }
-    
-    
+
     public ObservableList<Creditos> getCreditos(){
         ArrayList<Creditos> lista = new ArrayList();
         ArrayList<String> comboCodigo = new ArrayList();
@@ -196,17 +142,15 @@ public class creditosController implements Initializable {
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 lista.add(new Creditos(
-                            rs.getInt("idCredito"),
                             rs.getDate("creaditoFechaInicio"),
                             rs.getDate("creditoFechaFinal"),
                             rs.getInt("creditoDiasRestantes"),
                             rs.getString("creditoDesc"),
-                            rs.getString("proveedorNombre"),
                             rs.getDouble("creditoMonto"),
                             rs.getString("estadoCreditoDesc"),
                             rs.getString("noFactura")
                 ));
-                comboCodigo.add(x, rs.getString("idCredito"));
+                comboCodigo.add(x, rs.getString("noFactura"));
                 x++;
             }
         }catch(SQLException ex){
@@ -221,19 +165,69 @@ public class creditosController implements Initializable {
     public void cargarCreditos(){
         tableProductos.setItems(getCreditos());
         
+        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
         colFechaInicio.setCellValueFactory(new PropertyValueFactory("creaditoFechaInicio"));
         colFechaFinal.setCellValueFactory(new PropertyValueFactory("creditoFechaFinal"));  
         colDiasRestantes.setCellValueFactory(new PropertyValueFactory("creditoDiasRestantes"));
         colDescripcion.setCellValueFactory(new PropertyValueFactory("creditoDesc"));
-        colProveedor.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
         colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
         colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
-        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
         new AutoCompleteComboBoxListener(cmbBuscar);
-        new AutoCompleteComboBoxListener(cmbProveedorCreditos);
-        new AutoCompleteComboBoxListener(cmbProveedorProducto1);
     }  
 
+        public ObservableList<CreditosBuscados> getCreditosBuscados(){
+        ArrayList<CreditosBuscados> lista = new ArrayList();
+        String sql = "{call SpListarCreditoDetalle('"+FacBuscadaNo+"')}"; 
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new CreditosBuscados(
+                            rs.getString("productoDesc"),
+                            rs.getDouble("cantidadDetalle"),
+                            rs.getDouble("totalParcialDetalle")
+                ));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return listaCreditosBuscados = FXCollections.observableList(lista);
+    }
+    
+        public void cargarCreditosBuscados(){
+        tableProductosBuscados.setItems(getCreditosBuscados());
+        
+        colProducto.setCellValueFactory(new PropertyValueFactory("productoDesc"));
+        colCantidad.setCellValueFactory(new PropertyValueFactory("cantidadDetalle"));
+        colParcial.setCellValueFactory(new PropertyValueFactory("totalParcialDetalle"));
+        
+    }  
+        
+         public void buscarProducto(){
+           String sql = "{call SpListarCreditoDetalle('"+FacBuscadaNo+"')}"; 
+            PreparedStatement ps;
+            ResultSet rs;
+            
+            try{
+                    ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                    rs = ps.executeQuery();
+                    int numero=0;
+                    
+                    while(rs.next()){
+                        txtProveedor.setText(rs.getString("proveedorNombre"));
+                        colNitProveedor.setText(rs.getString("proveedorNit"));
+                        
+                    }
+                    cargarCreditosBuscados();
+
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
+        } 
+         
     /* FILTRAR POR FECHAS*/
         public ObservableList<Creditos> getFiltroCreditos(){
         ArrayList<Creditos> lista = new ArrayList();
@@ -246,12 +240,10 @@ public class creditosController implements Initializable {
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 lista.add(new Creditos(
-                            rs.getInt("idCredito"),
                             rs.getDate("creaditoFechaInicio"),
                             rs.getDate("creditoFechaFinal"),
                             rs.getInt("creditoDiasRestantes"),
                             rs.getString("creditoDesc"),
-                            rs.getString("proveedorNombre"),
                             rs.getDouble("creditoMonto"),
                             rs.getString("estadoCreditoDesc"),
                             rs.getString("noFactura")
@@ -277,18 +269,15 @@ public class creditosController implements Initializable {
         colFechaFinal.setCellValueFactory(new PropertyValueFactory("creditoFechaFinal"));  
         colDiasRestantes.setCellValueFactory(new PropertyValueFactory("creditoDiasRestantes"));
         colDescripcion.setCellValueFactory(new PropertyValueFactory("creditoDesc"));
-        colProveedor.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
         colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
         colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
         noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
-        new AutoCompleteComboBoxListener(cmbBuscar);
-        new AutoCompleteComboBoxListener(cmbProveedorCreditos);
-        new AutoCompleteComboBoxListener(cmbProveedorProducto1);
     }  
+    
+    
     /* FILTRO DE  PROVEEDORES*/
     public ObservableList<Creditos> getFiltroCreditospProveedor(){
         ArrayList<Creditos> lista = new ArrayList();
-        ArrayList<String> comboCodigo = new ArrayList();
         
          String sql = "{call SpFiltrarCreditoEmpresa('"+txtFechaInicio.getValue()+"','"+txtFechaFinal.getValue()+"','"+cmbBuscar.getValue()+"')}";
                     int x=0;  
@@ -297,24 +286,19 @@ public class creditosController implements Initializable {
                 ResultSet rs = ps.executeQuery();
                 while(rs.next()){
                     lista.add(new Creditos(
-                                rs.getInt("idCredito"),
                                 rs.getDate("creditoFechaFinal"),
                                 rs.getDate("creaditoFechaInicio"),
                                 rs.getInt("creditoDiasRestantes"),
                                 rs.getString("creditoDesc"),
-                                rs.getString("proveedorNombre"),
                                 rs.getDouble("creditoMonto"),
                                 rs.getString("estadoCreditoDesc"),
                                 rs.getString("noFactura")
                     ));
-                    comboCodigo.add(x, rs.getString("idCredito"));
                     x++;
                 }
             }catch(SQLException ex){
                 ex.printStackTrace();
             }
-            listaCmbCodigoCreditos = FXCollections.observableList(comboCodigo);
-            cmbBuscar.setItems(listaCmbCodigoCreditos);
             System.out.println("FILTRO EMPRESA");
             System.out.println(sql);
         
@@ -329,14 +313,11 @@ public class creditosController implements Initializable {
         colFechaFinal.setCellValueFactory(new PropertyValueFactory("creditoFechaFinal"));  
         colDiasRestantes.setCellValueFactory(new PropertyValueFactory("creditoDiasRestantes"));
         colDescripcion.setCellValueFactory(new PropertyValueFactory("creditoDesc"));
-        colProveedor.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
         colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
         colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
         
 
         new AutoCompleteComboBoxListener(cmbBuscar);
-        new AutoCompleteComboBoxListener(cmbProveedorCreditos);
-        new AutoCompleteComboBoxListener(cmbProveedorProducto1);
     }  
     
     public void cargarCombo(){
@@ -348,64 +329,6 @@ public class creditosController implements Initializable {
         listaCmbFiltro = FXCollections.observableList(lista);
         
         cmbFiltroCredito.setItems(listaCmbFiltro);
-    }
-    
-    public void llenarComboProveedores(){
-        ArrayList<String> lista = new ArrayList();
-        String sql= "{call SpListarProveedores()}";
-            int x =0;
-        
-        try{
-            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                lista.add(x, rs.getString("proveedorNombre"));
-                x++;
-            }
-            
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            
-            Notifications noti = Notifications.create();
-            noti.graphic(new ImageView(imgError));
-            noti.title("ERROR AL CARGAR DATOS CMB");
-            noti.text("Error al cargar la base de datos");
-            noti.position(Pos.BOTTOM_RIGHT);
-            noti.hideAfter(Duration.seconds(4));
-            noti.darkStyle();
-            noti.show();
-        }
-        listaProveedores = FXCollections.observableList(lista);
-        cmbProveedorCreditos.setItems(listaProveedores);
-    }
-    
-    public void llenarComboEstado(){
-        ArrayList<String> lista = new ArrayList();
-        String sql= "{call SpListarEstado()}";
-            int x =0;
-        
-        try{
-            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                lista.add(x, rs.getString("estadoCreditoDesc"));
-                x++;
-            }
-            
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            
-            Notifications noti = Notifications.create();
-            noti.graphic(new ImageView(imgError));
-            noti.title("ERROR AL CARGAR DATOS CMB");
-            noti.text("Error al cargar la base de datos");
-            noti.position(Pos.BOTTOM_RIGHT);
-            noti.hideAfter(Duration.seconds(4));
-            noti.darkStyle();
-            noti.show();
-        }
-        listaEstadoCredito = FXCollections.observableList(lista);
-        cmbProveedorProducto1.setItems(listaEstadoCredito);
     }
     
     @FXML
@@ -453,8 +376,6 @@ public class creditosController implements Initializable {
     
     @FXML
     private void limpiarBuscar(MouseEvent event) {
-        limpiarTextProveedores();
-        desactivarControlesCreditos();
     }
     
     @FXML
@@ -476,7 +397,7 @@ public class creditosController implements Initializable {
             
             while(rs.next()){
                  if(cmbFiltroCredito.getValue().equals("CÓDIGO")){
-                     lista.add(x, rs.getString("idCredito"));
+                     lista.add(x, rs.getString("noFactura"));
                      
                 }else if(cmbFiltroCredito.getValue().equals("PROVEEDOR")){
                     lista.add(x, rs.getString("proveedorNombre"));
@@ -493,26 +414,10 @@ public class creditosController implements Initializable {
     
     @FXML
     private void seleccionarElementos(MouseEvent event) {
-        
         int index = tableProductos.getSelectionModel().getSelectedIndex();
-        try{
-           
-            noFac.setText(noFacColumn.getCellData(index));
-            txtFechaFinalCredito.setValue(LocalDate.parse(colFechaInicio.getCellData(index).toString()));
-            txtfechaInicioCredito.setValue(LocalDate.parse(colFechaFinal.getCellData(index).toString()));
-            txtDiasrestantesCredito.setText(colDiasRestantes.getCellData(index).toString());
-            txtDescripcionCredito.setText(colDescripcion.getCellData(index));
-            txtMontoCredito.setText(colMonto.getCellData(index).toString());
-            cmbProveedorCreditos.setValue(colProveedor.getCellData(index));
-            cmbProveedorProducto1.setValue(colEstadoCredito.getCellData(index));
 
-            btnEliminar.setDisable(false);
-            btnEditar.setDisable(false);
-            
-            activarTextCreditos();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        FacBuscadaNo = Integer.parseInt(noFacColumn.getCellData(index).toString());
+        buscarProducto();
     }
     
       @FXML
@@ -579,39 +484,11 @@ public class creditosController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
        cargarCreditos();
        cargarCombo();
-       llenarComboProveedores();
-       llenarComboEstado();
        anuncio();
-       txtDiasrestantesCredito.setDisable(true);
        cmbFiltroCredito.setValue("");
        cmbBuscar.setValue("");
     }    
     
-        public void accionCreditos(){
-        switch(tipoOperacion){
-            case AGREGAR:
-                tipoOperacion = Operacion.GUARDAR;
-                cancelar = Operacion.CANCELAR;
-                desactivarControlesCreditos();
-                btnAgregar.setText("GUARDAR");
-                btnEliminar.setText("CANCELAR");
-                btnEliminar.setDisable(false);
-                activarTextCreditos();
-                limpiarTextProveedores();
-                btnBuscar.setDisable(true);
-                break;
-            case CANCELAR:
-                tipoOperacion = Operacion.NINGUNO;
-                desactivarControlesCreditos();
-                desactivarTextCreditos();
-                btnAgregar.setText("AGREGAR");
-                btnEliminar.setText("ELIMINAR");
-                limpiarTextProveedores();
-                btnBuscar.setDisable(false);
-                cancelar = Operacion.NINGUNO;
-                break;
-        }
-    }
 
         public void accionCreditos(String sql){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -621,58 +498,6 @@ public class creditosController implements Initializable {
         ButtonType buttonTypeSi = new ButtonType("Si");
         ButtonType buttonTypeNo = new ButtonType("No");
         switch(tipoOperacion){
-            
-            case GUARDAR:
-                alert.setTitle("AGREGAR REGISTRO");
-                alert.setHeaderText("AGREGAR REGISTRO");
-                alert.setContentText("¿Está seguro que desea guardar este registro?");
-                
-                alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
-                
-                Optional<ButtonType> result = alert.showAndWait();
-                if(result.get() == buttonTypeSi ){
-                    try {
-                        ps = Conexion.getIntance().getConexion().prepareCall(sql);
-                        ps.execute();
-                        
-                        noti.graphic(new ImageView(imgCorrecto));
-                        noti.title("OPERACIÓN EXITOSA");
-                        noti.text("SE HA AGREGADO EXITOSAMENTE EL REGISTRO");
-                        noti.position(Pos.BOTTOM_RIGHT);
-                        noti.hideAfter(Duration.seconds(4));
-                        noti.darkStyle();
-                        noti.show();
-                        tipoOperacion = Operacion.CANCELAR;
-                        accionCreditos();
-                       anuncio();
-                        cargarCreditos();
-                        limpiarTextProveedores();
-                        
-                    }catch (SQLException ex) {
-                        ex.printStackTrace();
-                        noti.graphic(new ImageView(imgError));
-                        noti.title("ERROR AL AGREGAR");
-                        noti.text("HA OCURRIDO UN ERROR AL GUARDAR EL REGISTRO");
-                        noti.position(Pos.BOTTOM_RIGHT);
-                        noti.hideAfter(Duration.seconds(4));
-                        noti.darkStyle();
-                        noti.show();
-                        tipoOperacion = Operacion.CANCELAR;
-                        accionCreditos();
-                    }
-                }else{
-                    
-                    noti.graphic(new ImageView(imgError));
-                    noti.title("OPERACIÓN CANCELADA");
-                    noti.text("NO SE HA AGREGADO EL REGISTRO");
-                    noti.position(Pos.BOTTOM_RIGHT);
-                    noti.hideAfter(Duration.seconds(4));
-                    noti.darkStyle();
-                    noti.show();
-                    tipoOperacion = Operacion.CANCELAR;
-                    accionCreditos();
-                }
-                break;
             case ELIMINAR:
                  alert.setTitle("ELIMINAR REGISTRO");
                 alert.setHeaderText("ELIMINAR REGISTRO");
@@ -696,7 +521,6 @@ public class creditosController implements Initializable {
                         noti.show();
                         cargarCreditos();
                         tipoOperacion = Operacion.CANCELAR;
-                        accionCreditos();
                         
                     }catch (SQLException ex) {
                         ex.printStackTrace();
@@ -710,7 +534,6 @@ public class creditosController implements Initializable {
                         noti.darkStyle();
                         noti.show();
                         tipoOperacion = Operacion.CANCELAR;
-                        accionCreditos();
                     }
                 }else{
                      noti.graphic(new ImageView(imgError));
@@ -721,84 +544,10 @@ public class creditosController implements Initializable {
                     noti.darkStyle();
                     noti.show();
                     tipoOperacion = Operacion.CANCELAR;
-                    accionCreditos();
                 }
                 break;
-            case ACTUALIZAR:
-                alert.setTitle("ACTUALIZAR REGISTRO");
-                alert.setHeaderText("ACTUALIZAR REGISTRO");
-                alert.setContentText("¿Está seguro que desea Actualizar este registro?");
-               
-                alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
-                
-                Optional<ButtonType> resultactualizar = alert.showAndWait();
-                if(resultactualizar.get() == buttonTypeSi ){
-                    try {
-                        ps = Conexion.getIntance().getConexion().prepareCall(sql);
-                        ps.execute();
-                        
-                        noti.graphic(new ImageView(imgCorrecto));
-                        noti.title("OPERACIÓN EXITOSA");
-                        noti.text("SE HA ACTUALIZADO EXITOSAMENTE EL REGISTRO");
-                        noti.position(Pos.BOTTOM_RIGHT);
-                        noti.hideAfter(Duration.seconds(4));
-                        noti.darkStyle();
-                        noti.show();
-                        tipoOperacion = Operacion.CANCELAR;
-                        accionCreditos();
-                        cargarCreditos();
-                    }catch (SQLException ex) {
-                        ex.printStackTrace();
-                        noti.graphic(new ImageView(imgError));
-                        noti.title("ERROR AL ACTUALIZAR");
-                        noti.text("HA OCURRIDO UN ERROR AL ACTUALIZAR EL REGISTRO");
-                        noti.position(Pos.BOTTOM_RIGHT);
-                        noti.hideAfter(Duration.seconds(4));
-                        noti.darkStyle();
-                        noti.show();
-                        tipoOperacion = Operacion.CANCELAR;
-                        accionCreditos();
-                    }
-                }else{
-                    noti.graphic(new ImageView(imgError));
-                    noti.title("OPERACIÓN CANCELADA");
-                    noti.text("NO SE HA ACTUALIZAR EL REGISTRO");
-                    noti.position(Pos.BOTTOM_RIGHT);
-                    noti.hideAfter(Duration.seconds(4));
-                    noti.darkStyle();
-                    noti.show();
-                    tipoOperacion = Operacion.CANCELAR;
-                    accionCreditos();
-                }
-                break;
-            case BUSCAR:
-                 try{
-                    ps = Conexion.getIntance().getConexion().prepareCall(sql);
-                    rs = ps.executeQuery();
-                    while(rs.next()){
-                        txtfechaInicioCredito.setValue(LocalDate.parse(rs.getString("creaditoFechaInicio")));
-                        txtFechaFinalCredito.setValue(LocalDate.parse(rs.getString("creditoFechaFinal")));
-                        txtDescripcionCredito.setText(rs.getString("creditoDesc"));
-                        txtMontoCredito.setText(rs.getString("creditoMonto"));
-                        txtDiasrestantesCredito.setText(rs.getString("creditoDiasRestantes"));
-                        cmbProveedorCreditos.setValue(rs.getString("proveedorNombre"));
-                        cmbProveedorProducto1.setValue(rs.getString("estadoCreditoDesc"));
 
-                        codigo = rs.getString("idCredito");
-                    }                    
-                }catch(SQLException ex){
-                    ex.printStackTrace();
-                    noti.graphic(new ImageView(imgError));
-                    noti.title("ERROR AL BUSCAR");
-                    noti.text("HA OCURRIDO UN ERROR EN LA BASE DE DATOS");
-                    noti.position(Pos.BOTTOM_RIGHT);
-                    noti.hideAfter(Duration.seconds(4));
-                    noti.darkStyle();
-                    noti.show();
-                    tipoOperacion = Operacion.CANCELAR;
-                    accionCreditos();
-                }
-                break;
+                
             case FILTRAR:
                  try{
                     ps = Conexion.getIntance().getConexion().prepareCall(sql);
@@ -846,7 +595,7 @@ public class creditosController implements Initializable {
     public void marcarPagado(){
         String sql = "";
         int index = tableProductos.getSelectionModel().getSelectedIndex();
-         String txtCodigoCredito = listaCreditos.get(index).getIdCredito().toString();
+        String txtCodigoCredito = listaCreditos.get(index).getNoFactura().toString();
          
         sql = "{call SpMarcarPagado('"+txtCodigoCredito+"')}";
         Notifications noti = Notifications.create();
@@ -899,132 +648,20 @@ public class creditosController implements Initializable {
         marcarPagado();
     }
     
-    public String verficarProveedor(String proveedor){
-        String sql = "{call SpBuscarProveedoresNombre('"+proveedor+"')}";
-        String codigoProveedor="";
-        try{
-            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                codigoProveedor = rs.getString("proveedorId");
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }
-        
-        return codigoProveedor;
-    }
-    
-    @FXML
-    private void btnAgregar(MouseEvent event) {
-        if(tipoOperacion == Operacion.GUARDAR){
-            if(txtFechaFinalCredito.getValue().equals("") || txtfechaInicioCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty() || cmbProveedorCreditos.getValue().isEmpty() ||txtMontoCredito.getText().isEmpty() ||cmbProveedorProducto1.getValue().isEmpty() || noFac.getText().isEmpty()){
-                Notifications noti = Notifications.create();
-                noti.graphic(new ImageView(imgError));
-                noti.title("ERROR");
-                noti.text("HAY CAMPOS VACÍOS");
-                noti.position(Pos.BOTTOM_RIGHT);
-                noti.hideAfter(Duration.seconds(4));
-                noti.darkStyle();   
-                noti.show();
-            }else{
-                Creditos nuevoCredito = new Creditos();
-                    nuevoCredito.setCreaditoFechaInicio(java.sql.Date.valueOf( txtfechaInicioCredito.getValue()));
-                    nuevoCredito.setCreditoFechaFinal(java.sql.Date.valueOf( txtFechaFinalCredito.getValue()));
-                    nuevoCredito.setCreditoDesc(txtDescripcionCredito.getText());
-                    nuevoCredito.setProveedorNombre(cmbProveedorCreditos.getValue());
-                    nuevoCredito.setCreditoMonto(Double.parseDouble(txtMontoCredito.getText()));
-                    nuevoCredito.setNoFactura(noFac.getText());
-                    Integer codigoEstado = 0;
-                    if(cmbProveedorProducto1.getValue().equals("PENDIENTE")){
-                        codigoEstado = 1;
-                    }else if(cmbProveedorProducto1.getValue().equals("PAGADO")){
-                        codigoEstado = 2;
-                    }else if(cmbProveedorProducto1.getValue().equals("VENCIDO")){
-                        codigoEstado = 3;
-                    }
-                    System.out.println(nuevoCredito.getCreaditoFechaInicio());
-                    System.out.println(verficarProveedor(nuevoCredito.getProveedorNombre()));
-                    System.out.println(codigoEstado);
-
-                String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoDesc()+"','"+verficarProveedor(nuevoCredito.getProveedorNombre())+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado+"','"+nuevoCredito.getNoFactura()+"')}";
-                    accionCreditos(sql);
-                }
-        }else{
-            tipoOperacion = Operacion.AGREGAR;
-            accionCreditos();
-        }
-    }
-
-    @FXML
+@FXML
     private void btnEliminar(MouseEvent event) {
          if(tipoOperacion == Operacion.GUARDAR){
             tipoOperacion = Operacion.CANCELAR;
-            accionCreditos();
         }else{
             Creditos eliminarCredito = new Creditos();
 
-            accionCreditos();
             int index = tableProductos.getSelectionModel().getSelectedIndex();
-             String txtCodigoCredito = listaCreditos.get(index).getIdCredito().toString();
+             String txtCodigoCredito = listaCreditos.get(index).getNoFactura().toString();
             
             String sql = "{call SpEliminatCreditos('"+txtCodigoCredito+"')}";
             tipoOperacion = Operacion.ELIMINAR;
             accionCreditos(sql);
         }
-    }
-    
-    
-    @FXML
-    private void btnEditar(MouseEvent event) {
-            if(txtFechaFinalCredito.getValue().equals("") || txtfechaInicioCredito.getValue().equals("") || txtDescripcionCredito.getText().isEmpty()||txtMontoCredito.getText().isEmpty() || noFac.getText().isEmpty()){
-                Notifications noti = Notifications.create();
-                noti.graphic(new ImageView(imgError));
-                noti.title("ERROR");
-                noti.text("HAY CAMPOS VACÍOS");
-                noti.position(Pos.BOTTOM_RIGHT);
-                noti.hideAfter(Duration.seconds(4));
-                noti.darkStyle();   
-                noti.show();
-            }else{
-                    Creditos nuevoCreditos = new Creditos();
-                    int index = tableProductos.getSelectionModel().getSelectedIndex();
-                    String txtCodigoCredito = listaCreditos.get(index).getIdCredito().toString();
-
-                    nuevoCreditos.setCreaditoFechaInicio(java.sql.Date.valueOf( txtfechaInicioCredito.getValue()));
-                    nuevoCreditos.setCreditoFechaFinal(java.sql.Date.valueOf( txtFechaFinalCredito.getValue()));
-                    nuevoCreditos.setCreditoDesc(txtDescripcionCredito.getText());
-                    nuevoCreditos.setCreditoMonto(Double.parseDouble(txtMontoCredito.getText()));
-                    nuevoCreditos.setNoFactura(noFac.getText());
-                    tipoOperacion = Operacion.ACTUALIZAR;
-                    String sql = "{call SpActualizarCredito('"+txtCodigoCredito+"','"+nuevoCreditos.getCreditoFechaFinal()+"','"+nuevoCreditos.getCreaditoFechaInicio()+"','"+nuevoCreditos.getCreditoDesc()+"','"+nuevoCreditos.getCreditoMonto()+"','"+nuevoCreditos.getNoFactura()+"')}";
-                    accionCreditos(sql);
-                }                
-    }
-    
-
-
-    @FXML
-    public void buscarNitProveedores(){
-        if(cmbProveedorCreditos.getValue()!= ""){
-                try{
-                     PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscareProveedorNit(?)}");
-                     sp.setString(1, cmbProveedorCreditos.getValue());
-                     ResultSet resultado = sp.executeQuery(); 
-                        while(resultado.next()){
-                            txtNitProveedor.setText(resultado.getString("proveedorNit"));
-                        }  
-                }catch(Exception e){
-                    Notifications noti = Notifications.create();
-                    noti.graphic(new ImageView(imgError));
-                    noti.title("ERROR");
-                    noti.text("El CAMPO DE BUSQUEDA ESTA VACÍO");
-                    noti.position(Pos.BOTTOM_RIGHT);
-                    noti.hideAfter(Duration.seconds(4));
-                    noti.darkStyle();   
-                    noti.show();
-                }
-            }
     }
     
     
@@ -1035,8 +672,100 @@ public class creditosController implements Initializable {
 
     @FXML
     private void cmbBuscar(ActionEvent event) {
+        
+            if(cmbFiltroCredito.getValue().equals("CÓDIGO")){
+                cargarCreditosPorCodigo();
+            }else if(cmbFiltroCredito.getValue().equals("PROVEEDOR")){
+                cargarCreditosPorProveedor();
+            }
     }
 
+    public ObservableList<Creditos> getCreditosPorCodigo(){
+        ArrayList<Creditos> lista = new ArrayList();
+        ArrayList<String> comboCodigo = new ArrayList();
+        String sql = "{call SpBuscarCredito('"+cmbBuscar.getValue()+"')}";
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Creditos(
+                            rs.getDate("creaditoFechaInicio"),
+                            rs.getDate("creditoFechaFinal"),
+                            rs.getInt("creditoDiasRestantes"),
+                            rs.getString("creditoDesc"),
+                            rs.getDouble("creditoMonto"),
+                            rs.getString("estadoCreditoDesc"),
+                            rs.getString("noFactura")
+                ));
+                comboCodigo.add(x, rs.getString("noFactura"));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        listaCmbCodigoCreditos = FXCollections.observableList(comboCodigo);
+        cmbBuscar.setItems(listaCmbCodigoCreditos);
+
+        return listaCreditos = FXCollections.observableList(lista);
+    }
+
+    public void cargarCreditosPorCodigo(){
+        tableProductos.setItems(getCreditosPorCodigo());
+        
+        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
+        colFechaInicio.setCellValueFactory(new PropertyValueFactory("creaditoFechaInicio"));
+        colFechaFinal.setCellValueFactory(new PropertyValueFactory("creditoFechaFinal"));  
+        colDiasRestantes.setCellValueFactory(new PropertyValueFactory("creditoDiasRestantes"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory("creditoDesc"));
+        colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
+        colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
+    }  
+    
+    public ObservableList<Creditos> getCreditosPorProveedor(){
+        ArrayList<Creditos> lista = new ArrayList();
+        ArrayList<String> comboCodigo = new ArrayList();
+        String sql = "{call SpBuscarCreditoProveedor('"+cmbBuscar.getValue()+"')}";
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Creditos(
+                            rs.getDate("creaditoFechaInicio"),
+                            rs.getDate("creditoFechaFinal"),
+                            rs.getInt("creditoDiasRestantes"),
+                            rs.getString("creditoDesc"),
+                            rs.getDouble("creditoMonto"),
+                            rs.getString("estadoCreditoDesc"),
+                            rs.getString("noFactura")
+                ));
+                comboCodigo.add(x, rs.getString("noFactura"));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        listaCmbCodigoCreditos = FXCollections.observableList(comboCodigo);
+        cmbBuscar.setItems(listaCmbCodigoCreditos);
+
+        return listaCreditos = FXCollections.observableList(lista);
+    }
+
+    public void cargarCreditosPorProveedor(){
+        tableProductos.setItems(getCreditosPorProveedor());
+        
+        noFacColumn.setCellValueFactory(new PropertyValueFactory("noFactura"));
+        colFechaInicio.setCellValueFactory(new PropertyValueFactory("creaditoFechaInicio"));
+        colFechaFinal.setCellValueFactory(new PropertyValueFactory("creditoFechaFinal"));  
+        colDiasRestantes.setCellValueFactory(new PropertyValueFactory("creditoDiasRestantes"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory("creditoDesc"));
+        colMonto.setCellValueFactory(new PropertyValueFactory("creditoMonto"));
+        colEstadoCredito.setCellValueFactory(new PropertyValueFactory("estadoCreditoDesc"));
+    }  
+    
     @FXML
     private void atajosProductos(KeyEvent event) {
     }
@@ -1068,9 +797,6 @@ public class creditosController implements Initializable {
                     noti.show();
                 }
     }
-  
-  
-  
   
     public void imprimirReporteCreditosEmpresas(){
             try{
@@ -1113,6 +839,12 @@ public class creditosController implements Initializable {
                 imprimirReporteCreditosEmpresas();
             
         }
+    }
+    
+    
+    @FXML
+    private void cmbCargar(ActionEvent event) {
+        cargarCreditos();
     }
     
 }

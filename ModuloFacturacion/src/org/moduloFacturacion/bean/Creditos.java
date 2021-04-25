@@ -5,46 +5,35 @@ import java.sql.Date;
 
 public class Creditos {
     
-    private Integer idCredito;
     private Date creaditoFechaInicio;
     private Date creditoFechaFinal;
     private Integer creditoDiasRestantes;
     private String creditoDesc;
-    private String proveedorNombre;
     private Double creditoMonto;
     private String estadoCreditoDesc;
     private String noFactura;
+    
     public Creditos() {
     }
 
-    public Creditos(Integer idCredito, Date creaditoFechaInicio, Date creditoFechaFinal, Integer creditoDiasRestantes, String creditoDesc, String proveedorNombre, Double creditoMonto, String estadoCreditoDesc, String noFactura) {
-        this.idCredito = idCredito;
+    public Creditos(Date creaditoFechaInicio, Date creditoFechaFinal, Integer creditoDiasRestantes, String creditoDesc, Double creditoMonto, String estadoCreditoDesc, String noFactura) {
         this.creaditoFechaInicio = creaditoFechaInicio;
         this.creditoFechaFinal = creditoFechaFinal;
         this.creditoDiasRestantes = creditoDiasRestantes;
         this.creditoDesc = creditoDesc;
-        this.proveedorNombre = proveedorNombre;
         this.creditoMonto = creditoMonto;
         this.estadoCreditoDesc = estadoCreditoDesc;
         this.noFactura = noFactura;
     }
 
+    
+    
     public String getNoFactura() {
         return noFactura;
     }
 
     public void setNoFactura(String noFactura) {
         this.noFactura = noFactura;
-    }
-
-   
-
-    public Integer getIdCredito() {
-        return idCredito;
-    }
-
-    public void setIdCredito(Integer idCredito) {
-        this.idCredito = idCredito;
     }
     
     public Integer getCreditoDiasRestantes() {
@@ -77,14 +66,6 @@ public class Creditos {
 
     public void setCreditoDesc(String creditoDesc) {
         this.creditoDesc = creditoDesc;
-    }
-
-    public String getProveedorNombre() {
-        return proveedorNombre;
-    }
-
-    public void setProveedorNombre(String proveedorNombre) {
-        this.proveedorNombre = proveedorNombre;
     }
 
     public Double getCreditoMonto() {

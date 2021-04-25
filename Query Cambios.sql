@@ -1,7 +1,8 @@
 alter table Facturas change facturaId facturaId int(5) UNSIGNED ZEROFILL unique not null;
 
+
 DELIMITER $$
-	create procedure SpvalidarFactura(serie varchar(5),idFactura int(5))
+	create procedure SpvalidarFactura(serie varchar(5),idFactura int(10))
 		begin
 			select * from Facturas
 				where (facturaSerie = serie) and (facturaId = idFactura);

@@ -426,6 +426,7 @@ public class FacturacionViewController implements Initializable {
         txtNitCliente.setValue("");
         txtSerieId.setText("");
         txtSerieId.setEditable(true);
+        date2 = LocalDate.now();
     }    
 
     @FXML
@@ -944,34 +945,42 @@ public class FacturacionViewController implements Initializable {
   
   @FXML
   public void validarNumeroFactura(KeyEvent event){
-        ArrayList<String> lista = new ArrayList();
-        String sql = "{call SpvalidarFactura('"+txtSerieId.getText()+"','"+txtFacturaId.getText()+"')}";                        
-        int x=0;
-        String id = "";
-            try{
-                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-                ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                lista.add(x, rs.getString("facturaId"));
-                id = rs.getString("facturaId");
-                 x++;
-            }
+    ArrayList<String> lista = new ArrayList();
+    
+    System.out.println(txtFacturaId.getText());
+    Integer idFac = Integer.parseInt(txtFacturaId.getText());
+    String sql = "{call SpvalidarFactura('"+txtSerieId.getText()+"','"+idFac+"')}";                        
+    int x=0;
+    String id = "";
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            System.out.println("aqui 1");
             
-            if(id != ""){
-                Notifications noti = Notifications.create();
-                noti.graphic(new ImageView(imgError));
-                noti.title("NUMERO DE FACTURA INVALIDO");
-                noti.text("Por favor verifica que el numero de factura sea correcto");
-                noti.position(Pos.BOTTOM_RIGHT);
-                noti.hideAfter(Duration.seconds(4));
-                noti.darkStyle();
-                noti.show();
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
+        while(rs.next()){
+            lista.add(x, rs.getString("facturaId"));
+            id = rs.getString("facturaId");
+             x++;
+             System.out.println(id);
+             System.out.println("adentro");
         }
+
+        if(id != ""){
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("NUMERO DE FACTURA INVALIDO");
+            noti.text("Por favor verifica que el numero de factura sea correcto");
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();
+            noti.show();
+        }
+    }catch(SQLException ex){
+        ex.printStackTrace();
+    } 
+
   }
-  
+
   public void ValidacionFecha(){
       Notifications noti = Notifications.create();
         
