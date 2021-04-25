@@ -90,8 +90,6 @@ public class InventarioViewController implements Initializable {
     private JFXTextField txtCostoNuevo;
 
 
-
-
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, SUMAR, RESTAR};
     public Operacion cancelar = Operacion.NINGUNO;
     
@@ -889,13 +887,25 @@ public class InventarioViewController implements Initializable {
             double cantidad = Double.parseDouble(txtCantidadInventario.getText());
             nuevoCredito.setCreditoMonto(costoProducto*cantidad);
             nuevoCredito.setNoFactura(noFactura.getText());
+            Double costoFinal = Double.parseDouble(txtCantidadInventario.getText())*Double.parseDouble(txtCostoNuevo.getText());
+            
+            String sqlDetalle = "{call SpAgregarCreditoDetalleBackUp('"+cmbCodigoProductoInventario.getValue()+"','"+txtCantidadInventario.getText()+"','"+costoFinal+"')}";
+            String sqlTransferirBackup = "{call SpAgregarCreditoDetalle()}";
             String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
-            System.out.println(sql);
+            String sqlEliminarBackup = "{call SpEliminarBackupCredito()}";
+
+        
             try {
                 PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                PreparedStatement psDetalle = Conexion.getIntance().getConexion().prepareCall(sqlDetalle);
+                PreparedStatement psTranferirBackup = Conexion.getIntance().getConexion().prepareCall(sqlTransferirBackup);
+                PreparedStatement psEliminarBackup = Conexion.getIntance().getConexion().prepareCall(sqlEliminarBackup);                
                 
+                psDetalle.execute();
+                psTranferirBackup.execute();
                 ps.execute();
-                 Notifications noti = Notifications.create();
+                
+                Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(imgCorrecto));
                 noti.title("CREDITO GUARDADO");
                 noti.text("Se ha agregado un nuevo credito");
@@ -903,6 +913,7 @@ public class InventarioViewController implements Initializable {
                 noti.hideAfter(Duration.seconds(4));
                 noti.darkStyle();   
                 noti.show();
+                psEliminarBackup.execute();
             } catch (SQLException ex) {
                  Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(imgError));
@@ -910,7 +921,7 @@ public class InventarioViewController implements Initializable {
                 noti.text("hubo un error en la base de datos"+ex);
                 ex.printStackTrace();
                 noti.position(Pos.BOTTOM_RIGHT);
-                noti.hideAfter(Duration.seconds(4));
+                noti.hideAfter(Duration.seconds(10));
                 noti.darkStyle();   
                 noti.show();
             }
@@ -939,11 +950,9 @@ public class InventarioViewController implements Initializable {
             PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
             ResultSet rs = ps.executeQuery();
              while(rs.next()){
-                montoFac = rs.getDouble("creditoMonto");
-                
+                montoFac = rs.getDouble("creditoMonto");                
             }
-            if(rs.first()){
-                
+            if(rs.first()){                
                 actualizarCredito(noFac,montoFac);
                 
             }else{
