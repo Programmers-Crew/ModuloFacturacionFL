@@ -28,7 +28,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="494.0" prefWidth="865.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.chequesController">
+<AnchorPane id="AnchorPane" fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.chequesController">
    <children>
       <Pane prefHeight="36.0" prefWidth="600.0" styleClass="bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -144,15 +144,15 @@
                                     <Button fx:id="btnImprimir" layoutX="388.0" layoutY="400.0" mnemonicParsing="false" onMouseClicked="#imprimirCheque" prefHeight="36.0" prefWidth="98.0" styleClass="boton" text="IMPRIMIR" textFill="WHITE" AnchorPane.bottomAnchor="23.0" AnchorPane.rightAnchor="34.0" />
                                     <AnchorPane fx:id="comprobanteChequeIma" layoutX="67.0" layoutY="34.0" prefHeight="346.0" prefWidth="370.0" styleClass="comprobanteImage" AnchorPane.bottomAnchor="77.20000000000005" AnchorPane.leftAnchor="67.0" AnchorPane.rightAnchor="67.40000000000003" AnchorPane.topAnchor="34.0">
                                        <children>
-                                          <Label fx:id="nochequeText" layoutX="284.0" layoutY="60.0" />
-                                          <Label fx:id="pagueseText" layoutX="83.0" layoutY="89.0" />
-                                          <Label fx:id="sumadeText" layoutX="83.0" layoutY="106.0">
+                                          <Label fx:id="nochequeText" layoutX="800.0" layoutY="180.0" />
+                                          <Label fx:id="pagueseText" layoutX="220.0" layoutY="250.0" />
+                                          <Label fx:id="sumadeText" layoutX="230.0" layoutY="310.0">
                                              <font>
                                                 <Font size="10.0" />
                                              </font></Label>
-                                          <Label fx:id="descText" layoutX="107.0" layoutY="180.0" />
-                                          <Label fx:id="digitosText" layoutX="284.0" layoutY="89.0" />
-                                          <Label fx:id="fechaText" layoutX="116.0" layoutY="69.0" />
+                                          <Label fx:id="descText" layoutX="290.0" layoutY="500.0" />
+                                          <Label fx:id="digitosText" layoutX="800.0" layoutY="262.0" />
+                                          <Label fx:id="fechaText" layoutX="350.0" layoutY="200.0" />
                                        </children>
                                     </AnchorPane>
                                  </children>
