@@ -598,6 +598,7 @@ public class creditosController implements Initializable {
         String txtCodigoCredito = listaCreditos.get(index).getNoFactura().toString();
          
         sql = "{call SpMarcarPagado('"+txtCodigoCredito+"')}";
+        System.out.println(sql);
         Notifications noti = Notifications.create();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         ButtonType buttonTypeSi = new ButtonType("Si");

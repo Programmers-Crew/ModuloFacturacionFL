@@ -94,7 +94,7 @@ DELIMITER $$
 			inner join
 				inventarioproductos as ip
 			on pr.productoId = ip.productoId
-            where ip.estadoProductoId = 1
+            where ip.inventarioProductoCant > 0
 			order by
 				pr.productoId ASC;
         END $$

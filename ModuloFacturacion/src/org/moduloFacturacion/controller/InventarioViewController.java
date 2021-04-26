@@ -6,9 +6,11 @@ import com.jfoenix.controls.JFXTextField;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -819,11 +821,37 @@ public class InventarioViewController implements Initializable {
     
     
     public void actualizarCredito(String nofac, double montoFac){
+
         double montoTotal =montoFac+Double.parseDouble(txtCantidadInventario.getText())*costoProducto;
-        String sql = "call SpActualizarCreditoInventario('"+montoTotal+"','"+nofac+"')";
+        
+            Double costoFinal = Double.parseDouble(txtCantidadInventario.getText())*Double.parseDouble(txtCostoNuevo.getText());
+            
+            String sqlDetalle = "{call SpAgregarCreditoDetalleBackUp('"+cmbCodigoProductoInventario.getValue()+"','"+txtCantidadInventario.getText()+"','"+costoFinal+"')}";
+            String sqlTransferirBackup = "{call SpAgregarCreditoDetalle()}";
+            String sqlEliminarBackup = "{call SpEliminarBackupCredito()}";
+
+     
+        Integer tipo = 1;
+            String sql = "call SpActualizarCreditoInventario('"+montoTotal+"','"+nofac+"')";
+            String sqlUpdate = "call SpUpdateDetalleCredito('"+nofac+"')";
+            String sqlCardex = "{call SpAgregarCardexFacUpdate('"+txtProductoInventario.getText()+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+noFactura.getText()+"')}";  
+
         try{
-            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);            
+            PreparedStatement psDetalle = Conexion.getIntance().getConexion().prepareCall(sqlDetalle);
+            PreparedStatement psTranferirBackup = Conexion.getIntance().getConexion().prepareCall(sqlTransferirBackup);
+            PreparedStatement psUpdate = Conexion.getIntance().getConexion().prepareCall(sqlUpdate);
+            PreparedStatement psEliminarBackup = Conexion.getIntance().getConexion().prepareCall(sqlEliminarBackup);
+                PreparedStatement psCardex = Conexion.getIntance().getConexion().prepareCall(sqlCardex);
+                
+                psCardex.execute();
             ps.execute();
+            psDetalle.execute();
+            psTranferirBackup.execute();
+            psUpdate.execute();            
+            psEliminarBackup.execute();
+
             Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgCorrecto));
             noti.title("CREDITO ACTUALIZADO");
@@ -878,7 +906,11 @@ public class InventarioViewController implements Initializable {
         dialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
         
         Optional<ButtonType> result = dialog.showAndWait();
-         
+        
+        Integer idFac = Integer.parseInt(noFactura.getText());                   
+        Integer tipo = 1;
+        LocalDate date2 = fechaInicio.getValue();
+            
         if(result.get() == buttonTypeOk){
             Creditos nuevoCredito = new Creditos();
             nuevoCredito.setCreaditoFechaInicio(java.sql.Date.valueOf( fechaInicio.getValue()));
@@ -893,14 +925,18 @@ public class InventarioViewController implements Initializable {
             String sqlTransferirBackup = "{call SpAgregarCreditoDetalle()}";
             String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
             String sqlEliminarBackup = "{call SpEliminarBackupCredito()}";
-
+            System.out.println(sqlDetalle);
+            
+            String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+txtProductoInventario.getText()+"','"+idFac+"','"+tipo+"','"+txtCantidadInventario.getText()+"')}";  
         
             try {
                 PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
                 PreparedStatement psDetalle = Conexion.getIntance().getConexion().prepareCall(sqlDetalle);
                 PreparedStatement psTranferirBackup = Conexion.getIntance().getConexion().prepareCall(sqlTransferirBackup);
                 PreparedStatement psEliminarBackup = Conexion.getIntance().getConexion().prepareCall(sqlEliminarBackup);                
+                PreparedStatement psCardex = Conexion.getIntance().getConexion().prepareCall(sqlCardex);
                 
+                psCardex.execute();
                 psDetalle.execute();
                 psTranferirBackup.execute();
                 ps.execute();

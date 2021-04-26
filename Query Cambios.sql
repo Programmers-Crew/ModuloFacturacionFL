@@ -157,4 +157,15 @@ DELIMITER $$
 
 DELIMITER ;
 
+DELIMITER $$
+	create procedure SpUpdateDetalleCredito(noFac varchar(10))
+		begin
+			            
+            insert into creditos(noFactura,creaditoFechaInicio,creditoFechaFinal,creditoFechaActual,creditoDiasRestantes,creditoDesc,creditoMonto,creditoEstado,creditoDetalle)
+				select c.noFactura,c.creaditoFechaInicio,c.creditoFechaFinal,c.creditoFechaActual,c.creditoDiasRestantes,c.creditoDesc,c.creditoMonto,c.creditoEstado,cdb.idCreditoDetalle
+                from creditos as c, creditodetallebackup as cdb
+				 where noFactura = nofac
+                 ;
+		end $$
+DELIMITER ;
  
