@@ -19,27 +19,37 @@ DELIMITER $$
 DELIMITER ;
 
 # QUERYS PARA REALIZAR EL CARDEX
+call SpListarCardex('HP00002')
+
 
 DELIMITER $$
-create procedure SpListarCardex(nombreProducto varchar(50))
-	begin 
-		select 	f.facturaFecha,f.facturaId, f.facturaSerie,
-				p.productoDesc as Salida, fd.cantidad as Total, (fd.cantidad-i.inventarioProductoCant) as SaldoSalida,
-				c.creaditoFechaInicio ,c.noFactura,
-				p.productoDesc as Entrada, cd.cantidadDetalle Total, (cd.cantidadDetalle + i.inventarioProductoCant) as SaldoEntrada
-        From 
-			facturas as f, creditos as c
-				inner join facturadetalle  as fd
-                on f.facturaDetalleId = fd.facturaDetalleId
-			inner join creditodetalle as cd
-				on c.creditoDetalle = cd.idCreditoDetalle
-			inner join productos as p
-				on fd.productoId = p.productoId or cd.productoId = p.productoId
-			inner join inventarioproductos as i
-				on p.productoId = i.inventarioProductoId
-			where p.productoDesc = nombreProducto
-        ;
-    end $$
+	create procedure SpGenerarCardex(prodId varchar(7))
+		begin 
+        end $$
 DELIMITER ;
 
+DELIMITER $$
+	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad int)
+		begin
+			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto)
+				select fecha, noFac, tipo,cantidad,ip.inventarioProductoCant, p.productoId
+					from inventarioproductos as ip
+						inner join productos as p
+							on ip.productoId = p.productoId
+						where p.productoDesc = nombre;
+        end $$
+DELIMITER ;
+ 
 
+DELIMITER $$
+	create procedure SpAgregarCardexFacUpdate(nombre varchar(60),tipo int, cantidad int, idBuscado int)
+		begin
+			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto )
+				select creditos.creaditoFechaInicio, creditos.noFactura, tipo,cantidad,inventarioproductos.inventarioProductoCant, p.productoId
+					from inventarioproductos
+						inner join productos as p					
+							on inventarioproductos.productoId = p.productoId,
+					Creditos
+						where (p.productoDesc = nombre) and (creditos.noFactura = idBuscado);
+        end $$
+DELIMITER ;

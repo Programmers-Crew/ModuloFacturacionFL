@@ -1027,7 +1027,8 @@ public class FacturacionViewController implements Initializable {
     
     System.out.println(txtFacturaId.getText());
     Integer idFac = Integer.parseInt(txtFacturaId.getText());
-    String sql = "{call SpvalidarFactura('"+txtSerieId.getText()+"','"+idFac+"')}";                        
+    String sql = "{call SpvalidarFactura('"+txtSerieId.getText()+"','"+idFac+"')}";        
+      System.out.println(sql);
     int x=0;
     String id = "";
         try{
@@ -1085,6 +1086,8 @@ public class FacturacionViewController implements Initializable {
   @FXML
     private void btnAgregarFacturaBackUp(MouseEvent event) {
         ValidacionFecha();
+            Integer idFac = Integer.parseInt(txtFacturaId.getText());                   
+            Integer tipo = 2;
         if(listaBackUp.size()>8){
              Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
@@ -1112,11 +1115,26 @@ public class FacturacionViewController implements Initializable {
                    nuevoBackUp.setProductoDesc(cmbNombreProducto.getValue());
                    nuevoBackUp.setCantidadBackup(Integer.parseInt(txtCantidadProducto.getText()));
                    nuevoBackUp.setTotalParcialBackup(Double.parseDouble(txtPrecioProducto.getText())*Integer.parseInt(txtCantidadProducto.getText()));
-
+                   
+                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+cmbNombreProducto.getValue()+"','"+idFac+"','"+tipo+"','"+txtCantidadProducto.getText()+"')}";  
+                    System.out.println(sqlCardex);
+                    
                    String sql = "{call SpAgregarBackup('"+buscarCodigoProducto(nuevoBackUp.getProductoDesc())+"','"+ nuevoBackUp.getCantidadBackup()+"','"+nuevoBackUp.getTotalParcialBackup()+"')}";
                    tipoOperacionFacturacion = Operacion.AGREGAR;
                    accionEstado(sql);  
                    txtLetrasPrecio.setText(letras.Convertir(twoDForm.format(Double.parseDouble(txtTotalFactura.getText())), true));
+                   
+
+                   
+
+                   try{
+                        PreparedStatement psCardex = Conexion.getIntance().getConexion().prepareCall(sqlCardex);
+                        psCardex.execute();
+                   }catch(Exception e){
+                       e.printStackTrace();
+                   }
+
+                   
                 }else{
                     Notifications noti = Notifications.create();
                     noti.graphic(new ImageView(imgError));
@@ -1275,7 +1293,6 @@ public class FacturacionViewController implements Initializable {
         String st =String.valueOf(df.format(total));
         if(cmbTipoFactura.getValue().equals("FACTURA")){
             if(txtSerieId.getText().charAt(0) == 'A' || txtSerieId.getText().charAt(0) == 'a'){
-                
                 impA.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
                 impA.imprima(listaBackUp, txtNitCliente.getValue(), txtNombreCliente.getText(), txtDireccionCliente.getText(), date2,txtLetrasPrecio.getText(), st);
             }else{
