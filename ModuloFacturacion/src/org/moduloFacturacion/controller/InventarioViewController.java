@@ -46,6 +46,7 @@ import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.Animations;
 import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
+import org.moduloFacturacion.bean.Cardex;
 import org.moduloFacturacion.bean.Creditos;
 import org.moduloFacturacion.bean.EstadoProductos;
 import org.moduloFacturacion.bean.GenerarExcel;
@@ -91,6 +92,8 @@ public class InventarioViewController implements Initializable {
     private JFXTextField txtCostoNuevo;
     @FXML
     private JFXButton generarExcel;
+    @FXML
+    private JFXButton btnCargarCardex;
 
 
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, SUMAR, RESTAR};
@@ -330,7 +333,11 @@ public class InventarioViewController implements Initializable {
            Stage s = (Stage) anchor.getScene().getWindow();
            s.toBack();
            GenerarExcel gE = new GenerarExcel();
+           try{
            gE.generar(listaInventarioProductos);
+           }catch(Exception e){
+               e.printStackTrace();
+           }
            s.toFront();
     }
 
@@ -880,6 +887,13 @@ public class InventarioViewController implements Initializable {
             noti.hideAfter(Duration.seconds(4));
             noti.darkStyle();   
             noti.show();
+            try{
+            PreparedStatement psEliminarBackup = Conexion.getIntance().getConexion().prepareCall(sqlEliminarBackup);
+            psEliminarBackup.execute();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
     
@@ -970,6 +984,12 @@ public class InventarioViewController implements Initializable {
                 noti.hideAfter(Duration.seconds(10));
                 noti.darkStyle();   
                 noti.show();
+                            try{
+              PreparedStatement psEliminarBackup = Conexion.getIntance().getConexion().prepareCall(sqlEliminarBackup);
+            psEliminarBackup.execute();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
             }
         }else{
             Notifications noti = Notifications.create();
@@ -1735,6 +1755,16 @@ public class InventarioViewController implements Initializable {
         llenarComboProducto();
         cargarCombo();
         
+        String sql = "{call SpDesactivarProd()}";
+
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                
+            ps.execute();
+        }catch(Exception e){
+                e.printStackTrace();
+        }
+        
         new AutoCompleteComboBoxListener(cmbBuscar);
         new AutoCompleteComboBoxListener(cmbFiltroCodigo);
         new AutoCompleteComboBoxListener(cmbCodigoProductoInventario);
@@ -1805,30 +1835,342 @@ public class InventarioViewController implements Initializable {
     @FXML
     private AnchorPane anchor41;
     @FXML
-    private TableView<?> tblCardex;
+    private TableView<Cardex> tblCardex;
+    
     @FXML
-    private TableColumn<?, ?> colFechaCardex;
+    private TableColumn<Cardex, Date> colFechaCardex;
     @FXML
-    private TableColumn<?, ?> colNoCardex;
+    private TableColumn<Cardex, String> colNoCardex;
     @FXML
-    private TableColumn<?, ?> colDescripcionCardex;
+    private TableColumn<Cardex, String> colMovimientoCardex;
     @FXML
-    private TableColumn<?, ?> colEntradaCardex;
+    private TableColumn<Cardex, Integer> colTotalCardex;
     @FXML
-    private TableColumn<?, ?> colSalidaCardex;
-    @FXML
-    private TableColumn<?, ?> colTotalCardex;
-    @FXML
-    private TableColumn<?, ?> colSaldoCardex;
+    private TableColumn<Cardex, Integer> colSaldoCardex;
     @FXML
     private JFXButton btnBuscarCardex;
     @FXML
-    private ComboBox<?> cmbFiltroCardex;
+    private ComboBox<String> cmbFiltroCardex;
     @FXML
-    private ComboBox<?> cmbFiltroBuscarCardex;
+    private ComboBox<String> cmbFiltroBuscarCardex;
     @FXML
     private JFXButton btnReporteCardex;
+    @FXML
+    private JFXDatePicker txtfechaInicioCardex;
+    @FXML
+    private JFXDatePicker txtfechaFinalCardex;
     
+    ObservableList<String> listaCmbFiltro;
+    ObservableList<String> listaCmbFiltroBuscado;
+    ObservableList<Cardex> listaCardex;
+    ObservableList<String> listaCardexProd;
+    ObservableList<Cardex> listaCardexOrden;
+
+    
+    @FXML
+   public void CargarDatosCardex(){
+       llenarCmbFiltro();
+       cmbFiltroBuscarCardex.setValue("");
+   }
+   
+   public void llenarCmbFiltro(){
+       ArrayList<String>lista = new ArrayList();
+        
+       lista.add(0,"CÓDIGO");
+       lista.add(1,"PRODUCTO");
+        
+       listaCmbFiltro = FXCollections.observableList(lista);
+        
+       cmbFiltroCardex.setItems(listaCmbFiltro);
+       
+   }
+   
+   @FXML
+   public void cargarComboFiltro(){
+        ArrayList<String> lista = new ArrayList();
+        
+        String sql ="{call SpLlenarCmbCardex()}";      
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                 if(cmbFiltroCardex.getValue().equals("CÓDIGO")){
+                     lista.add(x, rs.getString("productoId"));
+                     
+                }else if(cmbFiltroCardex.getValue().equals("PRODUCTO")){
+                    lista.add(x, rs.getString("productoDesc"));
+                }
+                 x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+       listaCmbFiltroBuscado = FXCollections.observableList(lista);
+       cmbFiltroBuscarCardex.setItems(listaCmbFiltroBuscado);
+       new AutoCompleteComboBoxListener(cmbFiltroBuscarCardex);
+   }
+          
+   //buscar por id
+    public ObservableList<Cardex> getCardex(){
+        ArrayList<Cardex> lista = new ArrayList();
+        String sql = "{call SpGenerarCardex('"+cmbFiltroBuscarCardex.getValue()+"')}"; 
+        System.out.println(sql);
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Cardex(
+                            rs.getDate("fechaCardex"),
+                            rs.getString("noFacCardex"),
+                            rs.getString("idTipoDesc"),
+                            rs.getInt("saldoCardex"),
+                            rs.getInt("totalCardex"),
+                            rs.getString("productoDesc")
+                ));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return listaCardex = FXCollections.observableList(lista);
+    }
+    
+    public void cargarCreditosBuscados(){
+        tblCardex.setItems(getCardex());
+        System.out.println("cargar");
+        colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
+        colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
+        colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
+        colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
+        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));        
+    }  
+   
+    //buscar por nombre
+    public ObservableList<Cardex> getCardexProd(){
+        ArrayList<Cardex> lista = new ArrayList();
+        String sql = "{call SpGenerarCardexProd('"+cmbFiltroBuscarCardex.getValue()+"')}"; 
+        System.out.println(sql);
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Cardex(
+                            rs.getDate("fechaCardex"),
+                            rs.getString("noFacCardex"),
+                            rs.getString("idTipoDesc"),
+                            rs.getInt("saldoCardex"),
+                            rs.getInt("totalCardex"),
+                            rs.getString("productoDesc")
+                ));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return listaCardex = FXCollections.observableList(lista);
+    }
+    
+    public void cargarCreditosBuscadosProd(){
+        tblCardex.setItems(getCardexProd());
+        System.out.println("cargar");
+        colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
+        colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
+        colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
+        colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
+        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));        
+    } 
+        
+    //buscar por id y fechas
+        public ObservableList<Cardex> getCardexFechas(){
+        ArrayList<Cardex> lista = new ArrayList();
+         String sql = "{call SpGenerarCardexFecha('"+cmbFiltroBuscarCardex.getValue()+"','"+txtfechaInicioCardex.getValue()+"','"+txtfechaFinalCardex.getValue()+"')}";
+        System.out.println(sql);
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Cardex(
+                            rs.getDate("fechaCardex"),
+                            rs.getString("noFacCardex"),
+                            rs.getString("idTipoDesc"),
+                            rs.getInt("saldoCardex"),
+                            rs.getInt("totalCardex"),
+                            rs.getString("productoDesc")
+                ));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return listaCardex = FXCollections.observableList(lista);
+    }
+    
+    public void cargarCreditosBuscadosFechas(){
+        tblCardex.setItems(getCardexFechas());
+        System.out.println("cargar");
+        colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
+        colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
+        colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
+        colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
+        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));        
+    } 
+    
+    
+    //buscar por nombre y fechas
+        public ObservableList<Cardex> getCardexFechasProd(){
+        ArrayList<Cardex> lista = new ArrayList();
+         String sql = "{call SpGenerarCardexFechaProd('"+cmbFiltroBuscarCardex.getValue()+"','"+txtfechaInicioCardex.getValue()+"','"+txtfechaFinalCardex.getValue()+"')}";
+        System.out.println(sql);
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Cardex(
+                            rs.getDate("fechaCardex"),
+                            rs.getString("noFacCardex"),
+                            rs.getString("idTipoDesc"),
+                            rs.getInt("saldoCardex"),
+                            rs.getInt("totalCardex"),
+                            rs.getString("productoDesc")
+                ));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return listaCardex = FXCollections.observableList(lista);
+    }
+    
+    public void cargarCreditosBuscadosFechasProd(){
+        tblCardex.setItems(getCardexFechasProd());
+        System.out.println("cargar");
+        colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
+        colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
+        colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
+        colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
+        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));        
+    } 
+    
+    
+        
+    @FXML
+    public void buscarCardex(){
+            if(cmbFiltroCardex.getValue().equals("CÓDIGO")){
+                System.out.println("aqui 1");
+                cargarCreditosBuscados();                
+            }else if(cmbFiltroCardex.getValue().equals("PRODUCTO")){
+                cargarCreditosBuscadosProd();
+        }
+    }
+    
+    @FXML
+    public void btnBuscarCardex(){
+            if(cmbFiltroCardex.getValue().equals("CÓDIGO")){
+                System.out.println("aqui 1");
+                cargarCreditosBuscadosFechas();                
+            }else if(cmbFiltroCardex.getValue().equals("PRODUCTO")){
+                cargarCreditosBuscadosFechasProd();
+            }       
+    }
+    
+    @FXML
+    public void btnCargarCardex(){
+        if(cmbFiltroCardex.getValue().equals("CÓDIGO")){
+                System.out.println("aqui 1");
+                cargarCreditosBuscados();                
+            }else if(cmbFiltroCardex.getValue().equals("PRODUCTO")){
+                cargarCreditosBuscadosProd();
+        }
+    }
+    
+    public void imprimirCardex(){
+            try{
+                Map parametros = new HashMap();
+
+                String prodId = cmbFiltroBuscarCardex.getValue().toString();
+                System.out.println(prodId);
+                parametros.put("prodId", "'"+prodId+"'");
+
+                 org.moduloFacturacion.report.GenerarReporte.mostrarReporte("CardexProd.jasper", "MOVIMIENTO DE INVENTARIO", parametros);
+                
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Notifications noti = Notifications.create();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR");
+                    noti.text("DEBE SELECCIONAR FECHA DE INICIO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                }
+    }
+    
+        public void imprimirCardexFechas(){
+            try{
+                Map parametros = new HashMap();
+
+                 String prodId = cmbFiltroBuscarCardex.getValue().toString();
+                 String inicio = txtfechaInicioCardex.getValue().toString();
+                 String finalFecha = txtfechaFinalCardex.getValue().toString();
+
+
+                
+                parametros.put("prodId", "'"+prodId+"'");
+                parametros.put("inicio", "'"+inicio+"'");
+                parametros.put("finalFecha", "'"+finalFecha+"'");
+
+
+                 org.moduloFacturacion.report.GenerarReporte.mostrarReporte("CardexProdFechas.jasper", "REPORTE CREDITO", parametros);
+                
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Notifications noti = Notifications.create();
+                    noti.graphic(new ImageView(imgError));
+                    noti.title("ERROR");
+                    noti.text("DEBE SELECCIONAR FECHA DE INICIO");
+                    noti.position(Pos.BOTTOM_RIGHT);
+                    noti.hideAfter(Duration.seconds(4));
+                    noti.darkStyle();
+                    noti.show();
+                }
+    }
+    
+    @FXML
+    public void generarReporteCredito(){
+        String prueba = txtfechaInicioCardex.getValue().toString();
+        
+        if(prueba != ""){
+            imprimirCardexFechas();
+        }else{
+        imprimirCardex();
+        }
+    }
+    
+    @FXML
+    public void generarReporteCardex(MouseEvent event){
+        if(txtfechaInicioCardex.getValue().equals("")){
+            imprimirCardex();
+            
+            System.out.println("aqui 1");
+        }else{
+            imprimirCardexFechas();
+            System.out.println("aqui dos");
+        }
+    }
     
 }
 

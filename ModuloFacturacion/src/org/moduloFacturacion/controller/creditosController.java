@@ -427,6 +427,31 @@ public class creditosController implements Initializable {
         cambioScene.Cambio(menu1, (Stage) anchorCreditos.getScene().getWindow());
         
     }
+     Runnable runnable = new Runnable() {
+         
+    @Override 
+	public void run() {
+                    LocalDate fechaActual = LocalDate.now();
+
+            String sql3="{call SpRestarDias2('"+fechaActual+"')}";
+            while (true) { 
+		try { 
+                    Thread.sleep(1000); 
+                    try{
+                    PreparedStatement ps3 = Conexion.getIntance().getConexion().prepareCall(sql3);
+                    ps3.execute();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                    
+                   
+		} catch (InterruptedException e) { 
+                    e.printStackTrace(); 
+					} 
+				} 
+			} 
+         
+		}; 
      
     public void anuncio(){
         LocalDate fechaActual = LocalDate.now();
@@ -489,6 +514,9 @@ public class creditosController implements Initializable {
         validar.validarView(menu.prefs.get("dark", "root"), anchorCreditos);
        cmbFiltroCredito.setValue("");
        cmbBuscar.setValue("");
+       
+//        Thread hilo = new Thread(runnable); 
+//	hilo.start(); 
     }    
     
 
