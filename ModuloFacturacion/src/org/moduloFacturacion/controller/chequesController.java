@@ -152,7 +152,7 @@ public class chequesController implements Initializable {
     @FXML
     private JFXTextField chequeFecha;
     @FXML
-    private JFXTextField pagoOrden;
+    private JFXComboBox<String> pagoOrden;
     @FXML
     private TextField sumaLetras;
     @FXML
@@ -206,7 +206,7 @@ public class chequesController implements Initializable {
         
         Stage stage = (Stage) anchor.getScene().getWindow();
         
-        if(numeroCheque.getText().isEmpty() || pagoOrden.getText().isEmpty() || totalValor.getText().isEmpty() || sumaLetras.getText().isEmpty() || descripcionPago.getText().isEmpty()){
+        if(numeroCheque.getText().isEmpty() || pagoOrden.getValue().isEmpty() || totalValor.getText().isEmpty() || sumaLetras.getText().isEmpty() || descripcionPago.getText().isEmpty()){
              Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
@@ -230,7 +230,7 @@ public class chequesController implements Initializable {
                 
                 pagueseText.setLayoutY(235);
                 pagueseText.setLayoutX(200);
-                pagueseText.setText(pagoOrden.getText());
+                pagueseText.setText(pagoOrden.getValue());
                 pagueseText.setFont(new Font("System",20));
                 
                 
@@ -262,7 +262,7 @@ public class chequesController implements Initializable {
                 
                 pagueseText.setLayoutY(100);
                 pagueseText.setLayoutX(105);
-                pagueseText.setText(pagoOrden.getText());
+                pagueseText.setText(pagoOrden.getValue());
                 pagueseText.setFont(new Font("System",12));
                 
                 
@@ -295,13 +295,13 @@ public class chequesController implements Initializable {
         limpiarTextChequeDetalle();
         descripcionPago.setWrapText(true);
         cargarCombo();
-        
+        cmbProv();
         new AutoCompleteComboBoxListener(creditoCancelar);
      
     }    
     public void limpiarTextChequeDetalle(){
         numeroCheque.setText("");
-        pagoOrden.setText("");
+        pagoOrden.setValue("");
         descripcionPago.setText("");
     }
     public void limpiarDetalle(){
@@ -501,7 +501,7 @@ public class chequesController implements Initializable {
     
      @FXML
     private void imprimirCheque(MouseEvent event) {
-        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("")){
+        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getValue().equals("")){
             Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
@@ -516,14 +516,14 @@ public class chequesController implements Initializable {
             imprimirCheque imprimirC = new imprimirCheque();
             imprimirCheque2 imprimirch = new imprimirCheque2();
           
-            imprimirch.imprima(chequeFecha.getText(), Double.parseDouble(totalValor.getText()), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText());
-            imprimirC.imprima(numeroCheque.getText(), chequeFecha.getText(), pagoOrden.getText(), sumaLetras.getText(), totalValor.getText(),descripcionPago.getText());
+            imprimirch.imprima(chequeFecha.getText(), Double.parseDouble(totalValor.getText()), pagoOrden.getValue(), sumaLetras.getText(), totalValor.getText());
+            imprimirC.imprima(numeroCheque.getText(), chequeFecha.getText(), pagoOrden.getValue(), sumaLetras.getText(), totalValor.getText(),descripcionPago.getText());
             guardarCheque();
         }
        
     }
      public void guardarCheque(){
-       String sqlCheque = "{call SpAgregarCheque('"+numeroCheque.getText()+"','"+chequeFecha.getText()+"','"+pagoOrden.getText()+"','"+totalValor.getText()+"','"+getUsuarioId()+"','"+descripcionPago.getText()+"')}";
+       String sqlCheque = "{call SpAgregarCheque('"+numeroCheque.getText()+"','"+chequeFecha.getText()+"','"+pagoOrden.getValue()+"','"+totalValor.getText()+"','"+getUsuarioId()+"','"+descripcionPago.getText()+"')}";
        try{
 
            PreparedStatement psCheque = Conexion.getIntance().getConexion().prepareCall(sqlCheque);
@@ -621,7 +621,7 @@ public class chequesController implements Initializable {
     
     @FXML
     private void btnEditarChequeDetalle(MouseEvent event) {
-        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getText().equals("")|| descripcionPago.getText().equals("")){
+        if(numeroCheque.getText().equals("") || chequeFecha.getText().equals("") || pagoOrden.getValue().equals("")|| descripcionPago.getText().equals("")){
             Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
             noti.title("ERROR");
@@ -1096,5 +1096,30 @@ public class chequesController implements Initializable {
         
 		};
 
+        ObservableList<String> listaProv;
+
+   @FXML
+   public void cmbProv(){
+        ArrayList<String> lista = new ArrayList();
+        
+        String sql ="{call SpListarProveedores()}";      
+        int x=0;
+        
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                     lista.add(x, rs.getString("proveedorNombre"));
+                 x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+       listaProv = FXCollections.observableList(lista);
+       pagoOrden.setItems(listaProv);
+       new AutoCompleteComboBoxListener(pagoOrden);
+   }
+    
     
 }

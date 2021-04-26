@@ -83,8 +83,6 @@ public class creditosController implements Initializable {
     String codigo = "";
     
     @FXML
-    private JFXButton btnReporte;
-    @FXML
     private AnchorPane anchorCreditos;
     @FXML
     private TableColumn<Creditos, String> noFacColumn;
