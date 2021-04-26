@@ -327,8 +327,11 @@ public class InventarioViewController implements Initializable {
     
     @FXML
     private void generarExcel(ActionEvent event) throws IOException {
+           Stage s = (Stage) anchor.getScene().getWindow();
+           s.toBack();
            GenerarExcel gE = new GenerarExcel();
            gE.generar(listaInventarioProductos);
+           s.toFront();
     }
 
     public ObservableList<InventarioProductos> getInventarioProveedor(){
