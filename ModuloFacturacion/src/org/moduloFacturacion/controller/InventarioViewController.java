@@ -3,7 +3,6 @@ package org.moduloFacturacion.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
@@ -50,6 +49,7 @@ import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.Creditos;
 import org.moduloFacturacion.bean.EstadoProductos;
+import org.moduloFacturacion.bean.GenerarExcel;
 import org.moduloFacturacion.bean.InventarioProductos;
 import org.moduloFacturacion.bean.ValidarStyle;
 import org.moduloFacturacion.db.Conexion;
@@ -90,6 +90,8 @@ public class InventarioViewController implements Initializable {
     private JFXButton btnCargarDatos;
     @FXML
     private JFXTextField txtCostoNuevo;
+    @FXML
+    private JFXButton generarExcel;
 
 
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, SUMAR, RESTAR};
@@ -323,7 +325,13 @@ public class InventarioViewController implements Initializable {
         activarControles();
         activarTextInventario();
     }
-     
+    
+    @FXML
+    private void generarExcel(ActionEvent event) {
+           GenerarExcel gE = new GenerarExcel();
+           gE.generar(listaInventarioProductos);
+    }
+
     public ObservableList<InventarioProductos> getInventarioProveedor(){
         ArrayList<InventarioProductos> lista = new ArrayList();
         ArrayList<String> comboCodigoFiltro = new ArrayList();
@@ -1724,6 +1732,7 @@ public class InventarioViewController implements Initializable {
         cmbCodigoProductoInventario.setValue("");
         llenarComboProducto();
         cargarCombo();
+        
         new AutoCompleteComboBoxListener(cmbBuscar);
         new AutoCompleteComboBoxListener(cmbFiltroCodigo);
         new AutoCompleteComboBoxListener(cmbCodigoProductoInventario);

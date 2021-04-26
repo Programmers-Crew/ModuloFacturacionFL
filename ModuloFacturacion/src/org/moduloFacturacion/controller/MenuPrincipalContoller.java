@@ -173,6 +173,9 @@ public class MenuPrincipalContoller implements Initializable {
     public Preferences factura = Preferences.userRoot().node(this.getClass().getName());
     public Preferences orden = Preferences.userRoot().node(this.getClass().getName());
     public Preferences letra = Preferences.userRoot().node(this.getClass().getName());
+    
+    
+    public Preferences cifras = Preferences.userRoot().node(this.getClass().getName());
     ValidarStyle validar = new ValidarStyle();
     
     
@@ -184,7 +187,6 @@ public class MenuPrincipalContoller implements Initializable {
             prefsUsuario1.put("validar", "no recordar");
         }
     }
-    
     public void limpiarText(){
         txtUsuario.setText("");
         txtPassword.setText("");
@@ -407,6 +409,49 @@ public class MenuPrincipalContoller implements Initializable {
     }
     
     
+    
+    public void llenarCifrasPFac(){
+        cifras.put("4","16");
+        cifras.put("5","11");
+        
+        cifras.put("6","6");
+        cifras.put("8","1");
+        
+        cifras.put("9","7");
+        cifras.put("10","12");
+        
+    }
+    
+    public void llenarCifrasTFac(){
+        cifras.put("4T", "20");
+        cifras.put("5T", "15");
+        cifras.put("6T", "10");
+        cifras.put("8T", "2");
+        cifras.put("9T", "7");
+        cifras.put("10T","9");
+    }
+    public void llenarCifrasPFacA(){
+        cifras.put("4A","16");
+        cifras.put("5A","11");
+        
+        cifras.put("6A","6");
+        cifras.put("8A","1");
+        
+        cifras.put("9A","7");
+        cifras.put("10A","12");
+        
+    }
+    
+    public void llenarCifrasTFacA(){
+        cifras.put("4AT", "25");
+        cifras.put("5AT", "20");
+        cifras.put("6AT", "16");
+        cifras.put("8AT", "8");
+        cifras.put("9AT", "2");
+        cifras.put("10AT","2");
+    }
+    
+    
      public void resetearCamposOrden(){
         orden.put("diaxorden", "28");
         orden.put("diayorden", "320");
@@ -458,7 +503,14 @@ public class MenuPrincipalContoller implements Initializable {
             resetarCamposComprobante();
             
         }
-        
+        if(cifras.get("4", "root").equals("root")){
+            llenarCifrasTFac();
+            llenarCifrasPFac();
+        }
+        if(cifras.get("4A", "root").equals("root")){
+            llenarCifrasTFacA();
+            llenarCifrasPFacA();
+        }
         if(factura.get("totalfacy","root").equals("root")){
             resetearCamposFactura();
         }
@@ -494,7 +546,6 @@ public class MenuPrincipalContoller implements Initializable {
                 checkBox.setSelected(false);
         }
        
-        System.out.println(orden.get("descfacxorden", "root"));
         
         // caja de bienvenida
          FadeTransition ft = new FadeTransition();

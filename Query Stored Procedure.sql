@@ -474,6 +474,10 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> Diego-Gonzalez
 DELIMITER $$
 	create procedure SpListarInventarioProductosProv()
 		BEGIN
@@ -998,7 +1002,7 @@ DELIMITER $$
 #====================================== Entidad de Backup
 
 DELIMITER $$
-	create procedure SpListarBackup()
+	create procedure SpListarBackup(userName varchar(30))
 		BEGIN
 			select fdb.facturaDetalleIdBackup, p.productoDesc, fdb.cantidadBackup , p.productoPrecio ,fdb.totalParcialBackup
 				from facturadetallebackup as fdb
@@ -1286,9 +1290,13 @@ insert into EstadoCredito values(1, "PENDIENTE"),(2, "PAGADO"),(3, "VENCIDO");
 
 insert into tipoproducto values (1,'BIEN'),(2,'SERVICIO');
 
+<<<<<<< HEAD
+
+=======
 insert into estadoproductos values(1,'EXISTENCIA'),(2,'AGOTADO')
 
 insert into tipocardex values (1,'ENTRADA'), (2,'SALIDA')
+>>>>>>> Diego-Gonzalez
 
 DELIMITER $$
 	create procedure Sp_DevolucionProductos(serie varchar(5),idBuscado int)
@@ -1301,7 +1309,8 @@ DELIMITER $$
 				inner join facturas as f
 				  on f.facturaDetalleId = fd.facturaDetalleId
 					set ip.inventarioProductoCant = fd.cantidad + ip.inventarioProductoCant,
-						f.estadoFactura = 2
+						f.estadoFactura = 2,
+                        ip.estadoProductoId = 1
 						where facturaSerie = serie and  facturaId = idBuscado;
         end $$
 DELIMITER ;

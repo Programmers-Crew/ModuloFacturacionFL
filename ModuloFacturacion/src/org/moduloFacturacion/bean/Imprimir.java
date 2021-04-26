@@ -49,6 +49,22 @@ public class Imprimir implements Printable{
     float totalfacy = Float.parseFloat(menu.factura.get("totalfacy", "root"));
     int tamaño = Integer.parseInt(menu.letra.get("tamaño", "root"));
 
+    float cuatro = Float.parseFloat(menu.cifras.get("4","root"));
+    float cinco = Float.parseFloat(menu.cifras.get("5","root"));
+    float seis = Float.parseFloat(menu.cifras.get("6","root"));
+    float ocho = Float.parseFloat(menu.cifras.get("8","root"));
+    float nueve = Float.parseFloat(menu.cifras.get("9","root"));
+    float diez = Float.parseFloat(menu.cifras.get("10","root"));
+    
+    float cuatroT = Float.parseFloat(menu.cifras.get("4T","root"));
+    float cincoT = Float.parseFloat(menu.cifras.get("5T","root"));
+    float seisT = Float.parseFloat(menu.cifras.get("6T","root"));
+    float ochoT = Float.parseFloat(menu.cifras.get("8T","root"));
+    float nueveT = Float.parseFloat(menu.cifras.get("9T","root"));
+    float diezT = Float.parseFloat(menu.cifras.get("10T","root"));
+    
+    
+    
     
     public Imprimir(){
         super();
@@ -106,22 +122,22 @@ public class Imprimir implements Printable{
             int tamañoTotal = totalp.length();
             switch(tamañoTotal)  {
                 case 4:
-                    g2d.drawString(totalp, anchofor, anchoValor+16);
+                    g2d.drawString(totalp, anchofor, anchoValor+cuatro);
                     break;
                 case 5:
-                    g2d.drawString(totalp, anchofor, anchoValor+11);
+                    g2d.drawString(totalp, anchofor, anchoValor+cinco);
                     break;
                 case 6:
-                    g2d.drawString(totalp, anchofor, anchoValor+6);
+                    g2d.drawString(totalp, anchofor, anchoValor+seis);
                     break;
                 case 8:
-                    g2d.drawString(totalp, anchofor, anchoValor-1);
+                    g2d.drawString(totalp, anchofor, anchoValor-ocho);
                     break;
                 case 9:
-                    g2d.drawString(totalp, anchofor, anchoValor-7);
+                    g2d.drawString(totalp, anchofor, anchoValor-nueve);
                     break;
                 case 10:
-                    g2d.drawString(totalp, anchofor, anchoValor-12);
+                    g2d.drawString(totalp, anchofor, anchoValor-diez);
                     break;
             }
 
@@ -133,22 +149,22 @@ public class Imprimir implements Printable{
         
             switch(tamañoFacE)  {
                 case 4:
-                    g2d.drawString(totalF, totalfacy, totalfacx+20);
+                    g2d.drawString(totalF, totalfacy, totalfacx+cuatroT);
                     break;
                 case 5:
-                    g2d.drawString(totalF, totalfacy, totalfacx+15);
+                    g2d.drawString(totalF, totalfacy, totalfacx+cincoT);
                     break;
                 case 6:
-                    g2d.drawString(totalF, totalfacy, totalfacx+10);
+                    g2d.drawString(totalF, totalfacy, totalfacx+seisT);
                     break;
                 case 8:
-                    g2d.drawString(totalF, totalfacy, totalfacx+2);
+                    g2d.drawString(totalF, totalfacy, totalfacx+ochoT);
                     break;
                 case 9:
-                    g2d.drawString(totalF, totalfacy, totalfacx-7);
+                    g2d.drawString(totalF, totalfacy, totalfacx-nueveT);
                     break;
                 case 10:
-                    g2d.drawString(totalF, totalfacy, totalfacx-9);
+                    g2d.drawString(totalF, totalfacy, totalfacx-diezT);
                     break;
             }
     }

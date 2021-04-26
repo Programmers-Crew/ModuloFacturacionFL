@@ -445,19 +445,6 @@
                                     <Button layoutX="146.0" layoutY="449.0" mnemonicParsing="false" onMouseClicked="#guardarPreferencesFactura" styleClass="boton" text="GUARDAR" textFill="WHITE" />
                                     <Label layoutX="25.0" layoutY="396.0" text="TAMAÑO GENERAL:" />
                                     <TextField fx:id="size" layoutX="24.0" layoutY="422.0" prefHeight="26.0" prefWidth="71.0" />
-                                    <TextField fx:id="espaciadofac2" layoutX="25.0" layoutY="513.0" prefHeight="26.0" prefWidth="53.0" />
-                                    <TextField fx:id="espaciadofac21" layoutX="25.0" layoutY="572.0" prefHeight="26.0" prefWidth="53.0" />
-                                    <TextField fx:id="espaciadofac211" layoutX="125.0" layoutY="572.0" prefHeight="26.0" prefWidth="53.0" />
-                                    <TextField fx:id="espaciadofac2111" layoutX="128.0" layoutY="513.0" prefHeight="26.0" prefWidth="53.0" />
-                                    <Label layoutX="25.0" layoutY="487.0" text="X Cifras" />
-                                    <Label layoutX="132.0" layoutY="487.0" text="X Cifras" />
-                                    <Label layoutX="26.0" layoutY="550.0" text="X Cifras" />
-                                    <Label layoutX="132.0" layoutY="550.0" text="X Cifras" />
-                                    <TextField fx:id="espaciadofac2112" layoutX="224.0" layoutY="513.0" prefHeight="26.0" prefWidth="53.0" />
-                                    <TextField fx:id="espaciadofac21121" layoutX="224.0" layoutY="572.0" prefHeight="26.0" prefWidth="53.0" />
-                                    <Label layoutX="227.0" layoutY="550.0" text="X Cifras" />
-                                    <Label layoutX="227.0" layoutY="487.0" text="X Cifras" />
-                                    <Button layoutX="336.0" layoutY="537.0" mnemonicParsing="false" onMouseClicked="#guardarPreferencesFactura" styleClass="boton" text="GUARDAR" textFill="WHITE" />
                                  </children>
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -531,7 +518,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <SplitPane layoutX="415.0" layoutY="157.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.5" layoutX="415.0" layoutY="157.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <items>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                  <children>
@@ -592,6 +579,100 @@
                                     <Button layoutX="146.0" layoutY="449.0" mnemonicParsing="false" onMouseClicked="#guardarPreferencesFacturaA" styleClass="boton" text="GUARDAR" textFill="WHITE" />
                                     <Label layoutX="26.0" layoutY="387.0" text="TAMAÑO GENERAL:" />
                                     <TextField fx:id="size1" layoutX="24.0" layoutY="405.0" prefHeight="26.0" prefWidth="71.0" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <TextField fx:id="cuatroB" layoutX="29.0" layoutY="85.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="29.0" layoutY="60.0" text="4 Cifras" />
+                                    <Button fx:id="cifrasB" layoutX="30.0" layoutY="192.0" mnemonicParsing="false" onMouseClicked="#cifrasB" styleClass="boton" text="GUARDAR" textFill="WHITE" />
+                                    <TextField fx:id="cincoB" layoutX="98.0" layoutY="84.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="98.0" layoutY="59.0" text="5 Cifras" />
+                                    <TextField fx:id="seisB" layoutX="169.0" layoutY="84.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="169.0" layoutY="59.0" text="6 Cifras" />
+                                    <TextField fx:id="ochoB" layoutX="242.0" layoutY="83.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="242.0" layoutY="58.0" text="8 Cifras" />
+                                    <TextField fx:id="nueveB" layoutX="311.0" layoutY="82.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="311.0" layoutY="57.0" text="9 Cifras" />
+                                    <TextField fx:id="diezB" layoutX="381.0" layoutY="81.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="381.0" layoutY="56.0" text="10 Cifras" />
+                                    <TextField fx:id="cuatroBT" layoutX="26.0" layoutY="152.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="26.0" layoutY="127.0" text="4 Cifras" />
+                                    <TextField fx:id="cincoBT" layoutX="95.0" layoutY="151.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="95.0" layoutY="126.0" text="5 Cifras" />
+                                    <TextField fx:id="seisBT" layoutX="166.0" layoutY="151.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="166.0" layoutY="126.0" text="6 Cifras" />
+                                    <TextField fx:id="ochoBT" layoutX="239.0" layoutY="150.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="239.0" layoutY="125.0" text="8 Cifras" />
+                                    <TextField fx:id="nueveBT" layoutX="308.0" layoutY="149.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="308.0" layoutY="124.0" text="9 Cifras" />
+                                    <TextField fx:id="diezBT" layoutX="378.0" layoutY="148.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="378.0" layoutY="123.0" text="10 Cifras" />
+                                    <Label layoutX="29.0" layoutY="24.0" prefHeight="31.0" prefWidth="189.0" text="FACTURA B">
+                                       <font>
+                                          <Font size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="cuatroA" layoutX="36.0" layoutY="286.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="36.0" layoutY="261.0" text="4 Cifras" />
+                                    <Button fx:id="cifrasA" layoutX="37.0" layoutY="384.0" mnemonicParsing="false" onMouseClicked="#cifrasA" styleClass="boton" text="GUARDAR" textFill="WHITE" />
+                                    <TextField fx:id="cincoA" layoutX="105.0" layoutY="285.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="105.0" layoutY="260.0" text="5 Cifras" />
+                                    <TextField fx:id="seisA" layoutX="176.0" layoutY="285.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="176.0" layoutY="260.0" text="6 Cifras" />
+                                    <TextField fx:id="ochoA" layoutX="249.0" layoutY="284.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="249.0" layoutY="259.0" text="8 Cifras" />
+                                    <TextField fx:id="nueveA" layoutX="318.0" layoutY="283.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="318.0" layoutY="258.0" text="9 Cifras" />
+                                    <TextField fx:id="diezA" layoutX="388.0" layoutY="282.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="388.0" layoutY="257.0" text="10 Cifras" />
+                                    <TextField fx:id="cuatroAT" layoutX="39.0" layoutY="349.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="39.0" layoutY="324.0" text="4 Cifras" />
+                                    <TextField fx:id="cincoAT" layoutX="108.0" layoutY="348.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="108.0" layoutY="323.0" text="5 Cifras" />
+                                    <TextField fx:id="seisAT" layoutX="179.0" layoutY="348.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="179.0" layoutY="323.0" text="6 Cifras" />
+                                    <TextField fx:id="ochoAT" layoutX="252.0" layoutY="347.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="252.0" layoutY="322.0" text="8 Cifras" />
+                                    <TextField fx:id="nueveAT" layoutX="321.0" layoutY="346.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="321.0" layoutY="321.0" text="9 Cifras" />
+                                    <TextField fx:id="diezAT" layoutX="391.0" layoutY="345.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="391.0" layoutY="320.0" text="10 Cifras" />
+                                    <Label layoutX="30.0" layoutY="225.0" prefHeight="31.0" prefWidth="189.0" text="FACTURA A">
+                                       <font>
+                                          <Font size="21.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="cuatroO" layoutX="36.0" layoutY="490.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="36.0" layoutY="465.0" text="4 Cifras" />
+                                    <Button fx:id="cifrasOrden" layoutX="37.0" layoutY="589.0" mnemonicParsing="false" onMouseClicked="#cifrasOrden" styleClass="boton" text="GUARDAR" textFill="WHITE" />
+                                    <TextField fx:id="cincoO" layoutX="105.0" layoutY="489.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="105.0" layoutY="464.0" text="5 Cifras" />
+                                    <TextField fx:id="seisO" layoutX="176.0" layoutY="489.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="176.0" layoutY="464.0" text="6 Cifras" />
+                                    <TextField fx:id="ochoO" layoutX="249.0" layoutY="488.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="249.0" layoutY="463.0" text="8 Cifras" />
+                                    <TextField fx:id="nueveO" layoutX="318.0" layoutY="487.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="318.0" layoutY="462.0" text="9 Cifras" />
+                                    <TextField fx:id="diezO" layoutX="388.0" layoutY="486.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="388.0" layoutY="461.0" text="10 Cifras" />
+                                    <TextField fx:id="cuatroOT" layoutX="33.0" layoutY="553.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="33.0" layoutY="528.0" text="4 Cifras" />
+                                    <TextField fx:id="cincoOT" layoutX="102.0" layoutY="552.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="102.0" layoutY="527.0" text="5 Cifras" />
+                                    <TextField fx:id="seisOT" layoutX="173.0" layoutY="552.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="173.0" layoutY="527.0" text="6 Cifras" />
+                                    <TextField fx:id="ochoOT" layoutX="246.0" layoutY="551.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="246.0" layoutY="526.0" text="8 Cifras" />
+                                    <TextField fx:id="nueveOT" layoutX="315.0" layoutY="550.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="315.0" layoutY="525.0" text="9 Cifras" />
+                                    <TextField fx:id="diezOT" layoutX="385.0" layoutY="549.0" prefHeight="26.0" prefWidth="53.0" />
+                                    <Label layoutX="385.0" layoutY="524.0" text="10 Cifras" />
+                                    <Label layoutX="34.0" layoutY="419.0" prefHeight="31.0" prefWidth="237.0" text="ORDEN DE COMPRA:">
+                                       <font>
+                                          <Font size="21.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                               </AnchorPane>
                            </items>
