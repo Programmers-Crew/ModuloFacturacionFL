@@ -474,10 +474,6 @@ DELIMITER $$
         END $$
 DELIMITER ;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> Diego-Gonzalez
 DELIMITER $$
 	create procedure SpListarInventarioProductosProv()
 		BEGIN
@@ -1139,7 +1135,20 @@ DELIMITER $$
 			update inventarioproductos as ip
 					set ip.inventarioProductoCant = ip.inventarioProductoCant + cantidad
 						where ip.productoId = idBuscado ;
+                        
+			update inventarioproductos as ip
+					set estadoProductoId = 1
+						where ip.productoId = idBuscado and inventarioProductoCant>0 ;
         END $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpDesactivarProd()
+		begin
+			update inventarioproductos as ip
+				set estadoProductoId = 2
+					where inventarioProductoCant < 1;
+        end $$
 DELIMITER ;
 
 DELIMITER $$
@@ -1290,13 +1299,9 @@ insert into EstadoCredito values(1, "PENDIENTE"),(2, "PAGADO"),(3, "VENCIDO");
 
 insert into tipoproducto values (1,'BIEN'),(2,'SERVICIO');
 
-<<<<<<< HEAD
-
-=======
 insert into estadoproductos values(1,'EXISTENCIA'),(2,'AGOTADO')
 
 insert into tipocardex values (1,'ENTRADA'), (2,'SALIDA')
->>>>>>> Diego-Gonzalez
 
 DELIMITER $$
 	create procedure Sp_DevolucionProductos(serie varchar(5),idBuscado int)
@@ -1501,8 +1506,8 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpAgregarCredito(inicio date, final date, descripcion varchar(50),monto double, estado int, noFac varchar(10))
 		begin 
-			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDesc,creditoMonto,creditoEstado, noFactura, creditoDetalle)
-				select inicio, final,descripcion, monto, estado, noFac, cdb.idCreditoDetalle
+			insert into Creditos(creaditoFechaInicio,creditoFechaFinal,creditoDesc,creditoMonto,creditoEstado, noFactura, creditoDetalle,creditoDiasRestantes)
+				select inicio, final,descripcion, monto, estado, noFac, cdb.idCreditoDetalle, (final-inicio)
 				from CreditoDetalleBackUp as cdb;
         end $$
 DELIMITER ;

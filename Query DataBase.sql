@@ -161,7 +161,7 @@ create table Creditos(
     creaditoFechaInicio date not null,
     creditoFechaFinal date not null,
     creditoFechaActual date,
-    creditoDiasRestantes int not null,
+    creditoDiasRestantes int,
 	creditoDesc varchar(50) not null,
     creditoMonto double not null,
     creditoEstado int not null,

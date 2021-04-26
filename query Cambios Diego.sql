@@ -19,12 +19,61 @@ DELIMITER $$
 DELIMITER ;
 
 # QUERYS PARA REALIZAR EL CARDEX
-call SpListarCardex('HP00002')
-
 
 DELIMITER $$
-	create procedure SpGenerarCardex(prodId varchar(7))
+	create procedure SpGenerarCardex(prodId varchar(50))
 		begin 
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc
+			from cardex as c
+			inner join tipocardex as tc
+				on tc.idTipoCardex = c.tipoCardex
+			inner join productos as p
+				on p.productoId = producto
+			WHERE  p.productoId = prodId or p.productoDesc = prodId
+;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpGenerarCardexProd(prodId varchar(30))
+		begin 
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc
+			from cardex as c
+			inner join tipocardex as tc
+				on tc.idTipoCardex = c.tipoCardex
+			inner join productos as p
+				on p.productoId = producto
+			WHERE  p.productoDesc = prodId
+;
+        end $$
+DELIMITER ;
+call SpGenerarCardexFechaProd('Martillo Pequeno', '2021-04-01','2021-04-30');
+
+DELIMITER $$
+	create procedure SpGenerarCardexFechaProd(prodId varchar(30), inicio date, finalFecha date)
+		begin 
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc
+			from cardex as c
+			inner join tipocardex as tc
+				on tc.idTipoCardex = c.tipoCardex
+			inner join productos as p
+				on p.productoId = producto
+			WHERE p.productoId = prodId or p.productoDesc = prodId and c.fechaCardex BETWEEN inicio AND finalFecha
+;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpGenerarCardexFecha(prodId varchar(30), inicio date, final date)
+		begin 
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc
+			from cardex as c
+			inner join tipocardex as tc
+				on tc.idTipoCardex = c.tipoCardex
+			inner join productos as p
+				on p.productoId = producto
+			WHERE p.productoId = prodId and c.fechaCardex BETWEEN inicio AND final
+;
         end $$
 DELIMITER ;
 
@@ -51,5 +100,15 @@ DELIMITER $$
 							on inventarioproductos.productoId = p.productoId,
 					Creditos
 						where (p.productoDesc = nombre) and (creditos.noFactura = idBuscado);
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpLlenarCmbCardex()
+		begin
+			select DISTINCT p.productoId, p.productoDesc
+				from productos as p
+                inner join cardex as c
+					on c.producto = p.productoId;
         end $$
 DELIMITER ;
