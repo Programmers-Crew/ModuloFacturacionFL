@@ -3,7 +3,7 @@ use ProgrammersBilling;
 
 create table Clientes(
 	clienteId	int(5)  UNSIGNED ZEROFILL primary key auto_increment,
-	clienteNit	varchar(9) unique not null,
+	clienteNit	varchar(19) unique not null,
 	clienteNombre varchar(25) not null,
 	clienteDireccion varchar(100) not null DEFAULT 'Ciudad de Guatemala'
 );
@@ -161,7 +161,7 @@ create table Creditos(
     creaditoFechaInicio date not null,
     creditoFechaFinal date not null,
     creditoFechaActual date,
-    creditoDiasRestantes int not null,
+    creditoDiasRestantes int,
 	creditoDesc varchar(50) not null,
     creditoMonto double not null,
     creditoEstado int not null,

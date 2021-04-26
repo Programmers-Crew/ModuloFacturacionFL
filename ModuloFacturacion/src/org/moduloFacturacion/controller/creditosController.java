@@ -26,7 +26,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,6 +40,7 @@ import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.Creditos;
 import org.moduloFacturacion.bean.CreditosBuscados;
+import org.moduloFacturacion.bean.ValidarStyle;
 import org.moduloFacturacion.db.Conexion;
 
 public class creditosController implements Initializable {
@@ -89,7 +89,8 @@ public class creditosController implements Initializable {
     @FXML
     private TableColumn<Creditos, String> noFacColumn;
     
-    
+    MenuPrincipalContoller menu = new MenuPrincipalContoller();
+    ValidarStyle validar = new ValidarStyle();
     //BUSQUEDA CREDITOS
     @FXML
     private TableView<CreditosBuscados> tableProductosBuscados;
@@ -485,6 +486,7 @@ public class creditosController implements Initializable {
        cargarCreditos();
        cargarCombo();
        anuncio();
+        validar.validarView(menu.prefs.get("dark", "root"), anchorCreditos);
        cmbFiltroCredito.setValue("");
        cmbBuscar.setValue("");
     }    

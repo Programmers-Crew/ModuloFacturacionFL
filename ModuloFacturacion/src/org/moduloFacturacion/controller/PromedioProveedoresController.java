@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
+import org.moduloFacturacion.bean.ValidarStyle;
 import org.moduloFacturacion.db.Conexion;
 
 
@@ -34,7 +35,8 @@ public class PromedioProveedoresController implements Initializable {
     private JFXButton btnCerrar;
     @FXML
     private Button brnPromedio;
-
+    MenuPrincipalContoller menu = new MenuPrincipalContoller();
+    ValidarStyle validar = new ValidarStyle();
     @FXML
     private JFXComboBox<String> txtProveedorDos;
     @FXML
@@ -64,7 +66,7 @@ public class PromedioProveedoresController implements Initializable {
         llenarComboProeedores();
         txtProductoDos.setEditable(true);
         txtProductoUno.setEditable(true);
-        
+        validar.validarView(menu.prefs.get("dark", "root"), anchor);
         txtProveedoresUno.setEditable(true);
         txtProveedorDos.setEditable(true);
     }    

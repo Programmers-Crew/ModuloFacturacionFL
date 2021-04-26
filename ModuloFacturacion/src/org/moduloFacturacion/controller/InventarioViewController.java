@@ -5,7 +5,6 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -327,7 +326,7 @@ public class InventarioViewController implements Initializable {
     }
     
     @FXML
-    private void generarExcel(ActionEvent event) {
+    private void generarExcel(ActionEvent event) throws IOException {
            GenerarExcel gE = new GenerarExcel();
            gE.generar(listaInventarioProductos);
     }
