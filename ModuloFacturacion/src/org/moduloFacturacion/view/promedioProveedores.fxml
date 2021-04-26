@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="611.0" prefWidth="639.0" styleClass="anchorOscuro" stylesheets="@../resource/MenuPrincipalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.PromedioProveedoresController">
+<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="611.0" prefWidth="639.0" styleClass="anchorOscuro" stylesheets="@../resource/MenuPrincipalStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.PromedioProveedoresController">
    <children>
       <ButtonBar prefHeight="31.0" prefWidth="639.0" styleClass="menubar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <buttons>
@@ -39,6 +39,7 @@
          </font>
       </Label>
       <JFXComboBox fx:id="txtProveedoresUno" layoutX="46.0" layoutY="67.0" onAction="#buscarProductoUno" prefHeight="31.0" prefWidth="539.0" AnchorPane.leftAnchor="46.0" AnchorPane.rightAnchor="54.0" />
+      <JFXComboBox fx:id="txtProductoUno" layoutX="45.0" layoutY="147.0" onAction="#buscarPrecio" prefHeight="38.0" prefWidth="539.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="55.0" />
       <JFXTextField fx:id="txtPrecioUno" editable="false" layoutX="46.0" layoutY="229.0" prefHeight="38.0" prefWidth="539.0" AnchorPane.leftAnchor="46.0" AnchorPane.rightAnchor="54.0" />
       <Label layoutX="14.0" layoutY="200.0" prefHeight="38.0" prefWidth="193.0" text="PRECIO:">
          <font>
@@ -56,6 +57,7 @@
          </font>
       </Label>
       <JFXComboBox fx:id="txtProveedorDos" layoutX="46.0" layoutY="337.0" onAction="#buscarProductoDos" prefHeight="31.0" prefWidth="539.0" AnchorPane.leftAnchor="46.0" AnchorPane.rightAnchor="54.0" />
+      <JFXComboBox fx:id="txtProductoDos" layoutX="40.0" layoutY="409.0" onAction="#buscarPrecioDos" prefHeight="38.0" prefWidth="549.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="55.0" />
       <JFXTextField fx:id="txtPrecioDos" editable="false" layoutX="47.0" layoutY="489.0" prefHeight="38.0" prefWidth="539.0" AnchorPane.leftAnchor="46.0" AnchorPane.rightAnchor="54.0" />
       <Label layoutX="15.0" layoutY="458.0" prefHeight="38.0" prefWidth="193.0" text="PRECIO:">
          <font>
@@ -64,7 +66,5 @@
       </Label>
       <Line endX="518.0" fill="#a1a1a1" layoutX="107.0" layoutY="296.0" startX="-100.0" stroke="#6b6b6b" strokeLineCap="BUTT" strokeWidth="2.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="14.0" />
       <JFXTextField fx:id="txtPromedio" editable="false" layoutX="223.0" layoutY="559.0" prefHeight="38.0" prefWidth="362.0" AnchorPane.leftAnchor="223.0" AnchorPane.rightAnchor="54.0" />
-      <JFXComboBox fx:id="txtProductoDos" layoutX="40.0" layoutY="409.0" onAction="#buscarPrecioDos" prefHeight="38.0" prefWidth="549.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="55.0" />
-      <JFXComboBox fx:id="txtProductoUno" layoutX="45.0" layoutY="147.0" onAction="#buscarPrecio" prefHeight="38.0" prefWidth="539.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="55.0" />
    </children>
 </AnchorPane>

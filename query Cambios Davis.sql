@@ -14,7 +14,7 @@ DELIMITER $$
 		BEGIN
 			SELECT *
             FROM creditos
-            WHERE creditoEstado = 1;
+            WHERE creditoEstado = 1 group by noFactura;
         END $$
 DELIMITER ;
 

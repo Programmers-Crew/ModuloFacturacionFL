@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="494.0" prefWidth="865.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.ProductosViewController">
+<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="494.0" prefWidth="865.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.ProductosViewController">
    <children>
       <Pane layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="600.0" styleClass="bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -84,6 +84,8 @@
                                                 <ComboBox fx:id="cmbProveedorProducto" editable="true" layoutX="16.0" layoutY="219.0" prefHeight="26.0" prefWidth="250.0" styleClass="comboOscuro" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="17.799999999999983" AnchorPane.topAnchor="219.0" />
                                                 <Label layoutX="16.0" layoutY="253.0" prefHeight="18.0" prefWidth="61.0" text="PRECIO:" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="253.0" />
                                                 <JFXTextField fx:id="txtPrecioProducto" layoutX="16.0" layoutY="269.0" onKeyReleased="#validarPrecioProducto" prefHeight="26.0" prefWidth="170.0" AnchorPane.bottomAnchor="161.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="269.0" />
+                                                <JFXTextField fx:id="txtCostoProducto" layoutX="19.0" layoutY="322.0" onKeyReleased="#validarPrecioProducto" prefHeight="27.0" prefWidth="216.0" AnchorPane.bottomAnchor="107.38180329125828" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="21.78181694093817" AnchorPane.topAnchor="322.0" />
+                                                <ComboBox fx:id="cmbTipoProducto" editable="true" layoutX="18.0" layoutY="375.0" prefHeight="31.0" prefWidth="227.0" styleClass="comboOscuro" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="375.0" />
                                                 <GridPane layoutX="20.0" layoutY="419.0" prefHeight="30.0" prefWidth="260.0" AnchorPane.bottomAnchor="6.890894321410599" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="15.309090031395272" AnchorPane.topAnchor="419.0">
                                                    <columnConstraints>
                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.20001220703125" minWidth="10.0" prefWidth="70.99998779296875" />
@@ -122,9 +124,7 @@
                                                    </children>
                                                 </GridPane>
                                                 <Label layoutX="16.0" layoutY="312.0" prefHeight="18.0" prefWidth="61.0" text="COSTO:" />
-                                                <JFXTextField fx:id="txtCostoProducto" layoutX="19.0" layoutY="322.0" onKeyReleased="#validarPrecioProducto" prefHeight="27.0" prefWidth="216.0" AnchorPane.bottomAnchor="107.38180329125828" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="21.78181694093817" AnchorPane.topAnchor="322.0" />
                                                 <Label layoutX="16.0" layoutY="357.0" prefHeight="18.0" prefWidth="61.0" text="TIPO:" />
-                                                <ComboBox fx:id="cmbTipoProducto" editable="true" layoutX="18.0" layoutY="375.0" prefHeight="31.0" prefWidth="227.0" styleClass="comboOscuro" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="375.0" />
                                              </children>
                                              <padding>
                                                 <Insets left="5.0" />

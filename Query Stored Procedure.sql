@@ -12,7 +12,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-	create procedure SpAgregarClientes(nit varchar(9), nombre varchar(25), direccion varchar(100))
+	create procedure SpAgregarClientes(nit varchar(19), nombre varchar(25), direccion varchar(100))
 		BEGIN
 			insert into Clientes(clienteNit, clienteNombre, clienteDireccion)
 				value(nit, nombre, direccion);
@@ -20,7 +20,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE SpAgregarClientesSinDireccion(nit varchar(9), nombre varchar(25))
+CREATE PROCEDURE SpAgregarClientesSinDireccion(nit varchar(19), nombre varchar(25))
 		BEGIN
 			insert into Clientes(clienteNit, clienteNombre)
 				value(nit, nombre);
@@ -28,7 +28,7 @@ CREATE PROCEDURE SpAgregarClientesSinDireccion(nit varchar(9), nombre varchar(25
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpActualizarClientes(idBuscado int(100), nuevoNit varchar(9), nombre varchar(25), direccion varchar(100))
+	create procedure SpActualizarClientes(idBuscado int(100), nuevoNit varchar(19), nombre varchar(25), direccion varchar(100))
 		BEGIN
 			update Clientes
 				set clienteNit = nuevoNit, clienteNombre = nombre, clienteDireccion = direccion
@@ -59,7 +59,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpBuscarClientesNIt(nit varchar(9))
+	create procedure SpBuscarClientesNIt(nit varchar(19))
 		BEGIN
 			select clienteId, clienteNit, clienteNombre, clienteDireccion
 				from Clientes
@@ -1299,9 +1299,14 @@ insert into EstadoCredito values(1, "PENDIENTE"),(2, "PAGADO"),(3, "VENCIDO");
 
 insert into tipoproducto values (1,'BIEN'),(2,'SERVICIO');
 
+<<<<<<< HEAD
+
+=======
 insert into estadoproductos values(1,'EXISTENCIA'),(2,'AGOTADO')
 
 insert into tipocardex values (1,'ENTRADA'), (2,'SALIDA')
+>>>>>>> Diego-Gonzalez
+
 
 DELIMITER $$
 	create procedure Sp_DevolucionProductos(serie varchar(5),idBuscado int)

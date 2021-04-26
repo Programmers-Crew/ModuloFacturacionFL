@@ -5,7 +5,6 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -330,13 +329,16 @@ public class InventarioViewController implements Initializable {
     }
     
     @FXML
-    private void generarExcel(ActionEvent event) {
+    private void generarExcel(ActionEvent event) throws IOException {
+           Stage s = (Stage) anchor.getScene().getWindow();
+           s.toBack();
            GenerarExcel gE = new GenerarExcel();
            try{
            gE.generar(listaInventarioProductos);
            }catch(Exception e){
                e.printStackTrace();
            }
+           s.toFront();
     }
 
     public ObservableList<InventarioProductos> getInventarioProveedor(){

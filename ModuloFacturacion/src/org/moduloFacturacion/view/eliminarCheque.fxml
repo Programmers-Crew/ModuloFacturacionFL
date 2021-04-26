@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="510.0" prefWidth="599.0" styleClass="anchorOscuro" stylesheets="@../resource/MenuPrincipalStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.EliminarChequeController">
+<AnchorPane id="AnchorPane" fx:id="anchor" prefHeight="510.0" prefWidth="599.0" styleClass="anchorOscuro" stylesheets="@../resource/MenuPrincipalStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.EliminarChequeController">
    <children>
       <ButtonBar prefHeight="26.0" prefWidth="599.0" styleClass="menubar">
          <buttons>
@@ -32,7 +32,6 @@
             <Font size="17.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="txtNumeroFactura" editable="false" layoutX="25.0" layoutY="331.0" prefHeight="38.0" prefWidth="527.0" />
       <Label layoutX="25.0" layoutY="91.0" prefHeight="38.0" prefWidth="193.0" text="ADMINISTRADOR:">
          <font>
             <Font size="17.0" />
@@ -50,5 +49,6 @@
          </font>
       </Label>
       <JFXPasswordField fx:id="txtContrasena" layoutX="25.0" layoutY="233.0" prefHeight="31.0" prefWidth="527.0" />
+      <JFXTextField fx:id="txtNumeroFactura" editable="false" layoutX="25.0" layoutY="331.0" prefHeight="38.0" prefWidth="527.0" />
    </children>
 </AnchorPane>

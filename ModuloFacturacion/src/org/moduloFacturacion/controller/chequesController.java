@@ -456,95 +456,7 @@ public class chequesController implements Initializable {
         return codigoProveedor;
         
     }
-    public void agregarCredito(){
-        Dialog dialog = new Dialog();
-        dialog.setTitle("Agregar Credito");
-        dialog.setHeaderText("Ingrese los campos para agregar una nueva factura en creditos.");
-        dialog.setResizable(true);
-        int codigoEstado1 = 2;
-        Label label1 = new Label("Fecha de inicio: ");
-        Label label2 = new Label("Fecha Final: ");
-        Label label3 = new Label("Descripción:");
-        Label label4 = new Label("Proveedor:");
-        
-        JFXDatePicker fechaInicio = new JFXDatePicker();
-        JFXDatePicker fechaFinal= new JFXDatePicker();
-        TextField desc = new TextField();
-        ComboBox<String> com = new ComboBox();
-        com.setItems(llenarComboProveedores());
-        new AutoCompleteComboBoxListener(com);
-        
-        
-        GridPane grid = new GridPane();
-        
-        grid.add(label1, 1, 1);
-        grid.add(fechaInicio, 2, 1);
-        
-        grid.add(label2, 1, 3);
-        grid.add(fechaFinal, 2, 3);
-        
-        grid.add(label3, 1, 4);
-        grid.add(desc, 2, 4);
-        
-        grid.add(label4, 1, 5);
-        grid.add(com, 2, 5);
-        
-        dialog.getDialogPane().setContent(grid);
-
-        ButtonType buttonTypeOk = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
-        ButtonType buttonTypeCancel = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-        
-        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
-        dialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
-        
-        Optional<ButtonType> result = dialog.showAndWait();
-         
-        if(result.get() == buttonTypeOk){
-            Creditos nuevoCredito = new Creditos();
-            nuevoCredito.setCreaditoFechaInicio(java.sql.Date.valueOf( fechaInicio.getValue()));
-            nuevoCredito.setCreditoFechaFinal(java.sql.Date.valueOf( fechaFinal.getValue()));
-            nuevoCredito.setCreditoDesc(desc.getText());
- //           nuevoCredito.setProveedorNombre(verificarProveedores(com.getValue()));
-            nuevoCredito.setCreditoMonto(Double.parseDouble(totalValor.getText()));
-            nuevoCredito.setNoFactura(creditoCancelar.getValue());
-            String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
-            try {
-                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
-                
-                ps.execute();
-                 Notifications noti = Notifications.create();
-                noti.graphic(new ImageView(imgCorrecto));
-                noti.title("CREDITO GUARDADO");
-                noti.text("Se ha agregado un nuevo credito");
-                noti.position(Pos.BOTTOM_RIGHT);
-                noti.hideAfter(Duration.seconds(4));
-                noti.darkStyle();   
-                noti.show();
-            } catch (SQLException ex) {
-                 Notifications noti = Notifications.create();
-                noti.graphic(new ImageView(imgError));
-                noti.title("ERROR");
-                noti.text("hubo un error en la base de datos"+ex);
-                noti.position(Pos.BOTTOM_RIGHT);
-                noti.hideAfter(Duration.seconds(4));
-                noti.darkStyle();   
-                noti.show();
-            }
-        }else{
-            Notifications noti = Notifications.create();
-            noti.graphic(new ImageView(imgError));
-            noti.title("CREDITO NO GUARDADO");
-            noti.text("NO SE HA GUARDADO EL PRODUCTO A CREDITOS");
-            noti.position(Pos.BOTTOM_RIGHT);
-            noti.hideAfter(Duration.seconds(4));
-            noti.darkStyle();   
-            noti.show();
-        }
-
-
-        
-    }
-    
+   
     
     public void pagarCredito(){
         String noFac = creditoCancelar.getValue();
@@ -564,7 +476,14 @@ public class chequesController implements Initializable {
                 actualizarCredito(noFac);
                 
             }else{
-                agregarCredito();
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("ERROR");
+                noti.text("No se ha encontrado creditos");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();   
+                noti.show();
             }
         } catch (SQLException ex) {
             Notifications noti = Notifications.create();
