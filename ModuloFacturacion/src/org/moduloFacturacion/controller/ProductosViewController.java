@@ -271,6 +271,7 @@ public class ProductosViewController implements Initializable {
         cmbTipoProducto.setDisable(false);
     }
     
+    String proveedor = "nO CARGO DATOS";
     
     public ObservableList<Productos> getProductos(){
         ArrayList<Productos> lista = new ArrayList();
@@ -372,7 +373,55 @@ public class ProductosViewController implements Initializable {
         new AutoCompleteComboBoxListener(cmbProveedorProducto);
     }
         
+          public ObservableList<Productos> getProductosPorProveedor2(){
+        ArrayList<Productos> lista = new ArrayList();
+        ArrayList<String> comboCodigo = new ArrayList();
+        String sql = "{call SpListarProductosPorProveedor('"+proveedor+"')}";
+        int x=0;
         
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(new Productos(
+                            rs.getString("productoId"),
+                            rs.getString("productoDesc"),
+                            rs.getString("proveedorNombre"),
+                            rs.getString("categoriaNombre"),
+                            rs.getDouble("precioCosto"),
+                            rs.getDouble("productoPrecio"),
+                            rs.getString("tipoProdDesc")
+                ));
+                comboCodigo.add(x, rs.getString("productoId"));
+                x++;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        listaCodigoProductos = FXCollections.observableList(comboCodigo);
+        return listaProductos = FXCollections.observableList(lista);
+    }
+        
+        public void cargarDatosPorProveedor2(){
+        tableProductos.setItems(getProductosPorProveedor2());
+        colCodigoProductos.setCellValueFactory(new PropertyValueFactory("productoId"));
+        colNombreProductos.setCellValueFactory(new PropertyValueFactory("productoDesc"));
+        colCategoriaProductos.setCellValueFactory(new PropertyValueFactory("categoriaNombre"));
+        colProveedorProductos.setCellValueFactory(new PropertyValueFactory("proveedorNombre"));
+        colCostoProductos.setCellValueFactory(new PropertyValueFactory("precioCosto"));
+        colPrecioProductos.setCellValueFactory(new PropertyValueFactory("productoPrecio"));
+        colTipoProducto.setCellValueFactory(new PropertyValueFactory("tipoProdDesc"));
+        limpiarText();
+        desactivarControles();
+        desactivarText();
+        llenarComboCategoria();
+        llenarComboProveedores();
+        llenarComboTipoProductos();
+        cmbCategoriaProducto.setValue("");
+        cmbProveedorProducto.setValue("");
+        new AutoCompleteComboBoxListener(cmbCategoriaProducto);
+        new AutoCompleteComboBoxListener(cmbProveedorProducto);
+    }
         public void buscarProducto(){
 
             String sql = "{call SpListarProductosPorProveedor('"+cmbFiltrar.getValue()+"')}";
@@ -484,6 +533,8 @@ public class ProductosViewController implements Initializable {
         }
         listaCategoriaProductos = FXCollections.observableList(lista);
         cmbCategoriaProducto.setItems(listaCategoriaProductos);
+        new AutoCompleteComboBoxListener(cmbCategoriaProducto);
+
     }
     
     public void llenarComboProveedores(){
@@ -514,6 +565,8 @@ public class ProductosViewController implements Initializable {
         listaProveedoresProductos = FXCollections.observableList(lista);
         cmbProveedorProducto.setItems(listaProveedoresProductos);
         cmbFiltrar.setItems(listaProveedoresProductos);
+        new AutoCompleteComboBoxListener(cmbProveedorProducto);
+        new AutoCompleteComboBoxListener(cmbFiltrar);
     }
 
     
@@ -545,6 +598,8 @@ public class ProductosViewController implements Initializable {
         }
         listaTipoProducto = FXCollections.observableList(lista);
         cmbTipoProducto.setItems(listaTipoProducto);
+        new AutoCompleteComboBoxListener(cmbTipoProducto);
+        
     }
     
     
@@ -602,15 +657,15 @@ public class ProductosViewController implements Initializable {
                         
                         noti.graphic(new ImageView(imgCorrecto));
                         noti.title("OPERACIÓN EXITOSA");
-                        noti.text("SE HA AGREGADO EXITOSAMENTE EL REGISTRO");
+                        noti.text("SE HA AGREGADO EXITOSAMENTE EL REGISTRO 22");
                         noti.position(Pos.BOTTOM_RIGHT);
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();
                         noti.show();
+                        proveedor = cmbProveedorProducto.getValue();
+                        cargarDatosPorProveedor2();
                         tipoOperacionProducto = Operacion.CANCELAR;
                         accion();
-                        
-                        cargarDatos();
                         
                     }catch (SQLException ex) {
                         ex.printStackTrace();
@@ -658,7 +713,8 @@ public class ProductosViewController implements Initializable {
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();
                         noti.show();
-                        cargarDatos();
+                        proveedor = cmbProveedorProducto.getValue();
+                        cargarDatosPorProveedor2();
                         tipoOperacionProducto = Operacion.CANCELAR;
                         accion();
                         
@@ -708,9 +764,10 @@ public class ProductosViewController implements Initializable {
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();
                         noti.show();
+                        proveedor = cmbProveedorProducto.getValue();
+                        cargarDatosPorProveedor2();
                         tipoOperacionProducto = Operacion.CANCELAR;
                         accion();
-                        cargarDatos();
                     }catch (SQLException ex) {
                         ex.printStackTrace();
                         noti.graphic(new ImageView(imgError));
@@ -1130,6 +1187,12 @@ public class ProductosViewController implements Initializable {
                         accion(sql);      
                    }
              
+    }
+    
+        
+     @FXML
+    private void BtnCargar(MouseEvent event) {
+        cargarDatos();
     }
     
     @FXML

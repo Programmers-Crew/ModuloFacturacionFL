@@ -23,13 +23,16 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpGenerarCardex(prodId varchar(50))
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
 			inner join productos as p
 				on p.productoId = producto
-			WHERE  p.productoId = prodId or p.productoDesc = prodId
+			inner join tipodocumento as td
+				on td.idTipoDocumento = c.tipoDocumento
+			WHERE p.productoId = prodId or p.productoDesc = prodId 
+            order by c.idCardex desc
 ;
         end $$
 DELIMITER ;
@@ -37,51 +40,62 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpGenerarCardexProd(prodId varchar(30))
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
 			inner join productos as p
 				on p.productoId = producto
-			WHERE  p.productoDesc = prodId
+			inner join tipodocumento as td
+				on td.idTipoDocumento = c.tipoDocumento
+			WHERE p.productoId = prodId or p.productoDesc = prodId
+            order by c.idCardex desc
 ;
         end $$
 DELIMITER ;
+<<<<<<< HEAD
 
+=======
+>>>>>>> Diego-Gonzalez
 
 DELIMITER $$
 	create procedure SpGenerarCardexFechaProd(prodId varchar(30), inicio date, finalFecha date)
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
 			inner join productos as p
 				on p.productoId = producto
+			inner join tipodocumento as td
+				on td.idTipoDocumento = c.tipoDocumento
 			WHERE p.productoId = prodId or p.productoDesc = prodId and c.fechaCardex BETWEEN inicio AND finalFecha
-;
+            order by c.idCardex desc;
         end $$
 DELIMITER ;
 
 DELIMITER $$
 	create procedure SpGenerarCardexFecha(prodId varchar(30), inicio date, final date)
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
 			inner join productos as p
 				on p.productoId = producto
+			inner join tipodocumento as td
+				on td.idTipoDocumento = c.tipoDocumento
 			WHERE p.productoId = prodId and c.fechaCardex BETWEEN inicio AND final
+                        order by c.idCardex desc
 ;
         end $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad int)
+	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad int, documento int(5))
 		begin
-			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto)
-				select fecha, noFac, tipo,cantidad,ip.inventarioProductoCant, p.productoId
+			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto, tipoDocumento)
+				select fecha, noFac, tipo,cantidad,ip.inventarioProductoCant, p.productoId, documento
 					from inventarioproductos as ip
 						inner join productos as p
 							on ip.productoId = p.productoId
@@ -91,10 +105,10 @@ DELIMITER ;
  
 
 DELIMITER $$
-	create procedure SpAgregarCardexFacUpdate(nombre varchar(60),tipo int, cantidad int, idBuscado int)
+	create procedure SpAgregarCardexFacUpdate(nombre varchar(60),tipo int, cantidad int, idBuscado int, documento int(5))
 		begin
-			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto )
-				select creditos.creaditoFechaInicio, creditos.noFactura, tipo,cantidad,inventarioproductos.inventarioProductoCant, p.productoId
+			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto,tipoDocumento )
+				select creditos.creaditoFechaInicio, creditos.noFactura, tipo,cantidad,inventarioproductos.inventarioProductoCant, p.productoId,documento
 					from inventarioproductos
 						inner join productos as p					
 							on inventarioproductos.productoId = p.productoId,

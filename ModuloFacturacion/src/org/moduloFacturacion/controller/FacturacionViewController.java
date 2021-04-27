@@ -1094,6 +1094,7 @@ public class FacturacionViewController implements Initializable {
         ValidacionFecha();
             Integer idFac = Integer.parseInt(txtFacturaId.getText());                   
             Integer tipo = 2;
+            Integer documento = 0;
         if(listaBackUp.size()>8){
              Notifications noti = Notifications.create();
             noti.graphic(new ImageView(imgError));
@@ -1122,7 +1123,13 @@ public class FacturacionViewController implements Initializable {
                    nuevoBackUp.setCantidadBackup(Integer.parseInt(txtCantidadProducto.getText()));
                    nuevoBackUp.setTotalParcialBackup(Double.parseDouble(txtPrecioProducto.getText())*Integer.parseInt(txtCantidadProducto.getText()));
                    
-                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+cmbNombreProducto.getValue()+"','"+idFac+"','"+tipo+"','"+txtCantidadProducto.getText()+"')}";  
+                   if(cmbTipoFactura.getValue().equals("FACTURA")){
+                       documento = 1;
+                   }else if(cmbTipoFactura.getValue().equals("ORDEN DE COMPRA")){
+                        documento = 2;
+                   }
+                   
+                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+cmbNombreProducto.getValue()+"','"+idFac+"','"+tipo+"','"+txtCantidadProducto.getText()+"','"+documento+"')}";  
                     System.out.println(sqlCardex);
                     
                    String sql = "{call SpAgregarBackup('"+buscarCodigoProducto(nuevoBackUp.getProductoDesc())+"','"+ nuevoBackUp.getCantidadBackup()+"','"+nuevoBackUp.getTotalParcialBackup()+"')}";

@@ -171,12 +171,18 @@ create table Creditos(
     CONSTRAINT FK_CreditosDetalle FOREIGN KEY (creditoDetalle) REFERENCES CreditoDetalle(idCreditoDetalle)
 );
 
+create table TipoDocumento(
+	idTipoDocumento int(5) not null auto_increment,
+	DescTipoDocumento varchar(30) not null,
+	PRIMARY KEY (idTipoDocumento)
+);
+
 create table TipoCardex(
 	idTipoCardex int(5) not null auto_increment,
     idTipoDesc varchar(10) not null,
 	PRIMARY KEY (idTipoCardex)
 );
- 
+
 create table Cardex(
 	idCardex int not null auto_increment,
     fechaCardex date,
@@ -185,8 +191,10 @@ create table Cardex(
     saldoCardex int ,   
     totalCardex int,
     producto varchar(8) not null,
+    tipoDocumento int(5) not null,
 	PRIMARY KEY (idCardex),
 	CONSTRAINT FK_CardexTipo FOREIGN KEY (tipoCardex) REFERENCES TipoCardex(idTipoCardex),
-	CONSTRAINT FK_CardexProducto FOREIGN KEY (producto) REFERENCES productos(productoId)
+	CONSTRAINT FK_CardexProducto FOREIGN KEY (producto) REFERENCES productos(productoId),
+    CONSTRAINT FK_CardexDocumento FOREIGN KEY (tipoDocumento) REFERENCES TipoDocumento(idTipoDocumento)
 );
 
