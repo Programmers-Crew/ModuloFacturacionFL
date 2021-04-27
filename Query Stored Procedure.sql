@@ -1299,14 +1299,11 @@ insert into EstadoCredito values(1, "PENDIENTE"),(2, "PAGADO"),(3, "VENCIDO");
 
 insert into tipoproducto values (1,'BIEN'),(2,'SERVICIO');
 
-<<<<<<< HEAD
-
-=======
 insert into estadoproductos values(1,'EXISTENCIA'),(2,'AGOTADO')
 
 insert into tipocardex values (1,'ENTRADA'), (2,'SALIDA')
->>>>>>> Diego-Gonzalez
 
+insert into tipodocumento values(1,'FACTURA'),(2,'ORDEN DE COMPRA'),(3,'CREDITO'),(4,'RESTA')
 
 DELIMITER $$
 	create procedure Sp_DevolucionProductos(serie varchar(5),idBuscado int)

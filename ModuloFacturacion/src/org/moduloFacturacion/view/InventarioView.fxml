@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor" minHeight="466.0" minWidth="865.0" prefHeight="517.0" prefWidth="876.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.InventarioViewController">
+<AnchorPane id="AnchorPane" fx:id="anchor" minHeight="466.0" minWidth="865.0" prefHeight="517.0" prefWidth="876.0" stylesheets="@../resource/moduloStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.moduloFacturacion.controller.InventarioViewController">
    <children>
       <Pane layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="600.0" styleClass="bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -128,7 +128,7 @@
                                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                   </rowConstraints>
                                                    <children>
-                                                      <JFXButton fx:id="btnRestarInventario" buttonType="RAISED" onMouseClicked="#btnRestar" prefHeight="24.0" prefWidth="87.0" styleClass="boton" text="RESTAR" textFill="WHITE" GridPane.columnIndex="1">
+                                                      <JFXButton fx:id="btnRestarInventario" buttonType="RAISED" onMouseClicked="#validarRestar" prefHeight="24.0" prefWidth="87.0" styleClass="boton" text="RESTAR" textFill="WHITE" GridPane.columnIndex="1">
                                                          <font>
                                                             <Font size="11.0" />
                                                          </font>
@@ -308,6 +308,7 @@
                                           <TableColumn fx:id="colFechaCardex" prefWidth="76.00001525878906" text="FECHA" />
                                           <TableColumn fx:id="colNoCardex" prefWidth="154.4000244140625" text="NO." />
                                           <TableColumn fx:id="colMovimientoCardex" prefWidth="120.0" text="MOVIMIENTO" />
+                                          <TableColumn fx:id="colDocumentoCardex" prefWidth="120.0" text="DOCUMENTO" />
                                           <TableColumn fx:id="colTotalCardex" prefWidth="120.0" text="TOTAL" />
                                           <TableColumn fx:id="colSaldoCardex" prefWidth="120.0" text="SALDO" />
                                        </columns>

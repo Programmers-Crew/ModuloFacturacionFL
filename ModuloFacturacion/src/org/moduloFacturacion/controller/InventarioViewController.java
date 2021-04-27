@@ -2,6 +2,7 @@ package org.moduloFacturacion.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
@@ -19,9 +20,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -42,6 +47,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.Animations;
@@ -95,6 +101,7 @@ public class InventarioViewController implements Initializable {
     private JFXButton generarExcel;
     @FXML
     private JFXButton btnCargarCardex;
+
 
 
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, SUMAR, RESTAR};
@@ -198,13 +205,14 @@ public class InventarioViewController implements Initializable {
     //========================================== CODIGO PARA VISTA INVENTARIO =============================================================
         
     public void limpiarText(){
-        cmbCodigoProductoInventario.setValue("");
-        txtCantidadInventario.setText("");
         txtProveedorInventario.setText("");
-        txtProductoInventario.setText("");
         cmbNombreEstado.setValue("");
-        txtCostoNuevo.setText("");
 
+    }
+    
+    public void limpiarTextFunciones(){
+    txtCostoNuevo.setText("");
+    txtCantidadInventario.setText("");
     }
     
     public void desactivarControlesInventario(){    
@@ -576,7 +584,8 @@ public class InventarioViewController implements Initializable {
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();
                         noti.show();
-                        cargarDatos();
+                        proveedorName= txtProveedorInventario.getText();
+                        cargarDatosProveedor();
                         tipoOperacionInventario = Operacion.CANCELAR;
                         accionInventario();
                         
@@ -626,9 +635,10 @@ public class InventarioViewController implements Initializable {
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();
                         noti.show();
+                        proveedorName= txtProveedorInventario.getText();
+                        cargarDatosProveedor();
                         tipoOperacionInventario = Operacion.CANCELAR;
                         accionInventario();
-                        cargarDatos();
                     }catch (SQLException ex) {
                         ex.printStackTrace();
                         noti.graphic(new ImageView(imgError));
@@ -733,13 +743,11 @@ public class InventarioViewController implements Initializable {
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();
                         noti.show();
+                        proveedorName= txtProveedorInventario.getText();
+                        cargarDatosProveedor();
                         tipoOperacionInventario = Operacion.CANCELAR;
                         buscarCredito();
-
                         accionInventario();
-                        
-                        cargarDatos();
-                        
                     }catch (SQLException ex) {
                         ex.printStackTrace();
                         noti.graphic(new ImageView(imgError));
@@ -785,11 +793,10 @@ public class InventarioViewController implements Initializable {
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();
                         noti.show();
+                        proveedorName= txtProveedorInventario.getText();
+                        cargarDatosProveedor();
                         tipoOperacionInventario = Operacion.CANCELAR;
                         accionInventario();
-                        
-                        cargarDatos();
-                        
                     }catch (SQLException ex) {
                         ex.printStackTrace();
                         noti.graphic(new ImageView(imgError));
@@ -849,10 +856,11 @@ public class InventarioViewController implements Initializable {
             String sqlEliminarBackup = "{call SpEliminarBackupCredito()}";
 
      
-        Integer tipo = 1;
+            Integer tipo = 1;
+            Integer documento = 3;
             String sql = "call SpActualizarCreditoInventario('"+montoTotal+"','"+nofac+"')";
             String sqlUpdate = "call SpUpdateDetalleCredito('"+nofac+"')";
-            String sqlCardex = "{call SpAgregarCardexFacUpdate('"+txtProductoInventario.getText()+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+noFactura.getText()+"')}";  
+            String sqlCardex = "{call SpAgregarCardexFacUpdate('"+txtProductoInventario.getText()+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+noFactura.getText()+"','"+documento+"')}";  
 
         try{
             
@@ -951,9 +959,10 @@ public class InventarioViewController implements Initializable {
             String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
             String sqlEliminarBackup = "{call SpEliminarBackupCredito()}";
             System.out.println(sqlDetalle);
-            
-            String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+txtProductoInventario.getText()+"','"+idFac+"','"+tipo+"','"+txtCantidadInventario.getText()+"')}";  
-        
+            Integer documento = 3;
+            System.out.println(txtProductoInventario.getText());
+            String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+txtProductoInventario.getText()+"','"+idFac+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+documento+"')}";  
+            System.out.println(sqlCardex);
             try {
                 PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
                 PreparedStatement psDetalle = Conexion.getIntance().getConexion().prepareCall(sqlDetalle);
@@ -975,6 +984,8 @@ public class InventarioViewController implements Initializable {
                 noti.darkStyle();   
                 noti.show();
                 psEliminarBackup.execute();
+                                        limpiarTextFunciones();
+
             } catch (SQLException ex) {
                  Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(imgError));
@@ -1095,9 +1106,7 @@ public class InventarioViewController implements Initializable {
                     accionInventario();
     }
     
-    
-           @FXML
-    private void btnRestar(MouseEvent event) {
+    private void btnRestar() {
            if(cmbCodigoProductoInventario.getValue().equals("") || txtCantidadInventario.getText().isEmpty()){
                     Notifications noti = Notifications.create();
                     noti.graphic(new ImageView(imgError));
@@ -1114,7 +1123,20 @@ public class InventarioViewController implements Initializable {
 
                    String sql = "{call SpRestarProductos('"+nuevoInventario.getProductoId()+"','"+ nuevoInventario.getInventarioProductoCant()+"')}";
                    tipoOperacionInventario = Operacion.RESTAR;
-                   accion(sql);                   
+                   accion(sql); 
+
+                    Integer documento = 4;
+                    Integer idFac = 1111;                   
+                    Integer tipo = 2;
+                    LocalDate date2 = LocalDate.now();
+                    
+                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+txtProductoInventario.getText()+"','"+idFac+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+documento+"')}";  
+                    try{
+                        PreparedStatement psCardex = Conexion.getIntance().getConexion().prepareCall(sqlCardex);
+                        psCardex.execute();  
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
                    accionInventario();
     }
@@ -1745,6 +1767,92 @@ public class InventarioViewController implements Initializable {
     public void generarReporteInventario(){
            imprimirReporteInventario(); 
     }
+    
+    boolean passUser = false;
+    @FXML
+    public void validarRestar(MouseEvent event){
+        Dialog dialog = new Dialog();
+        dialog.setTitle("AJUSTE INVENTARIO");
+        dialog.setHeaderText("Ingrese los campos para ajustar el inventario.");
+        dialog.setResizable(true);
+
+        Label label1 = new Label("USUARIO: ");
+        Label label2 = new Label("CONTRASEÑA: ");
+        
+        TextField user = new TextField();
+        JFXPasswordField pass= new JFXPasswordField();
+        GridPane grid = new GridPane();
+        
+        grid.add(label1, 1, 1);
+        grid.add(user, 2, 1);
+        
+        grid.add(label2, 1, 3);
+        grid.add(pass, 2, 3);
+        
+        dialog.getDialogPane().setContent(grid);
+
+        ButtonType buttonTypeOk = new ButtonType("Guardar", ButtonData.OK_DONE);
+        ButtonType buttonTypeCancel = new ButtonType("Cancelar", ButtonData.CANCEL_CLOSE);
+        
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
+        
+        Optional<ButtonType> result = dialog.showAndWait();
+        
+        if(result.get() == buttonTypeOk){
+            ArrayList<String> lista = new ArrayList();
+            String sql = "{call SpLoginAdmin('"+user.getText()+"','"+pass.getText()+"')}";                        
+            int x=0;
+            String usuario = "";
+                try{
+                    PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                    ResultSet rs = ps.executeQuery();
+                while(rs.next()){
+                    lista.add(x, rs.getString("usuarioNombre"));
+                    usuario = rs.getString("usuarioNombre");
+                     x++;
+                }
+
+                if(usuario.equals("")){
+
+                     Notifications noti = Notifications.create();
+                            noti.graphic(new ImageView(imgError));
+                            noti.title("ERROR AL VERIFICAR  USUARIO");
+                            noti.text("NO SE HA PODIDO VERIFICAR EL USUARIO");
+                            noti.position(Pos.BOTTOM_RIGHT);
+                            noti.hideAfter(Duration.seconds(4));
+                            noti.darkStyle();
+                            noti.show();
+
+                }else{
+                    btnRestar();
+                    passUser = true;
+                    
+                    Notifications noti = Notifications.create();
+                            noti.graphic(new ImageView(imgCorrecto));
+                            noti.title("USUARIO VERIFICADO");
+                            noti.text("SE HA VERIFICADO CON EXITO");
+                            noti.position(Pos.BOTTOM_RIGHT);
+                            noti.hideAfter(Duration.seconds(4));
+                            noti.darkStyle();
+                            noti.show();
+                }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        
+        }else{
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("OPERACIÓN CANCELADA");
+            noti.text("NO SE HA REALIZADO NINGUNA OPERACIÓN");
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }
+        
+      }
     //=========================================================================================================================================
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -1752,7 +1860,6 @@ public class InventarioViewController implements Initializable {
         iniciarInventario();
         cmbCodigoProductoInventario.setValue("");
         cmbNombreEstado.setValue("");
-        cmbCodigoProductoInventario.setValue("");
         llenarComboProducto();
         cargarCombo();
         
@@ -1849,6 +1956,8 @@ public class InventarioViewController implements Initializable {
     @FXML
     private TableColumn<Cardex, Integer> colSaldoCardex;
     @FXML
+    private TableColumn<Cardex, String> colDocumentoCardex;
+    @FXML
     private JFXButton btnBuscarCardex;
     @FXML
     private ComboBox<String> cmbFiltroCardex;
@@ -1931,7 +2040,8 @@ public class InventarioViewController implements Initializable {
                             rs.getString("idTipoDesc"),
                             rs.getInt("saldoCardex"),
                             rs.getInt("totalCardex"),
-                            rs.getString("productoDesc")
+                            rs.getString("productoDesc"),
+                            rs.getString("DescTipoDocumento")
                 ));
                 x++;
             }
@@ -1948,7 +2058,9 @@ public class InventarioViewController implements Initializable {
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
-        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));        
+        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));  
+        colDocumentoCardex.setCellValueFactory(new PropertyValueFactory("DescTipoDocumento"));        
+
     }  
    
     //buscar por nombre
@@ -1968,7 +2080,9 @@ public class InventarioViewController implements Initializable {
                             rs.getString("idTipoDesc"),
                             rs.getInt("saldoCardex"),
                             rs.getInt("totalCardex"),
-                            rs.getString("productoDesc")
+                            rs.getString("productoDesc"),
+                            rs.getString("DescTipoDocumento")
+
                 ));
                 x++;
             }
@@ -1985,7 +2099,9 @@ public class InventarioViewController implements Initializable {
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
-        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));        
+        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex")); 
+        colDocumentoCardex.setCellValueFactory(new PropertyValueFactory("DescTipoDocumento"));        
+
     } 
         
     //buscar por id y fechas
@@ -2005,7 +2121,9 @@ public class InventarioViewController implements Initializable {
                             rs.getString("idTipoDesc"),
                             rs.getInt("saldoCardex"),
                             rs.getInt("totalCardex"),
-                            rs.getString("productoDesc")
+                            rs.getString("productoDesc"),
+                            rs.getString("DescTipoDocumento")
+
                 ));
                 x++;
             }
@@ -2022,7 +2140,9 @@ public class InventarioViewController implements Initializable {
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
-        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));        
+        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));
+        colDocumentoCardex.setCellValueFactory(new PropertyValueFactory("DescTipoDocumento"));        
+        
     } 
     
     
@@ -2043,7 +2163,9 @@ public class InventarioViewController implements Initializable {
                             rs.getString("idTipoDesc"),
                             rs.getInt("saldoCardex"),
                             rs.getInt("totalCardex"),
-                            rs.getString("productoDesc")
+                            rs.getString("productoDesc"),
+                            rs.getString("DescTipoDocumento")
+
                 ));
                 x++;
             }
@@ -2060,7 +2182,9 @@ public class InventarioViewController implements Initializable {
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
-        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));        
+        colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex")); 
+        colDocumentoCardex.setCellValueFactory(new PropertyValueFactory("DescTipoDocumento"));        
+
     } 
     
     
@@ -2150,7 +2274,6 @@ public class InventarioViewController implements Initializable {
                 }
     }
     
-    @FXML
     public void generarReporteCredito(){
         String prueba = txtfechaInicioCardex.getValue().toString();
         
