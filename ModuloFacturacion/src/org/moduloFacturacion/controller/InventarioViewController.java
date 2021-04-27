@@ -2135,7 +2135,6 @@ public class InventarioViewController implements Initializable {
     
     public void cargarCreditosBuscadosFechas(){
         tblCardex.setItems(getCardexFechas());
-        System.out.println("cargar");
         colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        

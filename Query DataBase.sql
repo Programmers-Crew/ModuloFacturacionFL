@@ -4,7 +4,7 @@ use ProgrammersBilling;
 create table Clientes(
 	clienteId	int(5)  UNSIGNED ZEROFILL primary key auto_increment,
 	clienteNit	varchar(19) unique not null,
-	clienteNombre varchar(25) not null,
+	clienteNombre varchar(50) not null,
 	clienteDireccion varchar(100) not null DEFAULT 'Ciudad de Guatemala'
 );
 

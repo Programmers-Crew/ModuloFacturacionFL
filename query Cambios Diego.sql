@@ -53,6 +53,10 @@ DELIMITER $$
 ;
         end $$
 DELIMITER ;
+<<<<<<< HEAD
+
+=======
+>>>>>>> Diego-Gonzalez
 
 DELIMITER $$
 	create procedure SpGenerarCardexFechaProd(prodId varchar(30), inicio date, finalFecha date)

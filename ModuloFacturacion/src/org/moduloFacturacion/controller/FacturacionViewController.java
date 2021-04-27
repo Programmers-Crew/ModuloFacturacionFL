@@ -325,6 +325,12 @@ public class FacturacionViewController implements Initializable {
     private TextField nueveOT;
     @FXML
     private TextField diezOT;
+    @FXML
+    private TextField longitudProducto;
+    @FXML
+    private TextField logintudDireccion;
+    @FXML
+    private TextField logintudNombre;
 
 
     
@@ -2140,7 +2146,7 @@ public class FacturacionViewController implements Initializable {
             btnImprimirRespaldo.setDisable(false);
             
             codigoFactura = Integer.parseInt(colNumeroFacBuscado.getCellData(index).toString());
-            
+            txtSerieId.setText(colSerieFacturaBuscada.getCellData(index).toString());
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -2419,6 +2425,11 @@ public class FacturacionViewController implements Initializable {
      
     @FXML 
     private void preferencesCargar(Event event) { 
+        // longitudes
+        longitudProducto.setText(menu.letra.get("longitudProducto", "root"));
+        logintudDireccion.setText(menu.letra.get("longitudDireccion", "root"));
+        logintudNombre.setText(menu.letra.get("longitudNombre", "root"));
+        
         //cifras B
         cuatroB.setText(menu.cifras.get("4", "root"));
         cincoB.setText(menu.cifras.get("5", "root"));
@@ -2613,4 +2624,80 @@ public class FacturacionViewController implements Initializable {
     }
 
    
+    @FXML
+    private void tamañosLetra(MouseEvent event) {
+        if(txtSerieId.getText().isEmpty()){
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("CAMPO VACÍO");
+            noti.text("DEBE DE INGRESAR EL CAMPO SERIE");
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }else{
+            GridPane grid = new GridPane();
+            Dialog dialog = new Dialog();
+            dialog.setTitle("Cambiar Tamaño de Letra");
+            dialog.setHeaderText("Por favor seleccionar nuevo tamaño");
+            dialog.setResizable(true);
+
+            Label label1 = new Label("Tamaño de Nombre:");
+            JFXTextField tamañoNombre = new JFXTextField();
+            Label label2 = new Label("Tamaño de Direccion:");
+            JFXTextField tamañoDireccion = new JFXTextField();
+            if(txtSerieId.getText().charAt(0) == 'A' ||txtSerieId.getText().charAt(0) == 'a'){
+                tamañoNombre.setText(menu.letra.get("tamañoNombreA", "root"));
+                tamañoDireccion.setText(menu.letra.get("tamañoDirecA", "root"));
+            }else{
+                tamañoNombre.setText(menu.letra.get("tamañoNombreB", "root"));
+                tamañoDireccion.setText(menu.letra.get("tamañoDirecA", "root"));
+            }
+
+            grid.add(label1, 1, 1);
+            grid.add(tamañoNombre, 2, 1);
+
+            grid.add(label2, 1, 3);
+            grid.add(tamañoDireccion, 2, 3);
+
+
+            dialog.getDialogPane().setContent(grid);
+
+            ButtonType buttonTypeOk = new ButtonType("GUARDAR", ButtonBar.ButtonData.OK_DONE);
+            ButtonType buttonTypeCancel = new ButtonType("CANCELAR", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+            dialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
+
+            Optional<ButtonType> result = dialog.showAndWait();
+
+            if(result.get() == buttonTypeOk){             
+                menu.letra.put("tamañoNombreA", tamañoNombre.getText());
+                menu.letra.put("tamañoNombreB", tamañoNombre.getText());
+                menu.letra.put("tamañoDirecA", tamañoDireccion.getText());
+                menu.letra.put("tamañoDirecB", tamañoDireccion.getText());
+            }else if(result.get() == buttonTypeCancel){
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgWarning));
+                noti.title("TAMAÑO");
+                noti.text("TAMAÑO SE HA ESTABLECIDO EL POR DEFECTO");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();   
+                noti.show();
+            }
+        }
+        
+        
+    }
+
+    @FXML
+    private void logintudes(MouseEvent event) {
+        menu.letra.put("longitudProducto", longitudProducto.getText());
+        menu.letra.put("longitudDireccion", logintudDireccion.getText());
+        menu.letra.put("longitudNombre", logintudNombre.getText());
+        
+        
+    }
+
 }
