@@ -47,7 +47,7 @@ DELIMITER $$
 ;
         end $$
 DELIMITER ;
-call SpGenerarCardexFechaProd('Martillo Pequeno', '2021-04-01','2021-04-30');
+
 
 DELIMITER $$
 	create procedure SpGenerarCardexFechaProd(prodId varchar(30), inicio date, finalFecha date)

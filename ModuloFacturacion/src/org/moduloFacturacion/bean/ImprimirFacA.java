@@ -49,7 +49,12 @@ public class ImprimirFacA implements Printable{
     float totalfacy = Float.parseFloat(menu.facA.get("totalfacy1", "root"));
     int tamaño = Integer.parseInt(menu.facA.get("tamaño1", "root"));
     
-    
+    int tamañoNombre = Integer.parseInt(menu.letra.get("tamañoNombreA", "root"));
+    int tamañoDireccion = Integer.parseInt(menu.letra.get("tamañoDirecA", "root"));
+
+    int longitudProducto = Integer.parseInt(menu.letra.get("longitudProducto","root"));
+    int longitudDireccion = Integer.parseInt(menu.letra.get("longitudDireccion","root"));
+    int longitudNombre = Integer.parseInt(menu.letra.get("longitudNombre","root"));
     
     float cuatro = Float.parseFloat(menu.cifras.get("4A","root"));
     float cinco = Float.parseFloat(menu.cifras.get("5A","root"));
@@ -75,27 +80,29 @@ public class ImprimirFacA implements Printable{
     }
     
     public void imprima(ObservableList<FacturacionDetalleBackup> mensaje, String Nit, String nombreCliente, String direccionCliente,LocalDate fecha,String totalLetras, String totalFactura){
-    this.mensaje=mensaje;
-    this.Nit = Nit;
-    this.nombreCliente = nombreCliente;
-    this.direccionCliente = direccionCliente;
-    this.fecha = fecha;
-    this.totalLetras = totalLetras;
-    this.totalFactura = totalFactura;
-     if(printerJob.printDialog()){
-        try{
-            printerJob.print();
-        }catch(Exception PrinterException){
-            PrinterException.printStackTrace();
-        }        
+        this.mensaje=mensaje;
+        this.Nit = Nit;
+        this.nombreCliente = nombreCliente;
+        this.direccionCliente = direccionCliente;
+        this.fecha = fecha;
+        this.totalLetras = totalLetras;
+        this.totalFactura = totalFactura;
+        if(printerJob.printDialog()){
+            try{
+                printerJob.print();
+            }catch(Exception PrinterException){
+                PrinterException.printStackTrace();
+            }        
         } 
     }
     public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){   
-        Font font = new Font(null, Font.PLAIN, 0);    
+        
         AffineTransform affineTransform = new AffineTransform();
         affineTransform.rotate(Math.toRadians(-270),0, 0);
-        Font rotatedFont = font.deriveFont(affineTransform);
-        g2d.setFont(rotatedFont);
+        Font f1 = new Font(g2d.getFont().getFontName(),Font.PLAIN, tamaño);
+        Font f1Rotated = f1.deriveFont(affineTransform);
+        g2d.setFont(f1Rotated);
+        
         g2d.drawString(String.valueOf(fecha.getDayOfMonth()), diay,diax);
         g2d.drawString(String.valueOf(fecha.getMonthValue()),mesy,mesx);
         g2d.drawString(String.valueOf(fecha.getYear()),añoy,añox);
@@ -107,22 +114,22 @@ public class ImprimirFacA implements Printable{
             float anchofor = ancho+espaciado;   
             DecimalFormat df = new DecimalFormat("###,###.00");
             System.out.println(mensaje.size());
-        Font f1 = new Font(g2d.getFont().getFontName(),Font.PLAIN, tamaño);
-        Font f1Rotated = f1.deriveFont(affineTransform);
-        g2d.setFont(f1Rotated);
-        g2d.drawString(direccionCliente,direcciony, direccionx); 
+        
+        
         
         g2d.drawString(Nit,nity , nitx);
-        g2d.drawString(nombreCliente, nombrey, nombrex);
+       
         for(int x=0; x< mensaje.size();x++){
         
             anchofor = anchofor-espaciado;
               String totalp = String.valueOf(df.format(mensaje.get(x).getTotalParcialBackup()));
 
             g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),anchofor, largo);
-            g2d.drawString(mensaje.get(x).getProductoDesc(), anchofor , anchoDesc);
-            
-            
+            if(mensaje.get(x).getProductoDesc().length()>longitudProducto){
+                g2d.drawString(mensaje.get(x).getProductoDesc().substring(0, longitudProducto), anchofor , anchoDesc);
+            }else{
+                g2d.drawString(mensaje.get(x).getProductoDesc(), anchofor , anchoDesc);
+            }
               int tamañoTotal = totalp.length();
             switch(tamañoTotal)  {
                 case 4:
@@ -149,7 +156,7 @@ public class ImprimirFacA implements Printable{
         
         String totalF = df.format(Double.parseDouble(totalFactura));
         int tamañoFacE = totalF.length();
-        System.out.println(tamañoFacE);
+        
          switch(tamañoFacE)  {
                 case 4:
                     g2d.drawString(totalF, totalfacy, totalfacx+25);
@@ -170,6 +177,34 @@ public class ImprimirFacA implements Printable{
                     g2d.drawString(totalF, totalfacy, totalfacx-2);
                     break;
             }
+        
+        Font fNombre = new Font(g2d.getFont().getFontName(),Font.PLAIN, tamañoNombre);
+        Font fNombreRotated = fNombre.deriveFont(affineTransform);
+        g2d.setFont(fNombreRotated);
+        
+        if(nombreCliente.length()> longitudNombre){
+            g2d.drawString(nombreCliente.substring(0, longitudNombre), nombrey, nombrex);
+        }else{
+            g2d.drawString(nombreCliente, nombrey, nombrex);
+        }
+        
+        
+        Font fDireccion = new Font(g2d.getFont().getFontName(),Font.PLAIN, tamañoDireccion);
+        Font fDireccionRotated = fDireccion.deriveFont(affineTransform);
+        g2d.setFont(fDireccionRotated);
+        
+        if(direccionCliente.length() > longitudDireccion){
+            g2d.drawString(direccionCliente.substring(0, longitudDireccion),direcciony, direccionx); 
+        }else{
+            g2d.drawString(direccionCliente,direcciony, direccionx); 
+        }
+        
+        
+        menu.letra.put("tamañoNombreB",menu.letra.get("tamaño", "root") );
+        menu.letra.put("tamañoNombreA",menu.letra.get("tamaño1", "root") );
+        
+        menu.letra.put("tamañoDirec",menu.letra.get("tamaño", "root") );
+        menu.letra.put("tamañoDirecA",menu.letra.get("tamaño1", "root") );
     }
     public int print(Graphics g,PageFormat pf,int pagina){
       Graphics2D g2d=(Graphics2D)g;

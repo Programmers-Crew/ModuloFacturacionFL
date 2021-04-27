@@ -50,7 +50,7 @@ public class GenerarExcel {
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         
         String[] titulos = {"CÓDIGO", "CANTIDAD",
-            "PROVEEDOR", "PRODUCTO","ESTADO","COSTO","TIPO"};
+            "PROVEEDOR", "PRODUCTO","ESTADO","COSTO","TIPO","TOTALES"};
         
         
         
@@ -97,6 +97,9 @@ public class GenerarExcel {
                         break;
                     case 6:
                         celda.setCellValue(listaInventarioProductos.get(x).getTipoProdDesc());
+                        break;
+                    case 7:
+                        celda.setCellValue(listaInventarioProductos.get(x).getInventarioProductoCant()*listaInventarioProductos.get(x).getPrecioCosto());
                         break;
                 }
                 

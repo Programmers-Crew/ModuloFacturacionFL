@@ -528,7 +528,16 @@ public class MenuPrincipalContoller implements Initializable {
         if(facA.get("tamaño1","root").equals("root")){
             resetarLetraA();
         }
+        letra.put("tamañoNombreB",letra.get("tamaño", "root") );
+        letra.put("tamañoNombreA",letra.get("tamaño1", "root") );
         
+        letra.put("tamañoDirec",letra.get("tamaño", "root") );
+        letra.put("tamañoDirecA",letra.get("tamaño1", "root") );
+        if(letra.get("longitudProducto","root").equals("root")){
+            letra.put("longitudProducto", "25");
+            letra.put("longitudNombre", "45");
+            letra.put("longitudDireccion", "35");
+        }
         prefsRegresar.put("regresar", "menu");
         prefsRegresarProductos.put("regresarProducto", "menu");
          validar.validarMenu(prefs.get("dark", "root"), anchor);
