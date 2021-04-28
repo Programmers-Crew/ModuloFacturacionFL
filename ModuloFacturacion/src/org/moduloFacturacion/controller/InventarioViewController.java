@@ -104,6 +104,7 @@ public class InventarioViewController implements Initializable {
 
 
 
+
     public enum Operacion{AGREGAR,GUARDAR,ELIMINAR,BUSCAR,ACTUALIZAR,CANCELAR,NINGUNO, SUMAR, RESTAR};
     public Operacion cancelar = Operacion.NINGUNO;
     
@@ -533,7 +534,7 @@ public class InventarioViewController implements Initializable {
                         tipoOperacionInventario = Operacion.CANCELAR;
                         buscarCredito();
                         accionInventario();
-                        
+                        System.out.println("aqui 4");
                         cargarDatosProveedor();
                         
                     }catch (SQLException ex) {
@@ -961,7 +962,7 @@ public class InventarioViewController implements Initializable {
             System.out.println(sqlDetalle);
             Integer documento = 3;
             System.out.println(txtProductoInventario.getText());
-            String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+txtProductoInventario.getText()+"','"+idFac+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+documento+"')}";  
+            String sqlCardex = "{call SpAgregarCardexCreditos('"+date2+"','"+txtProductoInventario.getText()+"','"+idFac+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+documento+"')}";  
             System.out.println(sqlCardex);
             try {
                 PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
@@ -1067,13 +1068,15 @@ public class InventarioViewController implements Initializable {
                 nuevoInventario.setProductoId(cmbCodigoProductoInventario.getValue());
                 nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
                 nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
-
+               System.out.println("aqui1");
 
                    proveedorName = txtProveedorInventario.getText();
                    System.out.println(proveedorName);
                    String sql = "{call SpAgregarInventarioProductos('"+nuevoInventario.getInventarioProductoCant()+"','"+ nuevoInventario.getProductoId()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
+                   System.out.println(sql);
                    tipoOperacionInventario = Operacion.GUARDAR;
-                   accion(sql);                                      
+                   accion(sql);     
+                   System.out.println("aqui 2");
             }
         }else{
             tipoOperacionInventario = Operacion.AGREGAR;;
@@ -1958,6 +1961,8 @@ public class InventarioViewController implements Initializable {
     @FXML
     private TableColumn<Cardex, String> colDocumentoCardex;
     @FXML
+    private TableColumn<Cardex, Integer> colEntradaCardex;
+    @FXML
     private JFXButton btnBuscarCardex;
     @FXML
     private ComboBox<String> cmbFiltroCardex;
@@ -1969,6 +1974,8 @@ public class InventarioViewController implements Initializable {
     private JFXDatePicker txtfechaInicioCardex;
     @FXML
     private JFXDatePicker txtfechaFinalCardex;
+    @FXML
+    private JFXTextField txtProveedorCardex;
     
     ObservableList<String> listaCmbFiltro;
     ObservableList<String> listaCmbFiltroBuscado;
@@ -2039,6 +2046,7 @@ public class InventarioViewController implements Initializable {
                             rs.getString("noFacCardex"),
                             rs.getString("idTipoDesc"),
                             rs.getInt("saldoCardex"),
+                            rs.getInt("entradaCardex"),
                             rs.getInt("totalCardex"),
                             rs.getString("productoDesc"),
                             rs.getString("DescTipoDocumento")
@@ -2058,9 +2066,10 @@ public class InventarioViewController implements Initializable {
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
+        colEntradaCardex.setCellValueFactory(new PropertyValueFactory("entradaCardex")); 
         colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));  
         colDocumentoCardex.setCellValueFactory(new PropertyValueFactory("DescTipoDocumento"));        
-
+        buscarProveedor();
     }  
    
     //buscar por nombre
@@ -2079,9 +2088,10 @@ public class InventarioViewController implements Initializable {
                             rs.getString("noFacCardex"),
                             rs.getString("idTipoDesc"),
                             rs.getInt("saldoCardex"),
+                            rs.getInt("entradaCardex"),                        
                             rs.getInt("totalCardex"),
                             rs.getString("productoDesc"),
-                            rs.getString("DescTipoDocumento")
+                            rs.getString("DescTipoDocumento")                                                    
 
                 ));
                 x++;
@@ -2099,11 +2109,13 @@ public class InventarioViewController implements Initializable {
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
+        colEntradaCardex.setCellValueFactory(new PropertyValueFactory("entradaCardex")); 
         colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex")); 
         colDocumentoCardex.setCellValueFactory(new PropertyValueFactory("DescTipoDocumento"));        
-
+        buscarProveedor();
     } 
         
+    
     //buscar por id y fechas
         public ObservableList<Cardex> getCardexFechas(){
         ArrayList<Cardex> lista = new ArrayList();
@@ -2120,6 +2132,7 @@ public class InventarioViewController implements Initializable {
                             rs.getString("noFacCardex"),
                             rs.getString("idTipoDesc"),
                             rs.getInt("saldoCardex"),
+                            rs.getInt("entradaCardex"),                        
                             rs.getInt("totalCardex"),
                             rs.getString("productoDesc"),
                             rs.getString("DescTipoDocumento")
@@ -2139,9 +2152,10 @@ public class InventarioViewController implements Initializable {
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
+        colEntradaCardex.setCellValueFactory(new PropertyValueFactory("entradaCardex")); 
         colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex"));
         colDocumentoCardex.setCellValueFactory(new PropertyValueFactory("DescTipoDocumento"));        
-        
+        buscarProveedor();
     } 
     
     
@@ -2161,6 +2175,7 @@ public class InventarioViewController implements Initializable {
                             rs.getString("noFacCardex"),
                             rs.getString("idTipoDesc"),
                             rs.getInt("saldoCardex"),
+                            rs.getInt("entradaCardex"),                        
                             rs.getInt("totalCardex"),
                             rs.getString("productoDesc"),
                             rs.getString("DescTipoDocumento")
@@ -2182,10 +2197,30 @@ public class InventarioViewController implements Initializable {
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
         colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex")); 
-        colDocumentoCardex.setCellValueFactory(new PropertyValueFactory("DescTipoDocumento"));        
+        colEntradaCardex.setCellValueFactory(new PropertyValueFactory("entradaCardex")); 
+        colDocumentoCardex.setCellValueFactory(new PropertyValueFactory("DescTipoDocumento"));
+        buscarProveedor();        
 
     } 
     
+    public void buscarProveedor(){
+       try{
+            PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarProveedorCardex(?)}");
+             sp.setString(1, cmbFiltroBuscarCardex.getValue());
+             ResultSet resultado = sp.executeQuery(); 
+             
+            while(resultado.next()){
+            txtProveedorCardex.setText(resultado.getString("proveedorNombre"));
+        }
+       }catch(Exception e){
+           e.printStackTrace();
+       
+       }
+ 
+  
+
+        }
+  
     
         
     @FXML

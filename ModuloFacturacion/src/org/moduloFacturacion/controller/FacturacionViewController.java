@@ -693,6 +693,8 @@ public class FacturacionViewController implements Initializable {
                 try{
                      PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarProductosFac(?)}");
                     sp.setString(1, buscarCodigoProducto(cmbNombreProducto.getValue()));
+                    System.out.println(buscarCodigoProducto(cmbNombreProducto.getValue()));
+                    System.out.println("codigo aqui");
                      ResultSet resultado = sp.executeQuery(); 
                         while(resultado.next()){
                             txtPrecioProducto.setText(resultado.getString("productoPrecio"));
@@ -820,8 +822,16 @@ public class FacturacionViewController implements Initializable {
         return codigoProducto;
     }
     
-   
-    
+    public String buscarNombreProducto(String precioProductos){    
+        
+        int busqueda = cmbNombreProducto.getValue().indexOf("|");
+        
+        String valor = cmbNombreProducto.getValue().substring(0, busqueda-1);
+        
+        
+        codigoProducto = valor;
+        return codigoProducto;
+    }    
     
     public void llenarComboProdcutos(){
         ArrayList<String> lista = new ArrayList();
@@ -1130,7 +1140,7 @@ public class FacturacionViewController implements Initializable {
                         documento = 2;
                    }
                    
-                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+cmbNombreProducto.getValue()+"','"+idFac+"','"+tipo+"','"+txtCantidadProducto.getText()+"','"+documento+"')}";  
+                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+buscarNombreProducto(cmbNombreProducto.getValue())+"','"+idFac+"','"+tipo+"','"+txtCantidadProducto.getText()+"','"+documento+"')}";  
                     System.out.println(sqlCardex);
                     
                    String sql = "{call SpAgregarBackup('"+buscarCodigoProducto(nuevoBackUp.getProductoDesc())+"','"+ nuevoBackUp.getCantidadBackup()+"','"+nuevoBackUp.getTotalParcialBackup()+"')}";
@@ -1250,7 +1260,7 @@ public class FacturacionViewController implements Initializable {
        }else{
            tipoFactura=2;
        } 
-              
+       
        String sqlFactura = "{call SpAgregarFactura('"+txtSerieId.getText()+"','"+txtFacturaId.getText()+"','"+getClienteId()+"','"+date2+"','"+getUsuarioId()+"','"+totalNeto+"','"+totalIva+"','"+txtTotalFactura.getText()+"','"+tipoFactura+"')}";
        String sqlTipo = "{call SpAgregarTipoDocumento('"+txtFacturaId.getText()+"','"+tipo+"')}";
        actualizarCliente();
@@ -1347,6 +1357,16 @@ public class FacturacionViewController implements Initializable {
                 comprobarClienteExistente();
                 txtLetrasPrecio.setText("");
                  imprimir();
+                String sql = "{call SpEliminarBackup()}";  
+
+                 try{
+                    PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);            
+                    ps.execute();
+
+                 
+                 }catch(Exception e){
+                     e.printStackTrace();
+                 }
                 if(guardarFactura()==true){
                     limpiarTextCliente();
                    limpiarTextEfectivo();
