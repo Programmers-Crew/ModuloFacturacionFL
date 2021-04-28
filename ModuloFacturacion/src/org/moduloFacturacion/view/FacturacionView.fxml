@@ -224,6 +224,7 @@
                                        </columnResizePolicy>
                                        <columns>
                                           <TableColumn fx:id="colCodigoFactura" prefWidth="99.2000150680542" text="NO." />
+                                          <TableColumn fx:id="codigoProductoColumn" prefWidth="75.0" text="CÓDIGO" />
                                           <TableColumn fx:id="colDesProductoBackUp" prefWidth="129.60003662109375" text="PRODUCTO" />
                                           <TableColumn fx:id="colCantidadProductoBackUp" prefWidth="154.4000244140625" text="CANTIDAD" />
                                           <TableColumn fx:id="colPrecioProductoBackUp" prefWidth="136.800048828125" text="PRECIO UNIT" />

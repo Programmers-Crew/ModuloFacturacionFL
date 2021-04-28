@@ -426,8 +426,13 @@ public class FacturacionViewController implements Initializable {
     private TableColumn<FacturacionDetalleBackup, Double> colPrecioProductoBackUp;
     @FXML
     private TableColumn<FacturacionDetalleBackup, Double> colTotalParcialBackUp;
+    
+    @FXML
+    private TableColumn<FacturacionDetalleBackup, String> codigoProductoColumn;
+    
     @FXML
     private TableView<FacturacionDetalleBackup> tblBackUp;
+    
 
     double totalFactura=0;
     
@@ -881,7 +886,8 @@ public class FacturacionViewController implements Initializable {
                     rs.getString("productoDesc"),
                     rs.getInt("cantidadBackup"),
                     rs.getDouble("productoPrecio"),
-                    rs.getDouble("totalParcialBackup")
+                    rs.getDouble("totalParcialBackup"),
+                    rs.getString("productoId")
                 ));
                 totalParcial = rs.getDouble("totalParcialBackup");
             }
@@ -890,8 +896,8 @@ public class FacturacionViewController implements Initializable {
         } 
             totalFactura = totalFactura+totalParcial;
             txtTotalFactura.setText(String.valueOf(totalFactura));
-            
-                return listaBackUp = FXCollections.observableList(lista);
+            listaBackUp = FXCollections.observableList(lista);
+                return listaBackUp;
     }
      
     public void cargarDatos(){
@@ -901,8 +907,7 @@ public class FacturacionViewController implements Initializable {
         colCantidadProductoBackUp.setCellValueFactory(new PropertyValueFactory("cantidadBackup"));  
         colPrecioProductoBackUp.setCellValueFactory(new PropertyValueFactory("productoPrecio"));
         colTotalParcialBackUp.setCellValueFactory(new PropertyValueFactory("totalParcialBackup"));
-
-        
+        codigoProductoColumn.setCellValueFactory(new PropertyValueFactory("productoId"));
         cmbNombreProducto.setValue("");
         limpiarTextFacturacion();
         
@@ -1538,7 +1543,7 @@ public class FacturacionViewController implements Initializable {
         if(result.get() == buttonTypeSi){
             try{
                 int index  = tblBackUp.getSelectionModel().getSelectedIndex();
-                cmbNombreProducto.setValue(colDesProductoBackUp.getCellData(index));
+                cmbNombreProducto.setValue(colDesProductoBackUp.getCellData(index)+" |"+codigoProductoColumn.getCellData(index));
                 txtCantidadProducto.setText(colCantidadProductoBackUp.getCellData(index).toString());
                 
                 btnEditar.setDisable(false);

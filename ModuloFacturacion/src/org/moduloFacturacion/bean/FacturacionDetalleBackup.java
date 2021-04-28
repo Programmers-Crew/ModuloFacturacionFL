@@ -8,18 +8,29 @@ public class FacturacionDetalleBackup {
     private int cantidadBackup;
     private double productoPrecio;
     private double totalParcialBackup;
+    private String productoId;
 
     public FacturacionDetalleBackup() {
     }
 
-    public FacturacionDetalleBackup(int facturaDetalleIdBackup, String productoDesc, int cantidadBackup, double productoPrecio, double totalParcialBackup) {
+    public FacturacionDetalleBackup(int facturaDetalleIdBackup, String productoDesc, int cantidadBackup, double productoPrecio, double totalParcialBackup, String productoId) {
         this.facturaDetalleIdBackup = facturaDetalleIdBackup;
         this.productoDesc = productoDesc;
         this.cantidadBackup = cantidadBackup;
         this.productoPrecio = productoPrecio;
         this.totalParcialBackup = totalParcialBackup;
+        this.productoId = productoId;
     }
 
+    public String getProductoId() {
+        return productoId;
+    }
+
+    public void setProductoId(String productoId) {
+        this.productoId = productoId;
+    }
+
+   
     public int getFacturaDetalleIdBackup() {
         return facturaDetalleIdBackup;
     }
@@ -62,9 +73,10 @@ public class FacturacionDetalleBackup {
 
     @Override
     public String toString() {
-        return "FacturacionDetalleBackup{" + "facturaDetalleIdBackup=" + facturaDetalleIdBackup + ", productoDesc=" + productoDesc + ", cantidadBackup=" + cantidadBackup + ", productoPrecio=" + productoPrecio + ", totalParcialBackup=" + totalParcialBackup + '}';
+        return "FacturacionDetalleBackup{" + "facturaDetalleIdBackup=" + facturaDetalleIdBackup + ", productoDesc=" + productoDesc + ", cantidadBackup=" + cantidadBackup + ", productoPrecio=" + productoPrecio + ", totalParcialBackup=" + totalParcialBackup + ", codigoProducto=" + productoId + '}';
     }
 
+   
     
     
     
