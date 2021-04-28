@@ -810,17 +810,13 @@ public class FacturacionViewController implements Initializable {
     }
 
     public String buscarCodigoProducto(String precioProductos){    
-        try{
-            PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarcodigoProducto(?)}");
-            sp.setString(1, precioProductos);
-            ResultSet resultado = sp.executeQuery(); 
-            
-            while(resultado.next()){
-            codigoProducto = resultado.getString(1);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        
+        int busqueda = cmbNombreProducto.getValue().indexOf("|");
+        
+        String valor = cmbNombreProducto.getValue().substring(busqueda+1, cmbNombreProducto.getValue().length());
+        
+        
+        codigoProducto = valor;
         return codigoProducto;
     }
     
@@ -836,7 +832,7 @@ public class FacturacionViewController implements Initializable {
             PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                lista.add(x, rs.getString("productoDesc"));
+                lista.add(x, rs.getString("productoDesc")+" |"+rs.getString("productoId"));
                 x++;
             }
             
@@ -960,8 +956,12 @@ public class FacturacionViewController implements Initializable {
   }
   
   public boolean validarProducto(){
-       String codigoProducto1 = buscarCodigoProducto(cmbNombreProducto.getValue());
-       String sql = "{call SpBuscarInventarioProductos('"+codigoProducto1+"')}";
+       int busqueda = cmbNombreProducto.getValue().indexOf("|");
+        
+        String valor1 = cmbNombreProducto.getValue().substring(busqueda+1, cmbNombreProducto.getValue().length());
+        
+   
+       String sql = "{call SpBuscarInventarioProductos('"+valor1+"')}";
        int cantidad=0;
        boolean valor=false;
        String estado="";
@@ -1010,9 +1010,9 @@ public class FacturacionViewController implements Initializable {
                     noti.darkStyle();   
                     noti.show();
                     valor = true;
-                    sql1="{call SpActualizarInventarioProductosFacturacion('"+codigoProducto1+"','"+total+"','"+validarEstadoProducto("AGOTADO")+"')}";
+                    sql1="{call SpActualizarInventarioProductosFacturacion('"+valor1+"','"+total+"','"+validarEstadoProducto("AGOTADO")+"')}";
                }else{
-                   sql1="{call SpActualizarInventarioProductosFacturacion('"+codigoProducto1+"','"+total+"','"+validarEstadoProducto(estado)+"')}";
+                   sql1="{call SpActualizarInventarioProductosFacturacion('"+valor1+"','"+total+"','"+validarEstadoProducto(estado)+"')}";
                    
                    valor = true;
                }
@@ -1022,8 +1022,9 @@ public class FacturacionViewController implements Initializable {
                }catch(SQLException ex){
                    ex.printStackTrace();
                }
+              }
            }
-       }
+       
     return valor;
   }
   
