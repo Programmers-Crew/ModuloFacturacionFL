@@ -1110,18 +1110,8 @@ public class FacturacionViewController implements Initializable {
         ValidacionFecha();
             Integer idFac = Integer.parseInt(txtFacturaId.getText());                   
             Integer tipo = 2;
-            Integer documento = 0;
-        if(listaBackUp.size()>8){
-             Notifications noti = Notifications.create();
-            noti.graphic(new ImageView(imgError));
-            noti.title("ERROR");
-            noti.text("NO PUEDE LLENAR MÁS DE 9 CAMPOS A SU FACTURA YA QUE SOLO ESE VALOR LE CABEN");
-            noti.position(Pos.BOTTOM_RIGHT);
-            noti.hideAfter(Duration.seconds(4));
-            noti.darkStyle();
-            noti.show();
-        }else{
-                if(cmbNombreProducto.getValue().equals("")|| txtPrecioProducto.getText().isEmpty() || txtCantidadProducto.getText().isEmpty() || txtNitCliente.getValue().equals("") || txtNombreCliente.getText().isEmpty() || txtFacturaId.getText().isEmpty() ){
+            Integer documento = 0;        
+            if(cmbNombreProducto.getValue().equals("")|| txtPrecioProducto.getText().isEmpty() || txtCantidadProducto.getText().isEmpty() || txtNitCliente.getValue().equals("") || txtNombreCliente.getText().isEmpty() || txtFacturaId.getText().isEmpty() ){
                 Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(imgError));
                 noti.title("ERROR");
@@ -1177,7 +1167,7 @@ public class FacturacionViewController implements Initializable {
                    
             }
             
-        }
+        
         
     }
     

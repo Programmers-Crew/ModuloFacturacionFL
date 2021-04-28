@@ -1,8 +1,8 @@
 alter table Cardex add entradaCardex int;
 
 drop procedure SpGenerarCardexProd;
-drop procedure SpGenerarCardex;
-drop procedure SpGenerarCardexProd;
+
+
 drop procedure SpGenerarCardexFechaProd;
 drop procedure SpGenerarCardexFecha;
 
@@ -27,6 +27,7 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS SpBuscarProveedorCardex;
 DELIMITER $$
 	create procedure SpBuscarProveedorCardex(prodId varchar(30))
 		begin 
@@ -38,7 +39,7 @@ DELIMITER $$
 		end $$
 DELIMITER ;
 
-
+DROP PROCEDURE IF EXISTS SpAgregarCardexCreditos;
 DELIMITER $$
 	create procedure SpAgregarCardexCreditos(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad int, documento int(5))
 		begin
@@ -51,6 +52,7 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS SpAgregarCardexCreUpdate;
 DELIMITER $$
 	create procedure SpAgregarCardexCreUpdate(nombre varchar(60),tipo int, cantidad int, idBuscado int, documento int(5))
 		begin
@@ -64,7 +66,7 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
-#
+DROP PROCEDURE IF EXISTS SpGenerarCardexFecha;
 DELIMITER $$
 	create procedure SpGenerarCardexFecha(prodId varchar(30), inicio date, final date)
 		begin 
@@ -81,7 +83,7 @@ DELIMITER $$
 ;
         end $$
 DELIMITER ;
-
+DROP PROCEDURE IF EXISTS SpGenerarCardexFechaProd;
 DELIMITER $$
 	create procedure SpGenerarCardexFechaProd(prodId varchar(30), inicio date, finalFecha date)
 		begin 
@@ -97,7 +99,7 @@ DELIMITER $$
             order by c.idCardex desc;
         end $$
 DELIMITER ;
-
+DROP PROCEDURE IF EXISTS SpGenerarCardexProd;
 DELIMITER $$
 	create procedure SpGenerarCardexProd(prodId varchar(30))
 		begin 
