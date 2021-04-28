@@ -59,7 +59,7 @@ DELIMITER $$
 				inventarioproductos as ip
 			on pr.productoId = ip.productoId
             
-			where pr.productoId = idBuscado and ip.estadoProductoId = 1
+			where pr.productoId = idBuscado and ip.estadoProductoId = 1 
 			order by pr.productoId ASC;
         END $$
 DELIMITER ;

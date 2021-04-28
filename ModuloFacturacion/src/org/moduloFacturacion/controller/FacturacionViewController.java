@@ -693,6 +693,7 @@ public class FacturacionViewController implements Initializable {
                 try{
                      PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarProductosFac(?)}");
                     sp.setString(1, buscarCodigoProducto(cmbNombreProducto.getValue()));
+                    System.out.println(buscarCodigoProducto(cmbNombreProducto.getValue()));
                      ResultSet resultado = sp.executeQuery(); 
                         while(resultado.next()){
                             txtPrecioProducto.setText(resultado.getString("productoPrecio"));
