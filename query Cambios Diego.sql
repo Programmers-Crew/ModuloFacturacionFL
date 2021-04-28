@@ -23,7 +23,7 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpGenerarCardex(prodId varchar(50))
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex,c.entradaCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
@@ -40,12 +40,14 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpGenerarCardexProd(prodId varchar(30))
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento, pr.proveedorNombre
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
 			inner join productos as p
 				on p.productoId = producto
+			inner join proveedores as pr
+				on pr.proveedorId = p.proveedorId
 			inner join tipodocumento as td
 				on td.idTipoDocumento = c.tipoDocumento
 			WHERE p.productoId = prodId or p.productoDesc = prodId
@@ -53,15 +55,11 @@ DELIMITER $$
 ;
         end $$
 DELIMITER ;
-<<<<<<< HEAD
-
-=======
->>>>>>> Diego-Gonzalez
 
 DELIMITER $$
 	create procedure SpGenerarCardexFechaProd(prodId varchar(30), inicio date, finalFecha date)
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
@@ -77,7 +75,7 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpGenerarCardexFecha(prodId varchar(30), inicio date, final date)
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
