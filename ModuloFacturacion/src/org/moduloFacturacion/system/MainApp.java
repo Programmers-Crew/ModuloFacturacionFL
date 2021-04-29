@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.moduloFacturacion.controller.ActivationViewController;
@@ -47,8 +48,17 @@ public class MainApp extends Application {
             Scene scene = new Scene(root);
             stage.setTitle("PROGRAMMERS BILLING");
             stage.getIcons().add(new Image(getClass().getResource("/org/moduloFacturacion/img/LogoGrande.png").toExternalForm()));
-            stage.setWidth(1500);
-            stage.setHeight(800);
+            int primaryMon=0;
+            Screen primary = Screen.getPrimary();
+            for(int i = 0; i < Screen.getScreens().size(); i++){
+                if(Screen.getScreens().get(i).equals(primary)){
+                    primaryMon = i;
+                    System.out.println("primary: " + i);
+                    break;
+                }
+            }
+            stage.setWidth(primary.getVisualBounds().getWidth());
+            stage.setHeight(primary.getVisualBounds().getHeight());
             stage.setMinWidth(1500);
             stage.setMinHeight(800);
             stage.setScene(scene);

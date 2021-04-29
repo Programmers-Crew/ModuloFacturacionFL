@@ -41,7 +41,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -54,7 +53,6 @@ import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.ChequeBuscado;
 import org.moduloFacturacion.bean.ChequeEncabezadoBuscado;
 import org.moduloFacturacion.bean.Chequedetalle;
-import org.moduloFacturacion.bean.Creditos;
 import org.moduloFacturacion.bean.Letras;
 import org.moduloFacturacion.bean.ValidarStyle;
 import org.moduloFacturacion.bean.imprimirCheque;
@@ -216,71 +214,38 @@ public class chequesController implements Initializable {
             noti.darkStyle();   
             noti.show();
         }else{  
-            if(stage.isMaximized()){
                 nochequeText.setLayoutY(160);
-                nochequeText.setLayoutX(705);
+                nochequeText.setLayoutX(800);
                 nochequeText.setText(numeroCheque.getText());
                 nochequeText.setFont(new Font("System",20));
-                
-                fechaText.setLayoutY(195);
-                fechaText.setLayoutX(280);
+
+                fechaText.setLayoutY(190);
+                fechaText.setLayoutX(290);
                 fechaText.setText(chequeFecha.getText());
                 fechaText.setFont(new Font("System",20));
-                
-                
-                pagueseText.setLayoutY(235);
-                pagueseText.setLayoutX(200);
+
+
+                pagueseText.setLayoutY(230);
+                pagueseText.setLayoutX(220);
                 pagueseText.setText(pagoOrden.getValue());
                 pagueseText.setFont(new Font("System",20));
-                
-                
-                digitosText.setLayoutY(235);
-                digitosText.setLayoutX(705);
+
+
+                digitosText.setLayoutY(230);
+                digitosText.setLayoutX(800);
                 digitosText.setText(totalValor.getText());
                 digitosText.setFont(new Font("System",20));
 
-                sumadeText.setLayoutY(275);
-                sumadeText.setLayoutX(200);
+                sumadeText.setLayoutY(270);
+                sumadeText.setLayoutX(240);
                 sumadeText.setText(sumaLetras.getText());
                 sumadeText.setFont(new Font("System",20));
 
                 descText.setLayoutY(450);
                 descText.setLayoutX(290);
                 descText.setText(descripcionPago.getText());
-                descText.setFont(new Font("System",20));
-            }else{
-                nochequeText.setLayoutY(68);
-                nochequeText.setLayoutX(380);
-                nochequeText.setText(numeroCheque.getText());
-                nochequeText.setFont(new Font("System",12));
-
-                fechaText.setLayoutX(135);
-                fechaText.setLayoutY(78);
-                fechaText.setText(chequeFecha.getText());
-                fechaText.setFont(new Font("System",12));
-                 
-                
-                pagueseText.setLayoutY(100);
-                pagueseText.setLayoutX(105);
-                pagueseText.setText(pagoOrden.getValue());
-                pagueseText.setFont(new Font("System",12));
-                
-                
-                digitosText.setLayoutY(100);
-                digitosText.setLayoutX(385);
-                digitosText.setText(totalValor.getText());
-                digitosText.setFont(new Font("System",12));
-                
-                sumadeText.setLayoutY(126);
-                sumadeText.setLayoutX(105);
-                sumadeText.setText(sumaLetras.getText());
-                sumadeText.setFont(new Font("System",10));
-
-                descText.setLayoutY(200);
-                descText.setLayoutX(140);
-                descText.setText(descripcionPago.getText());
-                descText.setFont(new Font("System",12));
-            }
+                descText.setFont(new Font("System",20));;
+            
             
         }
     
@@ -294,10 +259,11 @@ public class chequesController implements Initializable {
         btnEliminarCheque.setDisable(true);
         limpiarTextChequeDetalle();
         descripcionPago.setWrapText(true);
+        
         cargarCombo();
         cmbProv();
         new AutoCompleteComboBoxListener(creditoCancelar);
-     
+       
     }    
     public void limpiarTextChequeDetalle(){
         numeroCheque.setText("");

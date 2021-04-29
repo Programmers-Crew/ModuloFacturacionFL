@@ -30,6 +30,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -154,8 +155,19 @@ public class LoginViewController implements Initializable {
                     Stage primaryStage= new Stage();
                     Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("org/moduloFacturacion/view/menuPrincipal.fxml"));
                     Scene scene = new Scene(root);
-                    primaryStage.setWidth(1500);
-                    primaryStage.setHeight(800);
+                       int primaryMon=0;
+                    Screen primary = Screen.getPrimary();
+                    for(int i = 0; i < Screen.getScreens().size(); i++){
+                        if(Screen.getScreens().get(i).equals(primary)){
+                            primaryMon = i;
+                            System.out.println("primary: " + i);
+                            break;
+                        }
+                    }
+                    primaryStage.setWidth(primary.getVisualBounds().getWidth());
+                    primaryStage.setHeight(primary.getVisualBounds().getHeight());
+                    primaryStage.setMinWidth(1500);
+                    primaryStage.setMinHeight(800);
                     primaryStage.setScene(scene);
                     primaryStage.setTitle("PROGRAMMERS BILLING");
                     primaryStage.getIcons().add(new Image(getClass().getResource("/org/moduloFacturacion/img/LogoGrande.png").toExternalForm()));

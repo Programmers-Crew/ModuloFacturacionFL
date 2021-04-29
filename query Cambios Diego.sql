@@ -124,3 +124,9 @@ DELIMITER $$
 					on c.producto = p.productoId;
         end $$
 DELIMITER ;
+
+
+truncate inventarioproductos;
+
+insert into inventarioproductos(inventarioProductoCant,productoId,estadoProductoId) 
+select 100, productoId, 1 from productos;
