@@ -20,13 +20,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -210,6 +206,7 @@ public class InventarioViewController implements Initializable {
         cmbNombreEstado.setValue("");
 
     }
+    
     
     public void limpiarTextFunciones(){
     txtCostoNuevo.setText("");
@@ -534,7 +531,6 @@ public class InventarioViewController implements Initializable {
                         tipoOperacionInventario = Operacion.CANCELAR;
                         buscarCredito();
                         accionInventario();
-                        System.out.println("aqui 4");
                         cargarDatosProveedor();
                         
                     }catch (SQLException ex) {
@@ -1073,10 +1069,10 @@ public class InventarioViewController implements Initializable {
                    proveedorName = txtProveedorInventario.getText();
                    System.out.println(proveedorName);
                    String sql = "{call SpAgregarInventarioProductos('"+nuevoInventario.getInventarioProductoCant()+"','"+ nuevoInventario.getProductoId()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
-                   System.out.println(sql);
+                  
                    tipoOperacionInventario = Operacion.GUARDAR;
                    accion(sql);     
-                   System.out.println("aqui 2");
+                   
             }
         }else{
             tipoOperacionInventario = Operacion.AGREGAR;;

@@ -1110,8 +1110,18 @@ public class FacturacionViewController implements Initializable {
         ValidacionFecha();
             Integer idFac = Integer.parseInt(txtFacturaId.getText());                   
             Integer tipo = 2;
-            Integer documento = 0;        
-            if(cmbNombreProducto.getValue().equals("")|| txtPrecioProducto.getText().isEmpty() || txtCantidadProducto.getText().isEmpty() || txtNitCliente.getValue().equals("") || txtNombreCliente.getText().isEmpty() || txtFacturaId.getText().isEmpty() ){
+            Integer documento = 0;
+        if(listaBackUp.size()>13){
+             Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("ERROR");
+            noti.text("NO PUEDE LLENAR MÁS DE 13 CAMPOS A SU FACTURA");
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();
+            noti.show();
+        }else{
+                if(cmbNombreProducto.getValue().equals("")|| txtPrecioProducto.getText().isEmpty() || txtCantidadProducto.getText().isEmpty() || txtNitCliente.getValue().equals("") || txtNombreCliente.getText().isEmpty() || txtFacturaId.getText().isEmpty() ){
                 Notifications noti = Notifications.create();
                 noti.graphic(new ImageView(imgError));
                 noti.title("ERROR");
@@ -1167,10 +1177,9 @@ public class FacturacionViewController implements Initializable {
                    
             }
             
-        
+        }
         
     }
-    
     
     public void actualizarCliente(){
         ArrayList<String> lista = new ArrayList();
@@ -1353,7 +1362,11 @@ public class FacturacionViewController implements Initializable {
                 txtLetrasPrecio.setText("");
                  imprimir();
                 String sql = "{call SpEliminarBackup()}";  
-
+                if(guardarFactura()==true){
+                    limpiarTextCliente();
+                   limpiarTextEfectivo();
+                   totalFactura = 0;
+                }
                  try{
                     PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);            
                     ps.execute();
@@ -1362,11 +1375,6 @@ public class FacturacionViewController implements Initializable {
                  }catch(Exception e){
                      e.printStackTrace();
                  }
-                if(guardarFactura()==true){
-                    limpiarTextCliente();
-                   limpiarTextEfectivo();
-                   totalFactura = 0;
-                }
                 
            }
             

@@ -1,12 +1,14 @@
 package org.moduloFacturacion.controller;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -18,10 +20,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -30,6 +36,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -38,6 +45,7 @@ import org.moduloFacturacion.bean.Animations;
 import org.moduloFacturacion.bean.AutoCompleteComboBoxListener;
 import org.moduloFacturacion.bean.CambioScene;
 import org.moduloFacturacion.bean.CategoriaProducto;
+import org.moduloFacturacion.bean.Creditos;
 import org.moduloFacturacion.bean.Productos;
 import org.moduloFacturacion.bean.ValidarStyle;
 import org.moduloFacturacion.db.Conexion;
@@ -60,6 +68,7 @@ public class ProductosViewController implements Initializable {
     ObservableList<String> listaTipoProducto;
 
     
+    double costoProducto;
     Image imgError = new Image("org/moduloFacturacion/img/error.png");
     Image imgCorrecto= new Image("org/moduloFacturacion/img/correcto.png");
     @FXML
@@ -123,6 +132,12 @@ public class ProductosViewController implements Initializable {
     private ComboBox<String> cmbFiltrar;
     @FXML
     private JFXButton btnFiltrar;
+    @FXML
+    private JFXTextField txtcantidad;
+    @FXML
+    private JFXButton btnAgregar1;
+    @FXML
+    private JFXTextField txtFactura;
 
 
    
@@ -238,6 +253,7 @@ public class ProductosViewController implements Initializable {
          cmbFiltroProductos.setValue("");
          cmbBuscar.setValue("");
          cmbTipoProducto.setValue("");
+         txtcantidad.setText("");
     }
      
     public void desactivarControles(){
@@ -654,14 +670,17 @@ public class ProductosViewController implements Initializable {
                     try {
                         ps = Conexion.getIntance().getConexion().prepareCall(sql);
                         ps.execute();
-                        
+                        String sql1 = "{call SpAgregarInventarioProductos('"+txtcantidad.getText()+"','"+ txtCodigoProducto.getText()+"','"+1+"')}";
+                        PreparedStatement ps1 = Conexion.getIntance().getConexion().prepareCall(sql1);
+                        ps1.execute();
                         noti.graphic(new ImageView(imgCorrecto));
                         noti.title("OPERACIÓN EXITOSA");
-                        noti.text("SE HA AGREGADO EXITOSAMENTE EL REGISTRO 22");
+                        noti.text("SE HA AGREGADO EXITOSAMENTE EL REGISTRO");
                         noti.position(Pos.BOTTOM_RIGHT);
                         noti.hideAfter(Duration.seconds(4));
                         noti.darkStyle();
                         noti.show();
+                        buscarCredito();
                         proveedor = cmbProveedorProducto.getValue();
                         cargarDatosPorProveedor2();
                         tipoOperacionProducto = Operacion.CANCELAR;
@@ -1058,11 +1077,218 @@ public class ProductosViewController implements Initializable {
         return codigoProveedor;
         
     }
+    public void buscarCredito(){
+        String noFac = txtFactura.getText();
+        
+        double montoFac = 0;
+        String sql = "call SpBuscarFacCredito('"+noFac+"')";
+        
+        try {
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+             while(rs.next()){
+                montoFac = rs.getDouble("creditoMonto");                
+            }
+            if(rs.first()){                
+                actualizarCredito(noFac,montoFac);
+                
+            }else{
+                agregarCredito();
+            }
+        } catch (SQLException ex) {
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("ERROR");
+            noti.text("hubo un error en la base de datos"+ex);
+            ex.printStackTrace();
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }
+        
+        
+    }
+    
+       
+    public void actualizarCredito(String nofac, double montoFac){
+
+            double montoTotal =montoFac+Double.parseDouble(txtcantidad.getText())*Double.parseDouble(txtCostoProducto.getText());
+        
+            double costoFinal = Double.parseDouble(txtcantidad.getText())*Double.parseDouble(txtCostoProducto.getText());
+            
+            String sqlDetalle = "{call SpAgregarCreditoDetalleBackUp('"+txtCodigoProducto.getText()+"','"+txtcantidad.getText()+"','"+costoFinal+"')}";
+            String sqlTransferirBackup = "{call SpAgregarCreditoDetalle()}";
+            String sqlEliminarBackup = "{call SpEliminarBackupCredito()}";
+
+     
+            Integer tipo = 1;
+            Integer documento = 3;
+            String sql = "call SpActualizarCreditoInventario('"+montoTotal+"','"+nofac+"')";
+            String sqlUpdate = "call SpUpdateDetalleCredito('"+nofac+"')";
+            String sqlCardex = "{call SpAgregarCardexFacUpdate('"+txtNombreProducto.getText()+"','"+tipo+"','"+txtcantidad.getText()+"','"+txtFactura.getText()+"','"+documento+"')}";  
+
+        try{
+            
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);            
+            PreparedStatement psDetalle = Conexion.getIntance().getConexion().prepareCall(sqlDetalle);
+            PreparedStatement psTranferirBackup = Conexion.getIntance().getConexion().prepareCall(sqlTransferirBackup);
+            PreparedStatement psUpdate = Conexion.getIntance().getConexion().prepareCall(sqlUpdate);
+            PreparedStatement psEliminarBackup = Conexion.getIntance().getConexion().prepareCall(sqlEliminarBackup);
+                PreparedStatement psCardex = Conexion.getIntance().getConexion().prepareCall(sqlCardex);
+                
+                psCardex.execute();
+            ps.execute();
+            psDetalle.execute();
+            psTranferirBackup.execute();
+            psUpdate.execute();            
+            psEliminarBackup.execute();
+
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgCorrecto));
+            noti.title("CREDITO ACTUALIZADO");
+            noti.text("Se ha actualizado el credito de la factura: "+nofac);
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("ERROR");
+            noti.text("hubo un error en la base de datos"+ex);
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+            try{
+            PreparedStatement psEliminarBackup = Conexion.getIntance().getConexion().prepareCall(sqlEliminarBackup);
+            psEliminarBackup.execute();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }
+    }
+    
+    
+    public void agregarCredito(){
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Agregar Credito");
+        dialog.setHeaderText("Ingrese los campos para agregar una nueva factura en creditos.");
+        dialog.setResizable(true);
+        int codigoEstado1 = 1;
+        Label label1 = new Label("Fecha de inicio: ");
+        Label label2 = new Label("Fecha Final: ");
+        Label label3 = new Label("Descripción:");
+        
+        JFXDatePicker fechaInicio = new JFXDatePicker();
+        JFXDatePicker fechaFinal= new JFXDatePicker();
+        TextField desc = new TextField();
+        GridPane grid = new GridPane();
+        
+        grid.add(label1, 1, 1);
+        grid.add(fechaInicio, 2, 1);
+        
+        grid.add(label2, 1, 3);
+        grid.add(fechaFinal, 2, 3);
+        
+        grid.add(label3, 1, 4);
+        grid.add(desc, 2, 4);
+        
+        dialog.getDialogPane().setContent(grid);
+
+        ButtonType buttonTypeOk = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
+        ButtonType buttonTypeCancel = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
+        
+        Optional<ButtonType> result = dialog.showAndWait();
+        
+        Integer idFac = Integer.parseInt(txtFactura.getText());                   
+        Integer tipo = 1;
+        LocalDate date2 = fechaInicio.getValue();
+            
+        if(result.get() == buttonTypeOk){
+            Creditos nuevoCredito = new Creditos();
+            nuevoCredito.setCreaditoFechaInicio(java.sql.Date.valueOf( fechaInicio.getValue()));
+            nuevoCredito.setCreditoFechaFinal(java.sql.Date.valueOf( fechaFinal.getValue()));
+            nuevoCredito.setCreditoDesc(desc.getText());
+            double cantidad = Double.parseDouble(txtcantidad.getText());
+            nuevoCredito.setCreditoMonto(Double.parseDouble(txtCostoProducto.getText())*cantidad);
+            nuevoCredito.setNoFactura(txtFactura.getText());
+            Double costoFinal = Double.parseDouble(txtcantidad.getText())*Double.parseDouble(txtCostoProducto.getText());
+            
+            String sqlDetalle = "{call SpAgregarCreditoDetalleBackUp('"+txtCodigoProducto.getText()+"','"+txtcantidad.getText()+"','"+costoFinal+"')}";
+            String sqlTransferirBackup = "{call SpAgregarCreditoDetalle()}";
+            String sql = "{call SpAgregarCredito('"+nuevoCredito.getCreaditoFechaInicio()+"','"+nuevoCredito.getCreditoFechaFinal()+"','"+nuevoCredito.getCreditoDesc()+"','"+nuevoCredito.getCreditoMonto()+"','"+codigoEstado1+"','"+nuevoCredito.getNoFactura()+"')}";
+            String sqlEliminarBackup = "{call SpEliminarBackupCredito()}";
+            System.out.println(sqlDetalle);
+            Integer documento = 3;
+            
+            String sqlCardex = "{call SpAgregarCardexCreditos('"+date2+"','"+txtNombreProducto.getText()+"','"+idFac+"','"+tipo+"','"+txtcantidad.getText()+"','"+documento+"')}";  
+            System.out.println(sqlCardex);
+            try {
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                PreparedStatement psDetalle = Conexion.getIntance().getConexion().prepareCall(sqlDetalle);
+                PreparedStatement psTranferirBackup = Conexion.getIntance().getConexion().prepareCall(sqlTransferirBackup);
+                PreparedStatement psEliminarBackup = Conexion.getIntance().getConexion().prepareCall(sqlEliminarBackup);                
+                PreparedStatement psCardex = Conexion.getIntance().getConexion().prepareCall(sqlCardex);
+                
+                psCardex.execute();
+                psDetalle.execute();
+                psTranferirBackup.execute();
+                ps.execute();
+                
+                Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgCorrecto));
+                noti.title("CREDITO GUARDADO");
+                noti.text("Se ha agregado un nuevo credito");
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(4));
+                noti.darkStyle();   
+                noti.show();
+                psEliminarBackup.execute();
+
+            } catch (SQLException ex) {
+                 Notifications noti = Notifications.create();
+                noti.graphic(new ImageView(imgError));
+                noti.title("ERROR");
+                noti.text("hubo un error en la base de datos"+ex);
+                ex.printStackTrace();
+                noti.position(Pos.BOTTOM_RIGHT);
+                noti.hideAfter(Duration.seconds(10));
+                noti.darkStyle();   
+                noti.show();
+                            try{
+              PreparedStatement psEliminarBackup = Conexion.getIntance().getConexion().prepareCall(sqlEliminarBackup);
+            psEliminarBackup.execute();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            }
+        }else{
+            Notifications noti = Notifications.create();
+            noti.graphic(new ImageView(imgError));
+            noti.title("CREDITO NO GUARDADO");
+            noti.text("NO SE HA GUARDADO EL PRODUCTO A CREDITOS");
+            noti.position(Pos.BOTTOM_RIGHT);
+            noti.hideAfter(Duration.seconds(4));
+            noti.darkStyle();   
+            noti.show();
+        }
+
+
+        
+    }
+    
     
      @FXML
     private void btnAgregar(MouseEvent event) {
         if(tipoOperacionProducto == Operacion.GUARDAR){
-           if(txtCodigoProducto.getText().isEmpty() || txtNombreProducto.getText().isEmpty() || cmbCategoriaProducto.getValue().equals("") || cmbProveedorProducto.getValue().equals("") || txtPrecioProducto.getText().isEmpty() || cmbTipoProducto.getValue().equals("")){
+           if(txtCodigoProducto.getText().isEmpty() || txtFactura.getText().isEmpty() ||txtcantidad.getText().isEmpty() || txtNombreProducto.getText().isEmpty() || cmbCategoriaProducto.getValue().equals("") || cmbProveedorProducto.getValue().equals("") || txtPrecioProducto.getText().isEmpty() || cmbTipoProducto.getValue().equals("")){
                     Notifications noti = Notifications.create();
                     noti.graphic(new ImageView(imgError));
                     noti.title("ERROR");
