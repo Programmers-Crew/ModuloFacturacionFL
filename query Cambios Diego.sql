@@ -133,6 +133,7 @@ create table BackupFacturacionF(
 	idDetalle int auto_increment,
     numeroFac varchar(50) ,
     serieFac varchar(50),
+    tipoFac varchar(50),
     PRIMARY KEY (idDetalle)
 );
 
@@ -156,10 +157,10 @@ create table BackupFacturacionP(
 
 #backUp Fac
 DELIMITER $$
-	create procedure AgregarBackupFacturacionF(numero varchar(50), serie varchar(50))
+	create procedure AgregarBackupFacturacionF(numero varchar(50), serie varchar(50), tipo varchar(50))
 		begin 
-			insert into BackupFacturacionF(numeroFac,serieFac)
-				values(numero, serie);
+			insert into BackupFacturacionF(numeroFac,serieFac,tipoFac)
+				values(numero, serie, tipo);
         end $$
 DELIMITER ;
 
@@ -167,7 +168,7 @@ DELIMITER ;
 DELIMITER $$
 	create procedure ListarBackupFacturacionF()
 		begin 
-			select numeroFac,serieFac
+			select numeroFac,serieFac,tipoFac
 				from BackupFacturacionF;
         end $$
 DELIMITER ;

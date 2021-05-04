@@ -368,6 +368,7 @@ public class FacturacionViewController implements Initializable {
     
     String numeroFac = "";
     String serieFac = "";
+    String numeroFacB = "";
     
     String nitCliente = "";
     String nombreCliente = "";
@@ -597,6 +598,7 @@ public class FacturacionViewController implements Initializable {
     
     public void limpiarTextCliente(){
         txtFacturaId.setText("");
+        txtSerieId.setText("");
         txtNitCliente.setValue("");
         txtNombreCliente.setText("");
         txtDireccionCliente.setText("");
@@ -708,6 +710,7 @@ public class FacturacionViewController implements Initializable {
     private void buscarPrecio(ActionEvent event) {
         
         buscarPrecioMetodo();
+        llenarBackup();
     }
 
     public void buscarPrecioMetodo(){
@@ -1094,7 +1097,6 @@ public class FacturacionViewController implements Initializable {
             noti.darkStyle();
             noti.show();
         }
-        llenarBackup();
     }catch(SQLException ex){
         ex.printStackTrace();
     } 
@@ -1631,7 +1633,7 @@ public class FacturacionViewController implements Initializable {
     
  
   public void llenarBackup(){
-        String sql="{call AgregarBackupFacturacionF('"+txtFacturaId.getText()+"','"+txtSerieId.getText()+"')}";
+        String sql="{call AgregarBackupFacturacionF('"+txtFacturaId.getText()+"','"+txtSerieId.getText()+"','"+cmbTipoFactura.getValue()+"')}";
         String sqlCliente="{call SpAgregarBackupFacturacionC('"+txtNitCliente.getValue()+"','"+txtNombreCliente.getText()+"','"+txtDireccionCliente.getText()+"')}";
         String sqlProducto="{call SpAgregarBackupFacturacionP('"+cmbNombreProducto.getValue()+"','"+txtPrecioProducto.getText()+"','"+txtExistencias.getText()+"','"+txtProveedor.getText()+"','"+txtCantidadProducto.getText()+"')}";
       
@@ -1643,7 +1645,9 @@ public class FacturacionViewController implements Initializable {
             psClientes.execute();
 
             PreparedStatement psProductos = Conexion.getIntance().getConexion().prepareCall(sqlProducto);
-            psProductos.execute(); 
+            psProductos.execute();
+            
+            System.out.println(sqlCliente);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -1666,8 +1670,11 @@ public class FacturacionViewController implements Initializable {
                 );
                 lista.add(x, rs.getString("serieFac")
                 );
+                lista.add(x, rs.getString("tipoFac")
+                );                
                 numeroFac = rs.getString("numeroFac");
                 serieFac = rs.getString("serieFac");
+                numeroFacB = rs.getString("tipoFac");
                  x++;
             }
             
@@ -1741,7 +1748,7 @@ public class FacturacionViewController implements Initializable {
     public void SetDatosBackUp(){    
         txtFacturaId.setText(numeroFac);
         txtSerieId.setText(serieFac);
-        
+        cmbTipoFactura.setValue(numeroFacB);
         
         //Clientes
         txtNitCliente.setValue(nitCliente);
