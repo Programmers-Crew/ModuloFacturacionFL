@@ -125,3 +125,94 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
+
+#Cambio solicitado 05-05-21
+#Guardar datos de factura, clientes y prod en un backup.
+
+create table BackupFacturacionF(
+	idDetalle int auto_increment,
+    numeroFac varchar(50) ,
+    serieFac varchar(50),
+    PRIMARY KEY (idDetalle)
+);
+
+create table BackupFacturacionC(
+	idDetalleCliente int auto_increment,
+    nitCliente varchar(19),
+    nombreCliente varchar(50),
+	direccionCliente varchar(100),
+    PRIMARY KEY (idDetalleCliente)
+);
+
+create table BackupFacturacionP(
+	idDetalleProductos int auto_increment,
+    nombreProducto varchar(50),
+	precioProducto varchar(50),
+    existenciasProducto varchar(50),
+    proveedorProducto varchar(50),
+    cantidadProducto varchar(50),
+    PRIMARY KEY (idDetalleProductos)
+);
+
+#backUp Fac
+DELIMITER $$
+	create procedure AgregarBackupFacturacionF(numero varchar(50), serie varchar(50))
+		begin 
+			insert into BackupFacturacionF(numeroFac,serieFac)
+				values(numero, serie);
+        end $$
+DELIMITER ;
+
+
+DELIMITER $$
+	create procedure ListarBackupFacturacionF()
+		begin 
+			select numeroFac,serieFac
+				from BackupFacturacionF;
+        end $$
+DELIMITER ;
+
+#backuo cliente 
+DELIMITER $$
+	create procedure SpAgregarBackupFacturacionC(nit varchar(19), nombre varchar(50), direccion varchar(100))
+		begin 
+			insert into BackupFacturacionC(nitCliente,nombreCliente,direccionCliente)
+				values(nit, nombre, direccion);
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpListarBackupFacturacionC()
+		begin 
+			select nitCliente,nombreCliente,direccionCliente
+				from BackupFacturacionC;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpAgregarBackupFacturacionP(nombre varchar(50), precio varchar(50), existencia varchar(50), proveedor varchar(50), cantidad varchar(50))
+		begin 
+			insert into BackupFacturacionP(nombreProducto,precioProducto,existenciasProducto,proveedorProducto,cantidadProducto)
+            values(nombre, precio, existencia, proveedor, cantidad);
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpListarBackupFacturacionP()
+		begin 
+			select nombreProducto,precioProducto,existenciasProducto,proveedorProducto,cantidadProducto
+            from BackupFacturacionP;
+        end $$
+DELIMITER ;
+
+#Eliminar todos los backUp
+DELIMITER $$
+	create procedure SpElimarBackFCP()
+		begin
+			delete from backupfacturacionp;
+            delete from backupfacturacionf;
+            delete from backupfacturacionc;
+        end $$
+DELIMITER ;
+SET SQL_SAFE_UPDATES = 0;
+call SpElimarBackFCP();

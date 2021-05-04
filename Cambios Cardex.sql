@@ -5,7 +5,7 @@ drop procedure SpGenerarCardexProd;
 
 drop procedure SpGenerarCardexFechaProd;
 drop procedure SpGenerarCardexFecha;
-
+drop procedure SpEliminarBackup;
 SET SQL_SAFE_UPDATES = 0;
 
 DELIMITER $$
@@ -117,4 +117,16 @@ DELIMITER $$
             order by c.idCardex desc
 ;
         end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure SpEliminarBackUp
+DELIMITER ;
+
+
+DELIMITER $$
+	create procedure SpEliminarBackup()
+		BEGIN 
+			delete from facturadetallebackup;
+		END $$
 DELIMITER ;
