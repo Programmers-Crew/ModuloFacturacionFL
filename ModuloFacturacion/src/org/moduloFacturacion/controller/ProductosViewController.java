@@ -333,6 +333,7 @@ public class ProductosViewController implements Initializable {
         llenarComboCategoria();
         llenarComboProveedores();
         llenarComboTipoProductos();
+        
         cmbCategoriaProducto.setValue("");
         cmbProveedorProducto.setValue("");
         new AutoCompleteComboBoxListener(cmbCategoriaProducto);

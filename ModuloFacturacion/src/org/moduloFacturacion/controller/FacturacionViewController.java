@@ -366,8 +366,18 @@ public class FacturacionViewController implements Initializable {
 
     public Operacion cancelar = Operacion.NINGUNO;
     
-
+    String numeroFac = "";
+    String serieFac = "";
     
+    String nitCliente = "";
+    String nombreCliente = "";
+    String direccionCliente = "";
+    
+    String nombreProducto = "";
+    String precioProducto = "";
+    String existenciasProducto = "";
+    String proveedorProducto = "";
+    String cantidadProducto = "";
     // ==================== VARIABLES DE FACTURACION
     public Operacion tipoOperacionFacturacion = Operacion.NINGUNO; 
 
@@ -379,6 +389,8 @@ public class FacturacionViewController implements Initializable {
     boolean comprobarCliente = false;
     Notifications noti = Notifications.create();
     String codigoProducto;
+    
+    
     
     // ================= VARIABLES PRA BUSCAR FACTURAS
         public Operacion tipoOperacionBusquedaFacturas = Operacion.NINGUNO; 
@@ -515,6 +527,10 @@ public class FacturacionViewController implements Initializable {
         txtSerieId.setText("");
         txtSerieId.setEditable(true);
         date2 = LocalDate.now();
+        cargarBackUpF();
+        cargarBackUpC();
+        cargarBackUpP();
+        SetDatosBackUp();
     }    
 
     @FXML
@@ -575,6 +591,8 @@ public class FacturacionViewController implements Initializable {
         cmbNombreProducto.setValue("");
         txtPrecioProducto.setText("");
         txtCantidadProducto.setText("");
+        txtExistencias.setText("");
+        txtProveedor.setText("");
     }
     
     public void limpiarTextCliente(){
@@ -1076,6 +1094,7 @@ public class FacturacionViewController implements Initializable {
             noti.darkStyle();
             noti.show();
         }
+        llenarBackup();
     }catch(SQLException ex){
         ex.printStackTrace();
     } 
@@ -1361,16 +1380,20 @@ public class FacturacionViewController implements Initializable {
                 comprobarClienteExistente();
                 txtLetrasPrecio.setText("");
                  imprimir();
-                String sql = "{call SpEliminarBackup()}";  
+                String sql = "{call SpEliminarBackup()}"; 
+                String sqlBackUp = "{call SpElimarBackFCP()}"; 
                 if(guardarFactura()==true){
                     limpiarTextCliente();
                    limpiarTextEfectivo();
                    totalFactura = 0;
                 }
+                
                  try{
                     PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);            
                     ps.execute();
-
+                    
+                    PreparedStatement psBackUpFCP = Conexion.getIntance().getConexion().prepareCall(sqlBackUp);            
+                    psBackUpFCP.execute();
                  
                  }catch(Exception e){
                      e.printStackTrace();
@@ -1602,7 +1625,136 @@ public class FacturacionViewController implements Initializable {
         }
         txtCambio.setText(String.valueOf(total));
     }
+    
+    
+    //BackUp de facturación, productos y clientes
+    
+ 
+  public void llenarBackup(){
+        String sql="{call AgregarBackupFacturacionF('"+txtFacturaId.getText()+"','"+txtSerieId.getText()+"')}";
+        String sqlCliente="{call SpAgregarBackupFacturacionC('"+txtNitCliente.getValue()+"','"+txtNombreCliente.getText()+"','"+txtDireccionCliente.getText()+"')}";
+        String sqlProducto="{call SpAgregarBackupFacturacionP('"+cmbNombreProducto.getValue()+"','"+txtPrecioProducto.getText()+"','"+txtExistencias.getText()+"','"+txtProveedor.getText()+"','"+txtCantidadProducto.getText()+"')}";
+      
+        try{
+            PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+            ps.execute();
+            
+            PreparedStatement psClientes = Conexion.getIntance().getConexion().prepareCall(sqlCliente);
+            psClientes.execute();
 
+            PreparedStatement psProductos = Conexion.getIntance().getConexion().prepareCall(sqlProducto);
+            psProductos.execute(); 
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+  }
+
+  @FXML
+  public void llenarBackupMetodo(KeyEvent event){
+      llenarBackup();
+  }
+  
+    private void cargarBackUpF() {    
+        ArrayList<String> lista = new ArrayList();
+        String sql = "{call ListarBackupFacturacionF()}";                        
+        int x=0;
+            try{
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("numeroFac")
+                );
+                lista.add(x, rs.getString("serieFac")
+                );
+                numeroFac = rs.getString("numeroFac");
+                serieFac = rs.getString("serieFac");
+                 x++;
+            }
+            
+            
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    private void cargarBackUpC() {    
+        ArrayList<String> lista = new ArrayList();
+        String sql = "{call SpListarBackupFacturacionC()}";                        
+        int x=0;
+            try{
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("nitCliente")
+                );
+                lista.add(x, rs.getString("nombreCliente")
+                );
+                lista.add(x, rs.getString("direccionCliente")
+                );
+                
+                nitCliente = rs.getString("nitCliente");
+                nombreCliente = rs.getString("nombreCliente");
+                direccionCliente = rs.getString("direccionCliente");
+                 x++;
+            }
+            
+            
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    private void cargarBackUpP() {    
+        ArrayList<String> lista = new ArrayList();
+        String sql = "{call SpListarBackupFacturacionP()}";                        
+        int x=0;
+            try{
+                PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);
+                ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                lista.add(x, rs.getString("nombreProducto")
+                );
+                lista.add(x, rs.getString("precioProducto")
+                );
+                lista.add(x, rs.getString("existenciasProducto")
+                );
+                lista.add(x, rs.getString("proveedorProducto")
+                );
+                lista.add(x, rs.getString("cantidadProducto")
+                );
+                
+                nombreProducto = rs.getString("nombreProducto");
+                precioProducto = rs.getString("precioProducto");
+                existenciasProducto = rs.getString("existenciasProducto");
+                proveedorProducto = rs.getString("proveedorProducto");
+                cantidadProducto = rs.getString("cantidadProducto");
+
+                x++;
+            }
+            
+            
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public void SetDatosBackUp(){    
+        txtFacturaId.setText(numeroFac);
+        txtSerieId.setText(serieFac);
+        
+        
+        //Clientes
+        txtNitCliente.setValue(nitCliente);
+        txtNombreCliente.setText(nombreCliente);
+        txtDireccionCliente.setText(direccionCliente);
+        
+        //Productos
+        cmbNombreProducto.setValue(nombreProducto);
+        txtPrecioProducto.setText(precioProducto);
+        txtExistencias.setText(existenciasProducto);
+        txtProveedor.setText(proveedorProducto);
+        txtCantidadProducto.setText(cantidadProducto);
+    }
 // ================================ CODIGO BUSQUEDA FACTURAS
     
     public ObservableList<FacturasBuscadas> getFacturasBuscadas(){
