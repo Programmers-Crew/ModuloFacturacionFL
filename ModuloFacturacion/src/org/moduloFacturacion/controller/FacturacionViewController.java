@@ -536,6 +536,13 @@ public class FacturacionViewController implements Initializable {
 
     @FXML
     private void regresar(MouseEvent event) throws IOException {
+                try{
+            llenarBackup();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        
          String menu = "org/moduloFacturacion/view/menuPrincipal.fxml";
         cambioScene.Cambio(menu,(Stage) anchor.getScene().getWindow());
     }
