@@ -53,6 +53,7 @@ import org.moduloFacturacion.bean.Cardex;
 import org.moduloFacturacion.bean.Creditos;
 import org.moduloFacturacion.bean.EstadoProductos;
 import org.moduloFacturacion.bean.GenerarExcel;
+import org.moduloFacturacion.bean.GenerarExcelCardex;
 import org.moduloFacturacion.bean.InventarioProductos;
 import org.moduloFacturacion.bean.ValidarStyle;
 import org.moduloFacturacion.db.Conexion;
@@ -97,7 +98,8 @@ public class InventarioViewController implements Initializable {
     private JFXButton generarExcel;
     @FXML
     private JFXButton btnCargarCardex;
-
+    @FXML
+    private JFXButton generar;
 
 
 
@@ -2030,7 +2032,7 @@ public class InventarioViewController implements Initializable {
     public ObservableList<Cardex> getCardex(){
         ArrayList<Cardex> lista = new ArrayList();
         String sql = "{call SpGenerarCardex('"+cmbFiltroBuscarCardex.getValue()+"')}"; 
-        System.out.println(sql);
+        
         int x=0;
         
         try{
@@ -2057,7 +2059,6 @@ public class InventarioViewController implements Initializable {
     
     public void cargarCreditosBuscados(){
         tblCardex.setItems(getCardex());
-        System.out.println("cargar");
         colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
@@ -2187,7 +2188,6 @@ public class InventarioViewController implements Initializable {
     
     public void cargarCreditosBuscadosFechasProd(){
         tblCardex.setItems(getCardexFechasProd());
-        System.out.println("cargar");
         colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
@@ -2221,18 +2221,18 @@ public class InventarioViewController implements Initializable {
         
     @FXML
     public void buscarCardex(){
-            if(cmbFiltroCardex.getValue().equals("CÓDIGO")){
-                System.out.println("aqui 1");
-                cargarCreditosBuscados();                
-            }else if(cmbFiltroCardex.getValue().equals("PRODUCTO")){
-                cargarCreditosBuscadosProd();
+    
+        if(cmbFiltroCardex.getValue().equals("CÓDIGO")){
+            cargarCreditosBuscados();                
+        }else if(cmbFiltroCardex.getValue().equals("PRODUCTO")){
+            cargarCreditosBuscadosProd();
         }
+        
     }
     
     @FXML
     public void btnBuscarCardex(){
             if(cmbFiltroCardex.getValue().equals("CÓDIGO")){
-                System.out.println("aqui 1");
                 cargarCreditosBuscadosFechas();                
             }else if(cmbFiltroCardex.getValue().equals("PRODUCTO")){
                 cargarCreditosBuscadosFechasProd();
@@ -2319,13 +2319,20 @@ public class InventarioViewController implements Initializable {
         if(txtfechaInicioCardex.getValue().equals("")){
             imprimirCardex();
             
-            System.out.println("aqui 1");
         }else{
             imprimirCardexFechas();
-            System.out.println("aqui dos");
         }
     }
     
+    @FXML
+    private void btnGenerarCardex(ActionEvent event) throws IOException {
+        GenerarExcelCardex ge = new GenerarExcelCardex();
+        if(!listaCardex.isEmpty()){
+            ge.generar(listaCardex, cmbFiltroBuscarCardex.getValue());
+        }
+    }
+
+
 }
 
 
