@@ -8,16 +8,16 @@ public class Cardex {
     private Date fechaCardex;
     private String noFacCardex;
     private String idTipoDesc;
-    private Integer saldoCardex;
-    private Integer entradaCardex;
-    private Integer totalCardex;
+    private Double saldoCardex;
+    private Double entradaCardex;
+    private Double totalCardex;
     private String productoDesc;
     private String DescTipoDocumento;
     
     public Cardex() {
     }
 
-    public Cardex(Date fechaCardex, String noFacCardex, String idTipoDesc, Integer saldoCardex, Integer entradaCardex, Integer totalCardex, String productoDesc, String DescTipoDocumento) {
+    public Cardex(Date fechaCardex, String noFacCardex, String idTipoDesc, Double saldoCardex, Double entradaCardex, Double totalCardex, String productoDesc, String DescTipoDocumento) {
         this.fechaCardex = fechaCardex;
         this.noFacCardex = noFacCardex;
         this.idTipoDesc = idTipoDesc;
@@ -53,19 +53,19 @@ public class Cardex {
         this.idTipoDesc = idTipoDesc;
     }
 
-    public Integer getSaldoCardex() {
+    public Double getSaldoCardex() {
         return saldoCardex;
     }
 
-    public void setSaldoCardex(Integer saldoCardex) {
+    public void setSaldoCardex(Double saldoCardex) {
         this.saldoCardex = saldoCardex;
     }
 
-    public Integer getTotalCardex() {
+    public Double getTotalCardex() {
         return totalCardex;
     }
 
-    public void setTotalCardex(Integer totalCardex) {
+    public void setTotalCardex(Double totalCardex) {
         this.totalCardex = totalCardex;
     }
 
@@ -85,11 +85,11 @@ public class Cardex {
         this.DescTipoDocumento = DescTipoDocumento;
     }
 
-    public Integer getEntradaCardex() {
+    public Double getEntradaCardex() {
         return entradaCardex;
     }
 
-    public void setEntradaCardex(Integer entradaCardex) {
+    public void setEntradaCardex(Double entradaCardex) {
         this.entradaCardex = entradaCardex;
     }
             

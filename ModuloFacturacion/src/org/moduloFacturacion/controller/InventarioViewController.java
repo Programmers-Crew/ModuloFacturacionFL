@@ -43,7 +43,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.moduloFacturacion.bean.Animations;
@@ -150,7 +149,7 @@ public class InventarioViewController implements Initializable {
     @FXML
     private TableColumn<InventarioProductos, String> colCodigoProductoInventario;
     @FXML
-    private TableColumn<InventarioProductos, Integer> colCantidadInventario;
+    private TableColumn<InventarioProductos, Double> colCantidadInventario;
     @FXML
     private TableColumn<InventarioProductos, String> colProveedorInventario;
     @FXML
@@ -264,7 +263,7 @@ public class InventarioViewController implements Initializable {
             while(rs.next()){
                 lista.add(new InventarioProductos(
                             rs.getString("productoId"),
-                            rs.getInt("inventarioProductoCant"),
+                            rs.getDouble("inventarioProductoCant"),
                             rs.getString("proveedorNombre"),
                             rs.getString("productoDesc"),
                             rs.getString("estadoProductoDesc"),
@@ -362,7 +361,7 @@ public class InventarioViewController implements Initializable {
             while(rs.next()){
                 lista.add(new InventarioProductos(
                             rs.getString("productoId"),
-                            rs.getInt("inventarioProductoCant"),
+                            rs.getDouble("inventarioProductoCant"),
                             rs.getString("proveedorNombre"),
                             rs.getString("productoDesc"),
                             rs.getString("estadoProductoDesc"),
@@ -860,7 +859,7 @@ public class InventarioViewController implements Initializable {
             String sql = "call SpActualizarCreditoInventario('"+montoTotal+"','"+nofac+"')";
             String sqlUpdate = "call SpUpdateDetalleCredito('"+nofac+"')";
             String sqlCardex = "{call SpAgregarCardexFacUpdate('"+txtProductoInventario.getText()+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+noFactura.getText()+"','"+documento+"')}";  
-
+            System.out.println(sqlCardex);
         try{
             
             PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);            
@@ -1066,8 +1065,7 @@ public class InventarioViewController implements Initializable {
                 nuevoInventario.setProductoId(cmbCodigoProductoInventario.getValue());
                 nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
                 nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
-               System.out.println("aqui1");
-
+               
                    proveedorName = txtProveedorInventario.getText();
                    System.out.println(proveedorName);
                    String sql = "{call SpAgregarInventarioProductos('"+nuevoInventario.getInventarioProductoCant()+"','"+ nuevoInventario.getProductoId()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
@@ -1098,7 +1096,7 @@ public class InventarioViewController implements Initializable {
            }else{
                    InventarioProductos nuevoInventario = new InventarioProductos();
                    nuevoInventario.setProductoId(cmbCodigoProductoInventario.getValue());
-                   nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
+                   nuevoInventario.setInventarioProductoCant(Double.parseDouble(txtCantidadInventario.getText()));
 
                    String sql = "{call SpSumaProductos('"+nuevoInventario.getProductoId()+"','"+ nuevoInventario.getInventarioProductoCant()+"')}";
                    tipoOperacionInventario = Operacion.SUMAR;
@@ -1189,7 +1187,7 @@ public class InventarioViewController implements Initializable {
     @FXML
     private void btnEditar(MouseEvent event) throws SQLException {
        InventarioProductos nuevoInventario = new InventarioProductos();
-       nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
+       nuevoInventario.setInventarioProductoCant(Double.parseDouble(txtCantidadInventario.getText()));
        nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
 
        String sql = "{call SpActualizarInventarioProductos('"+codigoProducto+"','"+nuevoInventario.getInventarioProductoCant()+"','"+buscarCodigoEstado(nuevoInventario.getEstadoProductoDesc())+"')}";
@@ -1909,16 +1907,21 @@ public class InventarioViewController implements Initializable {
       @FXML
     private void validarCantidadProducto(KeyEvent event) {
          char letra = event.getCharacter().charAt(0);
-        
+        if(letra != '.'){
+            System.out.println("hola");
+        }
         if(!Character.isDigit(letra)){
-            if(!Character.isWhitespace(letra)){
-                event.consume();
-            }else{
-                if(Character.isSpaceChar(letra)){
+            
+            if(letra != '.'){
+                if(!Character.isWhitespace(letra)){
                     event.consume();
+                }else{
+                    if(Character.isSpaceChar(letra)){
+                        event.consume();
+                    }
                 }
             }
-           
+            
         }
     }
     
@@ -2043,9 +2046,9 @@ public class InventarioViewController implements Initializable {
                             rs.getDate("fechaCardex"),
                             rs.getString("noFacCardex"),
                             rs.getString("idTipoDesc"),
-                            rs.getInt("saldoCardex"),
-                            rs.getInt("entradaCardex"),
-                            rs.getInt("totalCardex"),
+                            rs.getDouble("saldoCardex"),
+                            rs.getDouble("entradaCardex"),
+                            rs.getDouble("totalCardex"),
                             rs.getString("productoDesc"),
                             rs.getString("DescTipoDocumento")
                 ));
@@ -2084,9 +2087,9 @@ public class InventarioViewController implements Initializable {
                             rs.getDate("fechaCardex"),
                             rs.getString("noFacCardex"),
                             rs.getString("idTipoDesc"),
-                            rs.getInt("saldoCardex"),
-                            rs.getInt("entradaCardex"),                        
-                            rs.getInt("totalCardex"),
+                            rs.getDouble("saldoCardex"),
+                            rs.getDouble("entradaCardex"),                        
+                            rs.getDouble("totalCardex"),
                             rs.getString("productoDesc"),
                             rs.getString("DescTipoDocumento")                                                    
 
@@ -2128,9 +2131,9 @@ public class InventarioViewController implements Initializable {
                             rs.getDate("fechaCardex"),
                             rs.getString("noFacCardex"),
                             rs.getString("idTipoDesc"),
-                            rs.getInt("saldoCardex"),
-                            rs.getInt("entradaCardex"),                        
-                            rs.getInt("totalCardex"),
+                            rs.getDouble("saldoCardex"),
+                            rs.getDouble("entradaCardex"),                        
+                            rs.getDouble("totalCardex"),
                             rs.getString("productoDesc"),
                             rs.getString("DescTipoDocumento")
 
@@ -2171,9 +2174,9 @@ public class InventarioViewController implements Initializable {
                             rs.getDate("fechaCardex"),
                             rs.getString("noFacCardex"),
                             rs.getString("idTipoDesc"),
-                            rs.getInt("saldoCardex"),
-                            rs.getInt("entradaCardex"),                        
-                            rs.getInt("totalCardex"),
+                            rs.getDouble("saldoCardex"),
+                            rs.getDouble("entradaCardex"),                        
+                            rs.getDouble("totalCardex"),
                             rs.getString("productoDesc"),
                             rs.getString("DescTipoDocumento")
 

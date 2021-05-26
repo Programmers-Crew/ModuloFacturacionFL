@@ -5,7 +5,7 @@ public class FacturacionDetalleBackup {
     
     private int facturaDetalleIdBackup;
     private String productoDesc;
-    private int cantidadBackup;
+    private double cantidadBackup;
     private double productoPrecio;
     private double totalParcialBackup;
     private String productoId;
@@ -13,7 +13,7 @@ public class FacturacionDetalleBackup {
     public FacturacionDetalleBackup() {
     }
 
-    public FacturacionDetalleBackup(int facturaDetalleIdBackup, String productoDesc, int cantidadBackup, double productoPrecio, double totalParcialBackup, String productoId) {
+    public FacturacionDetalleBackup(int facturaDetalleIdBackup, String productoDesc, double cantidadBackup, double productoPrecio, double totalParcialBackup, String productoId) {
         this.facturaDetalleIdBackup = facturaDetalleIdBackup;
         this.productoDesc = productoDesc;
         this.cantidadBackup = cantidadBackup;
@@ -47,11 +47,11 @@ public class FacturacionDetalleBackup {
         this.productoDesc = productoDesc;
     }
 
-    public int getCantidadBackup() {
+    public double getCantidadBackup() {
         return cantidadBackup;
     }
 
-    public void setCantidadBackup(int cantidadBackup) {
+    public void setCantidadBackup(double cantidadBackup) {
         this.cantidadBackup = cantidadBackup;
     }
 
