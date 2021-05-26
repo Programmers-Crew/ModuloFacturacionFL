@@ -487,7 +487,7 @@ public class FacturacionViewController implements Initializable {
     @FXML
      TableColumn<ProductoBuscado, String> colProductoBuscado;
     @FXML
-     TableColumn<ProductoBuscado, Integer> colCantidadBuscada;
+     TableColumn<ProductoBuscado, Double> colCantidadBuscada;
     @FXML
      TableColumn<ProductoBuscado, Double> colPrecioUnitBuscado;
     @FXML
@@ -1598,7 +1598,15 @@ public class FacturacionViewController implements Initializable {
            char letra = event.getCharacter().charAt(0);
         
         if(!Character.isDigit(letra)){
-            event.consume();
+           if(letra != '.'){
+                if(!Character.isWhitespace(letra)){
+                    event.consume();
+                }else{
+                    if(Character.isSpaceChar(letra)){
+                        event.consume();
+                    }
+                }
+            }
         }else{
         
         }
@@ -1989,7 +1997,7 @@ public class FacturacionViewController implements Initializable {
             while(rs.next()){
                 listaProducto.add(new ProductoBuscado(
                             rs.getString("productoDesc"),
-                            rs.getInt("cantidad"),
+                            rs.getDouble("cantidad"),
                             rs.getDouble("productoPrecio")
                 ));
             }
