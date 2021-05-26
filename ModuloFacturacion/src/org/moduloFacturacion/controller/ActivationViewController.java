@@ -40,9 +40,7 @@ public class ActivationViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         prefsValidacion.put("act", "771495f765ad06279c51dbbade9400ff");
-        
         prefsValidacion.put("program", "false");
-
     }    
 
 

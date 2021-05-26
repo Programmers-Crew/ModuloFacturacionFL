@@ -217,3 +217,14 @@ DELIMITER $$
 DELIMITER ;
 SET SQL_SAFE_UPDATES = 0;
 call SpElimarBackFCP();
+
+DELIMITER $$	
+	create procedure SpBuscarProveedorCardex(nombre varchar(50))
+		begin 
+			select proveedorNombre
+				from proveedores as p
+					inner join productos as pr
+						on pr.productoId = p.proveedorId
+			where (productoDesc = nombre) and (productoId = nombre );
+        end $$
+DELIMITER 

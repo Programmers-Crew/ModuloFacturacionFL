@@ -508,13 +508,10 @@ public class creditosController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
        cargarCreditos();
        cargarCombo();
-       anuncio();
-        validar.validarView(menu.prefs.get("dark", "root"), anchorCreditos);
+       validar.validarView(menu.prefs.get("dark", "root"), anchorCreditos);
        cmbFiltroCredito.setValue("");
        cmbBuscar.setValue("");
        
-//        Thread hilo = new Thread(runnable); 
-//	hilo.start(); 
     }    
     
 

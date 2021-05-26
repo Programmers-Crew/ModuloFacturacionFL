@@ -156,6 +156,11 @@
                                                 <Label layoutX="26.0" layoutY="131.0" text="EXISTENCIAS:" AnchorPane.leftAnchor="21.0" AnchorPane.topAnchor="131.0" />
                                                 <JFXTextField fx:id="txtProveedor" layoutX="22.0" layoutY="189.0" prefHeight="26.0" prefWidth="246.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="205.0" />
                                                 <Label layoutX="25.0" layoutY="184.0" text="PROVEEDOR:" AnchorPane.leftAnchor="21.0" />
+                                                <JFXButton fx:id="btnActualizar" buttonType="RAISED" layoutX="28.0" layoutY="339.0" onMouseClicked="#actualizarDatos" prefHeight="27.0" prefWidth="72.0" styleClass="boton" text="ACTUALIZAR" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="28.0">
+                                                   <font>
+                                                      <Font size="11.0" />
+                                                   </font>
+                                                </JFXButton>
                                              </children>
                                              <padding>
                                                 <Insets left="5.0" top="-3.0" />

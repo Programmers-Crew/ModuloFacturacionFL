@@ -331,6 +331,8 @@ public class FacturacionViewController implements Initializable {
     private TextField logintudDireccion;
     @FXML
     private TextField logintudNombre;
+    @FXML
+    private JFXButton btnActualizar;
 
 
     
@@ -564,8 +566,7 @@ public class FacturacionViewController implements Initializable {
         grid.add(label1, 1, 1);
         grid.add(fechaInicio, 2, 1);
 
- 
-        
+         
         dialog.getDialogPane().setContent(grid);
 
         ButtonType buttonTypeOk = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
@@ -1107,7 +1108,6 @@ public class FacturacionViewController implements Initializable {
     }catch(SQLException ex){
         ex.printStackTrace();
     } 
-
   }
 
   public void ValidacionFecha(){
@@ -1517,8 +1517,9 @@ public class FacturacionViewController implements Initializable {
                 ex.printStackTrace();
             }
         }
-       
     }
+    
+    
 @FXML
     private void btnEliminar(MouseEvent event) {
 
@@ -1660,7 +1661,6 @@ public class FacturacionViewController implements Initializable {
         }
   }
 
-  @FXML
   public void llenarBackupMetodo(KeyEvent event){
       llenarBackup();
   }
@@ -1769,6 +1769,28 @@ public class FacturacionViewController implements Initializable {
         txtProveedor.setText(proveedorProducto);
         txtCantidadProducto.setText(cantidadProducto);
     }
+    
+    
+    @FXML
+    private void actualizarDatos(MouseEvent event) throws IOException {
+       
+        txtFacturaId.setText("");
+        txtSerieId.setText("");
+        cmbTipoFactura.setValue("");
+        txtNitCliente.setValue("");
+        txtNombreCliente.setText("");
+        txtDireccionCliente.setText("");
+        cmbNombreProducto.setValue("");
+        txtPrecioProducto.setText("");
+        txtExistencias.setText("");
+        txtProveedor.setText("");
+        txtCantidadProducto.setText("");
+        txtTotalFactura.setText("");
+        txtEfectivo.setText("");
+        txtCambio.setText("");
+        txtLetrasPrecio.setText("");
+    }
+    
 // ================================ CODIGO BUSQUEDA FACTURAS
     
     public ObservableList<FacturasBuscadas> getFacturasBuscadas(){
