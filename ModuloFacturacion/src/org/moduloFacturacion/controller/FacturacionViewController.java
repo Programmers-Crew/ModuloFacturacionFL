@@ -1006,7 +1006,7 @@ public class FacturacionViewController implements Initializable {
         
    
        String sql = "{call SpBuscarInventarioProductos('"+valor1+"')}";
-       int cantidad=0;
+       double cantidad=0;
        boolean valor=false;
        String estado="";
        try{
@@ -1054,6 +1054,7 @@ public class FacturacionViewController implements Initializable {
                     noti.darkStyle();   
                     noti.show();
                     valor = true;
+                    System.out.println(total);
                     sql1="{call SpActualizarInventarioProductosFacturacion('"+valor1+"','"+total+"','"+validarEstadoProducto("AGOTADO")+"')}";
                }else{
                    sql1="{call SpActualizarInventarioProductosFacturacion('"+valor1+"','"+total+"','"+validarEstadoProducto(estado)+"')}";
