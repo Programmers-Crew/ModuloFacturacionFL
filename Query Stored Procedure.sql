@@ -1640,6 +1640,8 @@ DELIMITER $$
 					on p.proveedorId = pr.proveedorId
 				inner join creditos as c
 					on cd.idCreditoDetalle = c.creditoDetalle
-				where c.noFactura = facNo;
+				where c.noFactura = facNo
+                group by  p.productoDesc;
             end $$
 DELIMITER ;
+
