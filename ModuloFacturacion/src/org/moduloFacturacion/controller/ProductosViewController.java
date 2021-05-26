@@ -1128,7 +1128,7 @@ public class ProductosViewController implements Initializable {
             String sql = "call SpActualizarCreditoInventario('"+montoTotal+"','"+nofac+"')";
             String sqlUpdate = "call SpUpdateDetalleCredito('"+nofac+"')";
             String sqlCardex = "{call SpAgregarCardexFacUpdate('"+txtNombreProducto.getText()+"','"+tipo+"','"+txtcantidad.getText()+"','"+txtFactura.getText()+"','"+documento+"')}";  
-
+            System.out.println(sqlCardex);
         try{
             
             PreparedStatement ps = Conexion.getIntance().getConexion().prepareCall(sql);            

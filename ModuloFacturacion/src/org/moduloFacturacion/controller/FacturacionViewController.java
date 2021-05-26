@@ -436,7 +436,7 @@ public class FacturacionViewController implements Initializable {
     @FXML
     private TableColumn<FacturacionDetalleBackup, String> colDesProductoBackUp;
     @FXML
-    private TableColumn<FacturacionDetalleBackup, Integer> colCantidadProductoBackUp;
+    private TableColumn<FacturacionDetalleBackup, Double> colCantidadProductoBackUp;
     @FXML
     private TableColumn<FacturacionDetalleBackup, Double> colPrecioProductoBackUp;
     @FXML
@@ -913,7 +913,7 @@ public class FacturacionViewController implements Initializable {
                 lista.add(new FacturacionDetalleBackup(
                     rs.getInt("facturaDetalleIdBackup"),
                     rs.getString("productoDesc"),
-                    rs.getInt("cantidadBackup"),
+                    rs.getDouble("cantidadBackup"),
                     rs.getDouble("productoPrecio"),
                     rs.getDouble("totalParcialBackup"),
                     rs.getString("productoId")
@@ -1032,7 +1032,7 @@ public class FacturacionViewController implements Initializable {
        if(estado.equalsIgnoreCase("AGOTADO")){
            valor=false;
        }else{
-           int total = cantidad -Integer.parseInt(txtCantidadProducto.getText());
+           double total = cantidad - Double.parseDouble(txtCantidadProducto.getText());
            
            if(total<0){
                valor = false;
@@ -1164,8 +1164,8 @@ public class FacturacionViewController implements Initializable {
                 if(validarProducto() == true){
                     FacturacionDetalleBackup nuevoBackUp = new FacturacionDetalleBackup();
                    nuevoBackUp.setProductoDesc(cmbNombreProducto.getValue());
-                   nuevoBackUp.setCantidadBackup(Integer.parseInt(txtCantidadProducto.getText()));
-                   nuevoBackUp.setTotalParcialBackup(Double.parseDouble(txtPrecioProducto.getText())*Integer.parseInt(txtCantidadProducto.getText()));
+                   nuevoBackUp.setCantidadBackup(Double.parseDouble(txtCantidadProducto.getText()));
+                   nuevoBackUp.setTotalParcialBackup(Double.parseDouble(txtPrecioProducto.getText())*Double.parseDouble(txtCantidadProducto.getText()));
                    
                    if(cmbTipoFactura.getValue().equals("FACTURA")){
                        documento = 1;
@@ -1432,8 +1432,8 @@ public class FacturacionViewController implements Initializable {
             nuevaFactura.setFacturaDetalleIdBackup(colCodigoFactura.getCellData(index));
             nuevaFactura.setProductoDesc(cmbNombreProducto.getValue());
             
-            nuevaFactura.setCantidadBackup(Integer.parseInt(txtCantidadProducto.getText()));
-            nuevaFactura.setTotalParcialBackup(Double.parseDouble(txtPrecioProducto.getText())*Integer.parseInt(txtCantidadProducto.getText()));
+            nuevaFactura.setCantidadBackup(Double.parseDouble(txtCantidadProducto.getText()));
+            nuevaFactura.setTotalParcialBackup(Double.parseDouble(txtPrecioProducto.getText())*Double.parseDouble(txtCantidadProducto.getText()));
             
             
            String sql = "{call spEditarBackup('"+nuevaFactura.getFacturaDetalleIdBackup()+"','"+buscarCodigoProducto(nuevaFactura.getProductoDesc())+"','"+nuevaFactura.getCantidadBackup()+"','"+nuevaFactura.getTotalParcialBackup()+"')}";
@@ -1469,7 +1469,7 @@ public class FacturacionViewController implements Initializable {
     public void sumarInventario(){
          String codigoProducto1 = buscarCodigoProducto(cmbNombreProducto.getValue());
        String sql = "{call SpBuscarInventarioProductos('"+codigoProducto1+"')}";
-       int cantidad=0;
+       double cantidad=0;
        boolean valor=false;
        String estado="";
        try{
@@ -1477,7 +1477,7 @@ public class FacturacionViewController implements Initializable {
            ResultSet rs = ps.executeQuery();
            
            while(rs.next()){
-               cantidad = rs.getInt("inventarioProductoCant");
+               cantidad = rs.getDouble("inventarioProductoCant");
                estado = rs.getString("estadoProductoDesc");
            }
        }catch(SQLException ex){
@@ -1492,7 +1492,7 @@ public class FacturacionViewController implements Initializable {
        }
        
        String sql1="";
-       int total = cantidad +Integer.parseInt(txtCantidadProducto.getText());
+       double total = cantidad + Double.parseDouble(txtCantidadProducto.getText());
        if(estado.equalsIgnoreCase("AGOTADO")){
            
        }else{

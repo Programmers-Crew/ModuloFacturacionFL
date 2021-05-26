@@ -48,7 +48,7 @@ create table Productos(
 
 create table InventarioProductos(
 	inventarioProductoId int(10) UNSIGNED ZEROFILL primary key auto_increment,
-    inventarioProductoCant int(5)  not null,
+    inventarioProductoCant double  not null,
     productoId varchar(7) not null unique,
     estadoProductoId tinyint(1) not null,
     
@@ -72,7 +72,7 @@ create table Usuarios(
 create table FacturaDetalle(
 	facturaDetalleId int(5) UNSIGNED ZEROFILL primary key,
     productoId varchar(7) not null,
-    cantidad int(5)  not null, 
+    cantidad double  not null, 
     totalParcial decimal(10,2),
 	CONSTRAINT FK_productoFacDetalle FOREIGN KEY (productoId) REFERENCES Productos(productoId)
 );
@@ -81,7 +81,7 @@ create table FacturaDetalle(
 create table FacturaDetalleBackUp(
 	facturaDetalleIdBackup int(5)UNSIGNED ZEROFILL primary key auto_increment ,
     productoIdBackup varchar(7) not null,
-    cantidadBackup int(5)  not null, 
+    cantidadBackup double  not null, 
     totalParcialBackup decimal(10,2) not null,
     
 	CONSTRAINT FK_productoFacDetalleBackup FOREIGN KEY (productoIdBackup) REFERENCES Productos(productoId)
@@ -188,8 +188,8 @@ create table Cardex(
     fechaCardex date,
     noFacCardex varchar(20),
     tipoCardex int(5),
-    saldoCardex int ,   
-    totalCardex int,
+    saldoCardex double ,   
+    totalCardex double,
     producto varchar(8) not null,
     tipoDocumento int(5) not null,
 	PRIMARY KEY (idCardex),

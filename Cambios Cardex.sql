@@ -1,11 +1,11 @@
-alter table Cardex add entradaCardex int;
+alter table Cardex add entradaCardex double;
 
-drop procedure SpGenerarCardexProd;
+drop procedure IF EXISTS SpGenerarCardexProd;
 
 
-drop procedure SpGenerarCardexFechaProd;
-drop procedure SpGenerarCardexFecha;
-drop procedure SpEliminarBackup;
+drop procedure IF EXISTS SpGenerarCardexFechaProd;
+drop procedure IF EXISTS SpGenerarCardexFecha;
+drop procedure IF EXISTS SpEliminarBackup;
 SET SQL_SAFE_UPDATES = 0;
 
 DELIMITER $$
@@ -41,7 +41,7 @@ DELIMITER ;
 
 DROP PROCEDURE IF EXISTS SpAgregarCardexCreditos;
 DELIMITER $$
-	create procedure SpAgregarCardexCreditos(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad int, documento int(5))
+	create procedure SpAgregarCardexCreditos(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad double, documento int(5))
 		begin
 			insert into cardex (fechaCardex,noFacCardex,tipoCardex,entradaCardex, totalCardex, producto, tipoDocumento)
 				select fecha, noFac, tipo,cantidad,ip.inventarioProductoCant, p.productoId, documento
@@ -54,7 +54,7 @@ DELIMITER ;
 
 DROP PROCEDURE IF EXISTS SpAgregarCardexCreUpdate;
 DELIMITER $$
-	create procedure SpAgregarCardexCreUpdate(nombre varchar(60),tipo int, cantidad int, idBuscado int, documento int(5))
+	create procedure SpAgregarCardexCreUpdate(nombre varchar(60),tipo int, cantidad double, idBuscado int, documento int(5))
 		begin
 			insert into cardex (fechaCardex,noFacCardex,tipoCardex,entradaCardex, totalCardex, producto,tipoDocumento )
 				select creditos.creaditoFechaInicio, creditos.noFactura, tipo,cantidad,inventarioproductos.inventarioProductoCant, p.productoId,documento

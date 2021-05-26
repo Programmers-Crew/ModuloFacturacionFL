@@ -503,7 +503,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$	
-	create procedure SpAgregarInventarioProductos(cant int(100), producto varchar(7), estado tinyint(1))
+	create procedure SpAgregarInventarioProductos(cant double, producto varchar(7), estado tinyint(1))
 		BEGIN
 			insert into InventarioProductos(inventarioProductoCant, productoId, estadoProductoId)
 				values(cant, producto, estado);
@@ -511,7 +511,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpActualizarInventarioProductos(idBuscado varchar(7), cant int(100),estado tinyint(1))
+	create procedure SpActualizarInventarioProductos(idBuscado varchar(7), cant double,estado tinyint(1))
 		BEGIN
 			update InventarioProductos
 				set  estadoProductoId = estado
@@ -1130,7 +1130,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-	create procedure SpSumaProductos(idBuscado varchar(7), cantidad int)
+	create procedure SpSumaProductos(idBuscado varchar(7), cantidad double)
 		BEGIN 
 			update inventarioproductos as ip
 					set ip.inventarioProductoCant = ip.inventarioProductoCant + cantidad
@@ -1152,7 +1152,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpRestarProductos(idBuscado varchar(7), cantidad int)
+	create procedure SpRestarProductos(idBuscado varchar(7), cantidad double)
 		BEGIN 
 			update inventarioproductos as ip
 					set ip.inventarioProductoCant = ip.inventarioProductoCant - cantidad
@@ -1304,11 +1304,7 @@ insert into estadoproductos values(1,'EXISTENCIA'),(2,'AGOTADO');
 
 insert into tipocardex values (1,'ENTRADA'), (2,'SALIDA');
 
-insert into estadoproductos values(1,'EXISTENCIA'),(2,'AGOTADO')
-
-insert into tipocardex values (1,'ENTRADA'), (2,'SALIDA')
-
-insert into tipodocumento values(1,'FACTURA'),(2,'ORDEN DE COMPRA'),(3,'CREDITO'),(4,'RESTA')
+insert into tipodocumento values(1,'FACTURA'),(2,'ORDEN DE COMPRA'),(3,'CREDITO'),(4,'RESTA');
 
 DELIMITER $$
 	create procedure Sp_DevolucionProductos(serie varchar(5),idBuscado int)
