@@ -856,9 +856,12 @@ public class InventarioViewController implements Initializable {
      
             Integer tipo = 1;
             Integer documento = 3;
+            Integer idFac = Integer.parseInt(noFactura.getText());                           
+            LocalDate date2 = LocalDate.now();
+        
             String sql = "call SpActualizarCreditoInventario('"+montoTotal+"','"+nofac+"')";
             String sqlUpdate = "call SpUpdateDetalleCredito('"+nofac+"')";
-            String sqlCardex = "{call SpAgregarCardexFacUpdate('"+txtProductoInventario.getText()+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+noFactura.getText()+"','"+documento+"')}";  
+            String sqlCardex = "{call SpAgregarCardexCreditos('"+date2+"','"+txtProductoInventario.getText()+"','"+idFac+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+documento+"')}";  
             System.out.println(sqlCardex);
         try{
             
