@@ -3,13 +3,13 @@ package org.moduloFacturacion.bean;
 public class ProductoBuscado {
     
     private String productoDesc;
-    private int cantidad;
+    private double cantidad;
     private double productoPrecio;
 
     public ProductoBuscado() {
     }
 
-    public ProductoBuscado(String productoDesc, int cantidad, double productoPrecio) {
+    public ProductoBuscado(String productoDesc, double cantidad, double productoPrecio) {
         this.productoDesc = productoDesc;
         this.cantidad = cantidad;
         this.productoPrecio = productoPrecio;
@@ -23,11 +23,11 @@ public class ProductoBuscado {
         this.productoDesc = productoDesc;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 

@@ -1008,7 +1008,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure spEditarBackup(idBuscado INT(5),prodId varchar(7), cantidad INT(5), totalParcial decimal(10,2) )
+	create procedure spEditarBackup(idBuscado INT(5),prodId varchar(7), cantidad double, totalParcial decimal(10,2) )
 		BEGIN
 			update facturadetallebackup
 				set productoIdBackup = prodId, productoIdBackup = prodId, cantidadBackup = cantidad, totalParcialBackup = totalParcial
@@ -1017,7 +1017,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarBackup(productoId varchar(7), cantidad int(11), totalParcial decimal(10,2))
+	create procedure SpAgregarBackup(productoId varchar(7), cantidad double, totalParcial decimal(10,2))
 		BEGIN				
                 insert into facturadetallebackup(productoIdBackup,cantidadBackup,totalParcialBackup)
 				values(productoId, cantidad, totalParcial);
