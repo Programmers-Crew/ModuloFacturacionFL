@@ -454,45 +454,45 @@ public class FacturacionViewController implements Initializable {
     // ============================ PROPIEDADES DE BUSQUEDA DE FACTURAS 
    @FXML
     private TableColumn<FacturasBuscadas, String> colSerieFacturaBuscada;
-    @FXML
+   private @FXML
      TableView<FacturasBuscadas> tblResultadoFactura;
-    @FXML
+   private @FXML
      TableColumn<FacturasBuscadas, String> colNumeroFacBuscado;
-    @FXML
+   private @FXML
      TableColumn<FacturasBuscadas, Double> colTotlalNeto;
-    @FXML
+    private @FXML
      TableColumn<FacturasBuscadas, Double> colTotalIva;
-    @FXML
+   private @FXML
      TableColumn<FacturasBuscadas, Double> colTotalBuscado;
-    @FXML
+   private @FXML
      TableColumn<FacturasBuscadas, Date> colFechaBuscada;
-    @FXML
+   private @FXML
      TableColumn<FacturasBuscadas, String> colTipoFactura;
-    @FXML
+   private @FXML
      JFXComboBox<String> txtBusquedaCodigoFac;
-    @FXML
+   private @FXML
      JFXButton btnBuscarFactura;
-    @FXML
+   private @FXML
      JFXButton btnFiltrarFactura;
-    @FXML
+   private @FXML
      JFXButton btnCargarFacturas;
-    @FXML
+   private @FXML
      JFXDatePicker txtFechaInicio;
-    @FXML
+   private @FXML
      JFXDatePicker txtFechaFinal;
-    @FXML
+   private @FXML
      JFXButton btnCorteDeCaja;
-    @FXML
+   private @FXML
      TableView<ProductoBuscado> tblResultadoProducto;
-    @FXML
+   private @FXML
      TableColumn<ProductoBuscado, String> colProductoBuscado;
-    @FXML
+   private @FXML
      TableColumn<ProductoBuscado, Double> colCantidadBuscada;
-    @FXML
+   private @FXML
      TableColumn<ProductoBuscado, Double> colPrecioUnitBuscado;
-    @FXML
+  private @FXML
      JFXTextField txtResultadoNit;
-    @FXML
+   private @FXML
      JFXTextField txtResultadoNombre;
     DecimalFormat twoDForm = new DecimalFormat("#.00");
     
@@ -534,6 +534,7 @@ public class FacturacionViewController implements Initializable {
         cargarBackUpC();
         cargarBackUpP();
         SetDatosBackUp();
+        btnImprimir.setDisable(true);
     }    
 
     @FXML
@@ -579,6 +580,7 @@ public class FacturacionViewController implements Initializable {
 
         if(result.get() == buttonTypeOk){             
             date2 = fechaInicio.getValue();
+            btnImprimir.setDisable(false);
             System.out.println(date2);
         }else if(result.get() == buttonTypeCancel){
             date2 = LocalDate.now();
@@ -1782,7 +1784,10 @@ public class FacturacionViewController implements Initializable {
     
     @FXML
     private void actualizarDatos(MouseEvent event) throws IOException {
-       
+                String sqlEliminar = "{call SpEliminarBackUpActualizar()}";
+
+        try{
+            
         txtFacturaId.setText("");
         txtSerieId.setText("");
         cmbTipoFactura.setValue("");
@@ -1798,6 +1803,17 @@ public class FacturacionViewController implements Initializable {
         txtEfectivo.setText("");
         txtCambio.setText("");
         txtLetrasPrecio.setText("");
+            
+
+        PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
+        psEliminar.execute();
+            System.out.println(sqlEliminar);
+        
+        }catch(Exception e){
+            e.printStackTrace();
+                        System.out.println(sqlEliminar);
+
+        }         
     }
     
 // ================================ CODIGO BUSQUEDA FACTURAS
