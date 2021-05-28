@@ -93,7 +93,7 @@ DELIMITER $$
 	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad int, documento int(5))
 		begin
 			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto, tipoDocumento)
-				select fecha, noFac, tipo,cantidad,cantidad-ip.inventarioProductoCant, p.productoId, documento
+				select fecha, noFac, tipo,cantidad,ip.inventarioProductoCant, p.productoId, documento
 					from inventarioproductos as ip
 						inner join productos as p
 							on ip.productoId = p.productoId
