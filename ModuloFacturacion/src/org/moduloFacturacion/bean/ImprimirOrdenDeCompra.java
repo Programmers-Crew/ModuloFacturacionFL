@@ -95,9 +95,10 @@ public class ImprimirOrdenDeCompra implements Printable{
         g2d.drawString(nombreCliente, nombrey, nombrex);
         for(int x=0; x< mensaje.size();x++){
             anchofor = anchofor-18;
+            String cant = String.valueOf(mensaje.get(x).getCantidadBackup()).replace(".0", "");
             String totalp = String.valueOf(df.format(mensaje.get(x).getTotalParcialBackup()));
             String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
-            g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),anchofor, largo);
+            g2d.drawString(cant,anchofor, largo);
             g2d.drawString(mensaje.get(x).getProductoDesc(), anchofor , anchoDesc);
             g2d.drawString(String.valueOf(totalp), anchofor, anchoValor);
 
