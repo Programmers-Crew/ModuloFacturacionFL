@@ -427,7 +427,7 @@ public class FacturacionViewController implements Initializable {
     @FXML
     private JFXButton btnImprimir;
     
-    LocalDate date2;
+    LocalDate date2 = LocalDate.now();
     
     MenuPrincipalContoller menu = new MenuPrincipalContoller();
     

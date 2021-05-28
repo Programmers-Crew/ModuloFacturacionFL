@@ -102,9 +102,10 @@ public class ImprimirRespaldoA implements Printable{
         for(int x=0; x< mensaje.size();x++){
             String precio = String.valueOf(df.format(mensaje.get(x).getProductoPrecio()));
             String totalp = String.valueOf(df.format(mensaje.get(x).getCantidad()*mensaje.get(x).getProductoPrecio()));
-
+            String cant = String.valueOf(mensaje.get(x).getCantidad()).replace(".0", "");
+            
             anchofor = anchofor-espaciado;
-            g2d.drawString(String.valueOf(mensaje.get(x).getCantidad()),anchofor, largo);
+            g2d.drawString(cant,anchofor, largo);
             
             if(mensaje.get(x).getProductoDesc().length()>longitudProducto){
                 g2d.drawString(mensaje.get(x).getProductoDesc().substring(0, longitudProducto), anchofor , anchoDesc);

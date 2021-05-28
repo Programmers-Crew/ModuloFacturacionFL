@@ -119,8 +119,9 @@ public class Imprimir implements Printable{
         
             anchofor = anchofor-espaciado;
             String totalp = String.valueOf(df.format(mensaje.get(x).getTotalParcialBackup()));
-            g2d.drawString(String.valueOf(mensaje.get(x).getCantidadBackup()),anchofor, largo);
             
+            String cant = String.valueOf(mensaje.get(x).getCantidadBackup()).replace(".0", "");
+            g2d.drawString(cant,anchofor, largo);
             if(mensaje.get(x).getProductoDesc().length()>longitudProducto){
                 g2d.drawString(mensaje.get(x).getProductoDesc().substring(0, longitudProducto), anchofor , anchoDesc);
             }else{
