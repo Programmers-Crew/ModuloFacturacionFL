@@ -729,8 +729,6 @@ public class FacturacionViewController implements Initializable {
                 try{
                      PreparedStatement sp = Conexion.getIntance().getConexion().prepareCall("{call SpBuscarProductosFac(?)}");
                     sp.setString(1, buscarCodigoProducto(cmbNombreProducto.getValue()));
-                    System.out.println(buscarCodigoProducto(cmbNombreProducto.getValue()));
-                    System.out.println("codigo aqui");
                      ResultSet resultado = sp.executeQuery(); 
                         while(resultado.next()){
                             txtPrecioProducto.setText(resultado.getString("productoPrecio"));
@@ -1178,8 +1176,8 @@ public class FacturacionViewController implements Initializable {
                    
                     String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+buscarNombreProducto(cmbNombreProducto.getValue())+"','"+idFac+"','"+tipo+"','"+txtCantidadProducto.getText()+"','"+documento+"')}";  
                     System.out.println(sqlCardex);
-                    
                    String sql = "{call SpAgregarBackup('"+buscarCodigoProducto(nuevoBackUp.getProductoDesc())+"','"+ nuevoBackUp.getCantidadBackup()+"','"+nuevoBackUp.getTotalParcialBackup()+"')}";
+                   System.out.println(sql);
                    tipoOperacionFacturacion = Operacion.AGREGAR;
                    accionEstado(sql);  
                    txtLetrasPrecio.setText(letras.Convertir(twoDForm.format(Double.parseDouble(txtTotalFactura.getText())), true));
