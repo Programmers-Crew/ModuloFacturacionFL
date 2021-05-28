@@ -1066,7 +1066,7 @@ public class InventarioViewController implements Initializable {
            }else{
                 InventarioProductos nuevoInventario = new InventarioProductos();
                 nuevoInventario.setProductoId(cmbCodigoProductoInventario.getValue());
-                nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
+                nuevoInventario.setInventarioProductoCant(Double.parseDouble(txtCantidadInventario.getText()));
                 nuevoInventario.setEstadoProductoDesc(cmbNombreEstado.getValue());
                
                    proveedorName = txtProveedorInventario.getText();
@@ -1081,7 +1081,6 @@ public class InventarioViewController implements Initializable {
             tipoOperacionInventario = Operacion.AGREGAR;;
             accionInventario();
         }
-
     }
     
     
@@ -1121,7 +1120,7 @@ public class InventarioViewController implements Initializable {
            }else{
                    InventarioProductos nuevoInventario = new InventarioProductos();
                    nuevoInventario.setProductoId(cmbCodigoProductoInventario.getValue());
-                   nuevoInventario.setInventarioProductoCant(Integer.parseInt(txtCantidadInventario.getText()));
+                   nuevoInventario.setInventarioProductoCant(Double.parseDouble(txtCantidadInventario.getText()));
 
                    String sql = "{call SpRestarProductos('"+nuevoInventario.getProductoId()+"','"+ nuevoInventario.getInventarioProductoCant()+"')}";
                    tipoOperacionInventario = Operacion.RESTAR;

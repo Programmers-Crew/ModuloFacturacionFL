@@ -1804,13 +1804,11 @@ public class FacturacionViewController implements Initializable {
             
 
         PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
-        psEliminar.execute();
-            System.out.println(sqlEliminar);
-        
+        psEliminar.execute();    
+        cargarDatos();
+        txtTotalFactura.setText("");
         }catch(Exception e){
             e.printStackTrace();
-                        System.out.println(sqlEliminar);
-
         }         
     }
     

@@ -766,7 +766,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-	create procedure SpAgregarDetalleFacturas(id int(100), prodcutoId int(100), cantidad int(100), totalParcial decimal(10,2))
+	create procedure SpAgregarDetalleFacturas(id int(100), prodcutoId int(100), cantidad double, totalParcial decimal(10,2))
 		BEGIN
 			insert into FacturaDetalle(facturaDetalleId,productoId,cantidad,totalParcial)
 				values(id,prodcutoId, cantidad, totalParcial);
