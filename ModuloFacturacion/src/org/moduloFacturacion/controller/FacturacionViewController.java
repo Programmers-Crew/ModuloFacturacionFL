@@ -1016,7 +1016,7 @@ public class FacturacionViewController implements Initializable {
            ResultSet rs = ps.executeQuery();
            
            while(rs.next()){
-               cantidad = rs.getInt("inventarioProductoCant");
+               cantidad = rs.getDouble("inventarioProductoCant");
                estado = rs.getString("estadoProductoDesc");
            }
        }catch(SQLException ex){
@@ -1806,13 +1806,11 @@ public class FacturacionViewController implements Initializable {
             
 
         PreparedStatement psEliminar = Conexion.getIntance().getConexion().prepareCall(sqlEliminar);
-        psEliminar.execute();
-            System.out.println(sqlEliminar);
-        
+        psEliminar.execute();    
+        cargarDatos();
+        txtTotalFactura.setText("");
         }catch(Exception e){
             e.printStackTrace();
-                        System.out.println(sqlEliminar);
-
         }         
     }
     
