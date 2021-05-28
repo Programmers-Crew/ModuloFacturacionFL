@@ -88,12 +88,12 @@ DELIMITER $$
 ;
         end $$
 DELIMITER ;
-
+drop procedure SpAgregarCardexFac
 DELIMITER $$
-	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad double, documento int(5))
+	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad int, documento int(5))
 		begin
 			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto, tipoDocumento)
-				select fecha, noFac, tipo,cantidad,ip.inventarioProductoCant, p.productoId, documento
+				select fecha, noFac, tipo,cantidad,cantidad-ip.inventarioProductoCant, p.productoId, documento
 					from inventarioproductos as ip
 						inner join productos as p
 							on ip.productoId = p.productoId
@@ -103,7 +103,7 @@ DELIMITER ;
  
 
 DELIMITER $$
-	create procedure SpAgregarCardexFacUpdate(nombre varchar(60),tipo int, cantidad double, idBuscado int, documento int(5))
+	create procedure SpAgregarCardexFacUpdate(nombre varchar(60),tipo int, cantidad int, idBuscado int, documento int(5))
 		begin
 			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto,tipoDocumento )
 				select creditos.creaditoFechaInicio, creditos.noFactura, tipo,cantidad,inventarioproductos.inventarioProductoCant, p.productoId,documento
@@ -228,3 +228,15 @@ DELIMITER $$
 			where (productoDesc = nombre) and (productoId = nombre );
         end $$
 DELIMITER 
+
+
+-- Cambio solicitado 27-05
+-- Borrar backup desde boton actualizar en Facturacion
+
+DELIMITER $$
+	create procedure SpEliminarBackUpActualizar()
+		begin
+			delete from facturadetallebackup ;
+        end $$
+DELIMITER ;
+
