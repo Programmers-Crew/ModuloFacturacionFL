@@ -1032,7 +1032,10 @@ public class FacturacionViewController implements Initializable {
        if(estado.equalsIgnoreCase("AGOTADO")){
            valor=false;
        }else{
-           double total = cantidad - Double.parseDouble(txtCantidadProducto.getText());
+           DecimalFormat df2 = new DecimalFormat("#.##");
+           double cant  = Double.parseDouble(df2.format(Double.parseDouble(txtCantidadProducto.getText())));
+           cantidad = Double.parseDouble(df2.format(cantidad));
+           double total = cantidad - cant;
            
            if(total<0){
                valor = false;
