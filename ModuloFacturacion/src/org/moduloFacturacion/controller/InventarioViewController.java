@@ -2242,7 +2242,6 @@ public class InventarioViewController implements Initializable {
         }else if(cmbFiltroCardex.getValue().equals("PRODUCTO")){
             cargarCreditosBuscadosProd();
         }
-        
     }
     
     @FXML
@@ -2322,20 +2321,29 @@ public class InventarioViewController implements Initializable {
     public void generarReporteCredito(){
         String prueba = txtfechaInicioCardex.getValue().toString();
         
-        if(prueba != ""){
+        if(!prueba.equals("")){
             imprimirCardexFechas();
+            System.out.println(prueba);
         }else{
-        imprimirCardex();
+            imprimirCardex();
+            System.out.println(prueba);
         }
     }
     
     @FXML
     public void generarReporteCardex(MouseEvent event){
-        if(txtfechaInicioCardex.getValue().equals("")){
-            imprimirCardex();
-            
-        }else{
+        String prueba = txtfechaInicioCardex.getValue().toString();
+        try{
+        if(!prueba.equals("")){
             imprimirCardexFechas();
+            System.out.println("sin fechas");
+        }else if(prueba == ""){
+            imprimirCardex(); 
+            System.out.println("con fechas");
+        }
+        }catch(Exception e){
+            e.printStackTrace();
+            imprimirCardex(); 
         }
     }
     

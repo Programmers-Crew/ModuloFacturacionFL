@@ -1284,7 +1284,7 @@ DELIMITER $$
 DELIMITER ;
 
 -- inserts obligatorios
-insert into tipofactua(tipoFactura,tipoFacturaDesc)
+/*insert into tipofactua(tipoFactura,tipoFacturaDesc)
 	values(1,"FACTURA"),(2,"ORDEN DE COMPRA");
     
 insert into estadofactura(estadoFactura,estadoFacturaDesc)
@@ -1305,7 +1305,7 @@ insert into estadoproductos values(1,'EXISTENCIA'),(2,'AGOTADO');
 insert into tipocardex values (1,'ENTRADA'), (2,'SALIDA');
 
 insert into tipodocumento values(1,'FACTURA'),(2,'ORDEN DE COMPRA'),(3,'CREDITO'),(4,'RESTA');
-
+*/
 DELIMITER $$
 	create procedure Sp_DevolucionProductos(serie varchar(5),idBuscado int)
 		begin

@@ -1,4 +1,4 @@
-alter table Cardex add entradaCardex double;
+/*alter table Cardex add entradaCardex double;*/
 
 drop procedure IF EXISTS SpGenerarCardexProd;
 

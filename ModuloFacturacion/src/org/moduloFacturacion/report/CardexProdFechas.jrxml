@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CardexProd" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="276c967c-1abf-4867-8336-88fc8c064c99">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="65"/>
+	<property name="ireport.y" value="15"/>
 	<parameter name="prodId" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -21,16 +21,25 @@
 	<field name="noFacCardex" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="seriaFac" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="idTipoDesc" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="saldoCardex" class="java.lang.Integer">
+	<field name="saldoCardex" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="totalCardex" class="java.lang.Integer">
+	<field name="entradaCardex" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalCardex" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="productoDesc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DescTipoDocumento" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -103,78 +112,114 @@
 				<reportElement x="-1" y="13" width="752" height="24" forecolor="#1E88E5" backcolor="#42A5F5" uuid="f0927690-b5ac-4519-9588-8cb17bcb65b8"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="604" y="13" width="120" height="27" uuid="25db0a3a-d1f2-48d0-a638-35b1e7cddf08"/>
+				<reportElement x="667" y="13" width="69" height="27" uuid="25db0a3a-d1f2-48d0-a638-35b1e7cddf08"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
+					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SALDO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="32" y="13" width="120" height="24" uuid="9ee1c782-c9dd-4d3a-ae5e-11b5e0301782"/>
+				<reportElement x="0" y="13" width="78" height="24" uuid="9ee1c782-c9dd-4d3a-ae5e-11b5e0301782"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
+					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[FECHA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="455" y="13" width="120" height="24" uuid="87dfb79b-7187-489d-ac64-46c1942fb950"/>
+				<reportElement x="591" y="13" width="61" height="24" uuid="87dfb79b-7187-489d-ac64-46c1942fb950"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
+					<font size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TOTAL]]></text>
+				<text><![CDATA[SALIDA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="174" y="10" width="120" height="27" uuid="8e6d9499-5c75-450f-b7f3-e0e6644c0d94"/>
+				<reportElement x="93" y="10" width="58" height="27" uuid="8e6d9499-5c75-450f-b7f3-e0e6644c0d94"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
+					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NO.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="314" y="10" width="120" height="27" uuid="840e0b43-a15b-4bd0-8dd2-34771c7f3648"/>
+				<reportElement x="256" y="10" width="107" height="27" uuid="840e0b43-a15b-4bd0-8dd2-34771c7f3648"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
+					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[MOVIMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="13" width="58" height="27" uuid="38a870c4-0ea1-478f-9fb3-28f6ade80510"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERIE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="13" width="107" height="27" uuid="3016e143-b489-4151-9856-620b2494443f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOCUMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="512" y="13" width="60" height="24" uuid="0b032ed9-4f68-40ea-8231-ac3fa8eb36de"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENTRADA]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="30" splitType="Stretch">
 			<textField>
-				<reportElement x="171" y="0" width="123" height="20" uuid="cd4df059-1e31-4512-aa48-7db260ebe8d7"/>
+				<reportElement x="93" y="0" width="58" height="20" uuid="cd4df059-1e31-4512-aa48-7db260ebe8d7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{noFacCardex}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="323" y="0" width="120" height="20" uuid="756c3098-afed-4412-841a-58fe53bd0031"/>
+				<reportElement x="256" y="2" width="107" height="20" uuid="756c3098-afed-4412-841a-58fe53bd0031"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{idTipoDesc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="443" y="2" width="120" height="20" uuid="7ab2a586-8dd7-4f59-93d5-a381722da63d"/>
+				<reportElement x="591" y="0" width="61" height="20" uuid="7ab2a586-8dd7-4f59-93d5-a381722da63d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{saldoCardex}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="588" y="2" width="120" height="20" uuid="02a5474b-99db-4ceb-8ffa-789191867d3c"/>
+				<reportElement x="667" y="2" width="70" height="20" uuid="02a5474b-99db-4ceb-8ffa-789191867d3c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{totalCardex}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="34" y="0" width="120" height="20" uuid="7b1633a9-04f8-47c5-bb8c-eaec33ed1a47"/>
+				<reportElement x="-1" y="0" width="79" height="20" uuid="7b1633a9-04f8-47c5-bb8c-eaec33ed1a47"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fechaCardex}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="165" y="2" width="58" height="20" uuid="6b8447f1-8cb5-44af-b2b4-564e45eaabb2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{seriaFac}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="384" y="2" width="107" height="20" uuid="4f6e75b5-b927-4776-8c88-fb4c0954ce91"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DescTipoDocumento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="512" y="0" width="60" height="20" uuid="5ec21e57-3e53-49df-93ac-3a0ff3a57d7d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{entradaCardex}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
