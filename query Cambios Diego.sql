@@ -218,7 +218,6 @@ DELIMITER $$
         end $$
 DELIMITER ;
 SET SQL_SAFE_UPDATES = 0;
-call SpElimarBackFCP();
 
 DELIMITER $$	
 	create procedure SpBuscarProveedorCardex(nombre varchar(50))
