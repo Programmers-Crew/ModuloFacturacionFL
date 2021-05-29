@@ -7,6 +7,7 @@ public class Cardex {
     
     private Date fechaCardex;
     private String noFacCardex;
+    private String seriaFac;
     private String idTipoDesc;
     private Double saldoCardex;
     private Double entradaCardex;
@@ -17,9 +18,10 @@ public class Cardex {
     public Cardex() {
     }
 
-    public Cardex(Date fechaCardex, String noFacCardex, String idTipoDesc, Double saldoCardex, Double entradaCardex, Double totalCardex, String productoDesc, String DescTipoDocumento) {
+    public Cardex(Date fechaCardex, String noFacCardex, String seriaFac, String idTipoDesc, Double saldoCardex, Double entradaCardex, Double totalCardex, String productoDesc, String DescTipoDocumento) {
         this.fechaCardex = fechaCardex;
         this.noFacCardex = noFacCardex;
+        this.seriaFac = seriaFac;
         this.idTipoDesc = idTipoDesc;
         this.saldoCardex = saldoCardex;
         this.entradaCardex = entradaCardex;
@@ -28,6 +30,13 @@ public class Cardex {
         this.DescTipoDocumento = DescTipoDocumento;
     }
 
+    public String getSeriaFac() {
+        return seriaFac;
+    }
+
+    public void setSeriaFac(String seriaFac) {
+        this.seriaFac = seriaFac;
+    }
 
     public Date getFechaCardex() {
         return fechaCardex;

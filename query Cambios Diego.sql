@@ -23,7 +23,7 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpGenerarCardex(prodId varchar(50))
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex,c.entradaCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,c.seriaFac,tc.idTipoDesc ,c.saldoCardex,c.entradaCardex, c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
@@ -37,10 +37,11 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
+
 DELIMITER $$
 	create procedure SpGenerarCardexProd(prodId varchar(30))
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento, pr.proveedorNombre
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex, c.seriaFac,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento, pr.proveedorNombre
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
@@ -59,7 +60,7 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpGenerarCardexFechaProd(prodId varchar(30), inicio date, finalFecha date)
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex, c.seriaFac ,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
@@ -75,7 +76,7 @@ DELIMITER ;
 DELIMITER $$
 	create procedure SpGenerarCardexFecha(prodId varchar(30), inicio date, final date)
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,c.seriaFac ,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
@@ -87,15 +88,14 @@ DELIMITER $$
                         order by c.idCardex desc
 ;
         end $$
-        
-        
 DELIMITER ;
 
+
 DELIMITER $$
-	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad double, documento int(5))
+	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, serie varchar(20),tipo int, cantidad double, documento int(5))
 		begin
-			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto, tipoDocumento)
-				select fecha, noFac, tipo,cantidad,ip.inventarioProductoCant, p.productoId, documento
+			insert into cardex (fechaCardex,noFacCardex, seriaFac,tipoCardex,saldoCardex, totalCardex, producto, tipoDocumento)
+				select fecha, noFac, serie,tipo,cantidad,ip.inventarioProductoCant, p.productoId, documento
 					from inventarioproductos as ip
 						inner join productos as p
 							on ip.productoId = p.productoId
@@ -130,7 +130,7 @@ DELIMITER ;
 
 #Cambio solicitado 05-05-21
 #Guardar datos de factura, clientes y prod en un backup.
-
+/*
 create table BackupFacturacionF(
 	idDetalle int auto_increment,
     numeroFac varchar(50) ,
@@ -156,7 +156,7 @@ create table BackupFacturacionP(
     cantidadProducto varchar(50),
     PRIMARY KEY (idDetalleProductos)
 );
-
+*/
 #backUp Fac
 DELIMITER $$
 	create procedure AgregarBackupFacturacionF(numero varchar(50), serie varchar(50), tipo varchar(50))

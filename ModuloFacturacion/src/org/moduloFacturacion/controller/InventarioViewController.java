@@ -99,6 +99,8 @@ public class InventarioViewController implements Initializable {
     private JFXButton btnCargarCardex;
     @FXML
     private JFXButton generar;
+    @FXML
+    private TableColumn<?, ?> colSerieCardex;
 
 
 
@@ -1130,8 +1132,8 @@ public class InventarioViewController implements Initializable {
                     Integer idFac = 1111;                   
                     Integer tipo = 2;
                     LocalDate date2 = LocalDate.now();
-                    
-                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+txtProductoInventario.getText()+"','"+idFac+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+documento+"')}";  
+                    String serieFac ="";
+                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+txtProductoInventario.getText()+"','"+idFac+"','"+serieFac+"','"+tipo+"','"+txtCantidadInventario.getText()+"','"+documento+"')}";  
                     try{
                         PreparedStatement psCardex = Conexion.getIntance().getConexion().prepareCall(sqlCardex);
                         psCardex.execute();  
@@ -2047,6 +2049,7 @@ public class InventarioViewController implements Initializable {
                 lista.add(new Cardex(
                             rs.getDate("fechaCardex"),
                             rs.getString("noFacCardex"),
+                            rs.getString("seriaFac"),
                             rs.getString("idTipoDesc"),
                             rs.getDouble("saldoCardex"),
                             rs.getDouble("entradaCardex"),
@@ -2066,6 +2069,7 @@ public class InventarioViewController implements Initializable {
         tblCardex.setItems(getCardex());
         colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
+        colSerieCardex.setCellValueFactory(new PropertyValueFactory("seriaFac"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
         colEntradaCardex.setCellValueFactory(new PropertyValueFactory("entradaCardex")); 
@@ -2088,6 +2092,7 @@ public class InventarioViewController implements Initializable {
                 lista.add(new Cardex(
                             rs.getDate("fechaCardex"),
                             rs.getString("noFacCardex"),
+                            rs.getString("seriaFac"),
                             rs.getString("idTipoDesc"),
                             rs.getDouble("saldoCardex"),
                             rs.getDouble("entradaCardex"),                        
@@ -2109,6 +2114,7 @@ public class InventarioViewController implements Initializable {
         System.out.println("cargar");
         colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
+        colSerieCardex.setCellValueFactory(new PropertyValueFactory("seriaFac"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
         colEntradaCardex.setCellValueFactory(new PropertyValueFactory("entradaCardex")); 
@@ -2132,6 +2138,7 @@ public class InventarioViewController implements Initializable {
                 lista.add(new Cardex(
                             rs.getDate("fechaCardex"),
                             rs.getString("noFacCardex"),
+                            rs.getString("seriaFac"),
                             rs.getString("idTipoDesc"),
                             rs.getDouble("saldoCardex"),
                             rs.getDouble("entradaCardex"),                        
@@ -2152,6 +2159,7 @@ public class InventarioViewController implements Initializable {
         tblCardex.setItems(getCardexFechas());
         colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
+        colSerieCardex.setCellValueFactory(new PropertyValueFactory("seriaFac"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
         colEntradaCardex.setCellValueFactory(new PropertyValueFactory("entradaCardex")); 
@@ -2175,6 +2183,7 @@ public class InventarioViewController implements Initializable {
                 lista.add(new Cardex(
                             rs.getDate("fechaCardex"),
                             rs.getString("noFacCardex"),
+                            rs.getString("seriaFac"),
                             rs.getString("idTipoDesc"),
                             rs.getDouble("saldoCardex"),
                             rs.getDouble("entradaCardex"),                        
@@ -2195,6 +2204,7 @@ public class InventarioViewController implements Initializable {
         tblCardex.setItems(getCardexFechasProd());
         colFechaCardex.setCellValueFactory(new PropertyValueFactory("fechaCardex"));
         colNoCardex.setCellValueFactory(new PropertyValueFactory("noFacCardex"));
+        colSerieCardex.setCellValueFactory(new PropertyValueFactory("seriaFac"));
         colMovimientoCardex.setCellValueFactory(new PropertyValueFactory("idTipoDesc"));        
         colTotalCardex.setCellValueFactory(new PropertyValueFactory("saldoCardex"));
         colSaldoCardex.setCellValueFactory(new PropertyValueFactory("totalCardex")); 
@@ -2232,7 +2242,6 @@ public class InventarioViewController implements Initializable {
         }else if(cmbFiltroCardex.getValue().equals("PRODUCTO")){
             cargarCreditosBuscadosProd();
         }
-        
     }
     
     @FXML
@@ -2312,20 +2321,29 @@ public class InventarioViewController implements Initializable {
     public void generarReporteCredito(){
         String prueba = txtfechaInicioCardex.getValue().toString();
         
-        if(prueba != ""){
+        if(!prueba.equals("")){
             imprimirCardexFechas();
+            System.out.println(prueba);
         }else{
-        imprimirCardex();
+            imprimirCardex();
+            System.out.println(prueba);
         }
     }
     
     @FXML
     public void generarReporteCardex(MouseEvent event){
-        if(txtfechaInicioCardex.getValue().equals("")){
-            imprimirCardex();
-            
-        }else{
+        String prueba = txtfechaInicioCardex.getValue().toString();
+        try{
+        if(!prueba.equals("")){
             imprimirCardexFechas();
+            System.out.println("sin fechas");
+        }else if(prueba == ""){
+            imprimirCardex(); 
+            System.out.println("con fechas");
+        }
+        }catch(Exception e){
+            e.printStackTrace();
+            imprimirCardex(); 
         }
     }
     
