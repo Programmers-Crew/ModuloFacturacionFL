@@ -92,10 +92,10 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, tipo int, cantidad double, documento int(5))
+	create procedure SpAgregarCardexFac(fecha date, nombre varchar(60),NoFac int, serie varchar(20),tipo int, cantidad double, documento int(5))
 		begin
-			insert into cardex (fechaCardex,noFacCardex,tipoCardex,saldoCardex, totalCardex, producto, tipoDocumento)
-				select fecha, noFac, tipo,cantidad,ip.inventarioProductoCant, p.productoId, documento
+			insert into cardex (fechaCardex,noFacCardex, seriaFac,tipoCardex,saldoCardex, totalCardex, producto, tipoDocumento)
+				select fecha, noFac, serie,tipo,cantidad,ip.inventarioProductoCant, p.productoId, documento
 					from inventarioproductos as ip
 						inner join productos as p
 							on ip.productoId = p.productoId

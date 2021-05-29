@@ -198,3 +198,5 @@ create table Cardex(
     CONSTRAINT FK_CardexDocumento FOREIGN KEY (tipoDocumento) REFERENCES TipoDocumento(idTipoDocumento)
 );
 
+-- Cambio 28-05
+alter table Cardex add seriaFac varchar(10);

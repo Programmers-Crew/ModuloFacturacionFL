@@ -8,10 +8,13 @@ drop procedure IF EXISTS SpGenerarCardexFecha;
 drop procedure IF EXISTS SpEliminarBackup;
 SET SQL_SAFE_UPDATES = 0;
 
+call SpGenerarCardexProd('ANTI001')
+
+
 DELIMITER $$
 	create procedure SpGenerarCardexProd(prodId varchar(30))
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento, pr.proveedorNombre
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,c.seriaFac,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento, pr.proveedorNombre
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
@@ -67,10 +70,11 @@ DELIMITER $$
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS SpGenerarCardexFecha;
+
 DELIMITER $$
 	create procedure SpGenerarCardexFecha(prodId varchar(30), inicio date, final date)
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,c.seriaFac,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
@@ -83,11 +87,12 @@ DELIMITER $$
 ;
         end $$
 DELIMITER ;
+
 DROP PROCEDURE IF EXISTS SpGenerarCardexFechaProd;
 DELIMITER $$
 	create procedure SpGenerarCardexFechaProd(prodId varchar(30), inicio date, finalFecha date)
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,c.seriaFac,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex
@@ -99,11 +104,13 @@ DELIMITER $$
             order by c.idCardex desc;
         end $$
 DELIMITER ;
+
 DROP PROCEDURE IF EXISTS SpGenerarCardexProd;
+
 DELIMITER $$
 	create procedure SpGenerarCardexProd(prodId varchar(30))
 		begin 
-			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento, pr.proveedorNombre
+			SELECT DISTINCT  c.fechaCardex, c.noFacCardex,seriaFac,tc.idTipoDesc ,c.saldoCardex, c.entradaCardex,c.totalCardex, p.productoDesc, td.DescTipoDocumento, pr.proveedorNombre
 			from cardex as c
 			inner join tipocardex as tc
 				on tc.idTipoCardex = c.tipoCardex

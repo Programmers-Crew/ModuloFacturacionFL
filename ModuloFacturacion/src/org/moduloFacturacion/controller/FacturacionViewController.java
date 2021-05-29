@@ -1177,7 +1177,7 @@ public class FacturacionViewController implements Initializable {
                         documento = 2;
                    }
                    
-                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+buscarNombreProducto(cmbNombreProducto.getValue())+"','"+idFac+"','"+tipo+"','"+txtCantidadProducto.getText()+"','"+documento+"')}";  
+                    String sqlCardex = "{call SpAgregarCardexFac('"+date2+"','"+buscarNombreProducto(cmbNombreProducto.getValue())+"','"+idFac+"','"+txtSerieId.getText()+"','"+tipo+"','"+txtCantidadProducto.getText()+"','"+documento+"')}";  
                     System.out.println(sqlCardex);
                    String sql = "{call SpAgregarBackup('"+buscarCodigoProducto(nuevoBackUp.getProductoDesc())+"','"+ nuevoBackUp.getCantidadBackup()+"','"+nuevoBackUp.getTotalParcialBackup()+"')}";
                    System.out.println(sql);
