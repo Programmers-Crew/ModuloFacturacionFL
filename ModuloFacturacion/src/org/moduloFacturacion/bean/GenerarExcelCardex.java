@@ -49,8 +49,8 @@ public class GenerarExcelCardex {
         style.setFillForegroundColor(IndexedColors.AQUA.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         
-        String[] titulos = {"FECHA", "NO.",
-            "MOVIMIENTO", "DOCUMENTO","ENTRADA","SALIDA","SALDO"};
+        String[] titulos = {"FECHA", "NO.","MOVIMIENTO",
+            "SERIE", "DOCUMENTO","ENTRADA","SALIDA","SALDO"};
         
         
         
@@ -92,17 +92,21 @@ public class GenerarExcelCardex {
                         celda.setCellValue(listaCardexG.get(x).getIdTipoDesc());
                         break;
                     case 3:
-                        celda.setCellValue(listaCardexG.get(x).getDescTipoDocumento());
+                        celda.setCellValue(listaCardexG.get(x).getSeriaFac());
                         break;
                     case 4:
-                        celda.setCellValue(listaCardexG.get(x).getEntradaCardex());
+                        celda.setCellValue(listaCardexG.get(x).getDescTipoDocumento());
                         break;
                     case 5:
-                        celda.setCellValue(listaCardexG.get(x).getSaldoCardex());
+                        celda.setCellValue(listaCardexG.get(x).getEntradaCardex());
                         break;
                     case 6:
+                        celda.setCellValue(listaCardexG.get(x).getSaldoCardex());
+                        break;
+                    case 7:
                         celda.setCellValue(listaCardexG.get(x).getTotalCardex());
                         break;
+                        
                 }
                 
             }
