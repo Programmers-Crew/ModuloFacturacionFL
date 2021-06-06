@@ -1207,7 +1207,6 @@ public class MenuPrincipalContoller implements Initializable {
                     noti.show();
                     
                 }else{
-                    if((txtUsuario.getText().length() >= 6 && txtUsuario.getText().length() < 30 ) &&(txtPassword.getText().length() >= 6 && txtPassword.getText().length() < 30)){
                         int tipoUsuario;
                         Usuario nuevoUsuario = new Usuario();
                         nuevoUsuario.setUsuarioNombre(txtUsuario.getText());
@@ -1220,17 +1219,6 @@ public class MenuPrincipalContoller implements Initializable {
 
                         String sql = "{call spAgregarUsuario('"+nuevoUsuario.getUsuarioNombre()+"','"+nuevoUsuario.getUsuarioPassword()+"','"+tipoUsuario+"')}";
                         accion(sql);
-                    }else{
-                        Notifications noti = Notifications.create();
-                        noti.graphic(new ImageView(imgError));
-                        noti.title("ERROR");
-                        noti.text("USUARIO Y/O CONTRASEÑA NO TIENEN UNA LONGITUD ADECUADA (DEBEN ESTAR ENTRE 6 Y 30 CARACTERES)");
-                        noti.position(Pos.BOTTOM_RIGHT);
-                        noti.hideAfter(Duration.seconds(4));
-                        noti.darkStyle();   
-                        noti.show();
-                    }
-                    
                 }
             }else{
                 tipoOperacion = Operacion.AGREGAR;

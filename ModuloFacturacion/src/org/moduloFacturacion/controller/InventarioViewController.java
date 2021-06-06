@@ -1232,7 +1232,7 @@ public class InventarioViewController implements Initializable {
         if(cmbFiltroCodigo.getValue().equals("CÓDIGO") || cmbFiltroCodigo.getValue().equals("NOMBRE")){
             sql = "{call SpListarInventarioProductos()}";
         }else if(cmbFiltroCodigo.getValue().equals("PROVEEDOR")){
-            sql = "{call SpListarInventarioProductosProv()}";
+            sql = "{call Sp_ListInventarioProv()}";
         }
         
         int x=0;

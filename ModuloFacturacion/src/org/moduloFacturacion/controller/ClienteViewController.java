@@ -492,17 +492,6 @@ public class ClienteViewController implements Initializable {
                     noti.show();
             }else{
                 String sql="";
-                if(txtNombreCliente.getText().length() > 25 || txtNitCliente.getText().length() > 9){
-                    Notifications noti = Notifications.create();
-                    
-                    noti.graphic(new ImageView(imgError));
-                    noti.title("ERROR");
-                    noti.text("CAMPOS FUERA DE RANGO, NOMBRE NO DEBE PASAR LOS 25 CARACTERES Y EL NIT NO DEBE PASAR LOS 9 CARACTERES");
-                    noti.position(Pos.BOTTOM_RIGHT);
-                    noti.hideAfter(Duration.seconds(4));
-                    noti.darkStyle();   
-                    noti.show();
-                }else{
                     Cliente nuevocliente = new Cliente();
                     nuevocliente.setClienteNit(txtNitCliente.getText());
                     nuevocliente.setClienteNombre(txtNombreCliente.getText());
@@ -515,7 +504,6 @@ public class ClienteViewController implements Initializable {
                     
                     tipoOperacion = Operacion.GUARDAR;
                     accion(sql);
-                }
             }
         }else{
             tipoOperacion = Operacion.AGREGAR;
@@ -535,16 +523,6 @@ public class ClienteViewController implements Initializable {
                     noti.darkStyle();   
                     noti.show();
             }else{
-                if(txtNombreCliente.getText().length() > 25 || txtNitCliente.getText().length() > 9){
-                    Notifications noti = Notifications.create();
-                    noti.graphic(new ImageView(imgError));
-                    noti.title("ERROR");
-                    noti.text("CAMPOS FUERA DE RANGO, NOMBRE NO DEBE PASAR LOS 25 CARACTERES Y EL NIT NO DEBE PASAR LOS 9 CARACTERES");
-                    noti.position(Pos.BOTTOM_RIGHT);
-                    noti.hideAfter(Duration.seconds(4));
-                    noti.darkStyle();   
-                    noti.show();
-                }else{
                     Cliente nuevocliente = new Cliente();
                     nuevocliente.setClienteNit(txtNitCliente.getText());
                     nuevocliente.setClienteNombre(txtNombreCliente.getText());
@@ -552,7 +530,6 @@ public class ClienteViewController implements Initializable {
                     String sql = "{call SpActualizarClientes('"+codigo+"','"+nuevocliente.getClienteNit()+"','"+nuevocliente.getClienteNombre()+"','"+nuevocliente.getClienteDireccion()+"')}";
                     tipoOperacion = Operacion.ACTUALIZAR;
                     accion(sql);
-                }
             }
     }
 
