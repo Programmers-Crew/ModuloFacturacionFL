@@ -92,6 +92,7 @@ public class Imprimir implements Printable{
         }        
         } 
     }
+    
     public void imprimir(Graphics2D g2d,PageFormat pf,int pagina){   
          
         AffineTransform affineTransform = new AffineTransform();

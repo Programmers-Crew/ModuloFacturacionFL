@@ -115,3 +115,79 @@ DELIMITER $$
 								on fdb.productoIdBackup = p.productoId;
         END $$
 DELIMITER ;
+
+
+-- CAMBIOS EN FACTOR DE VENTA
+
+DELIMITER $$
+	create procedure Sp_SearchFactorVenta(codigo int)
+		begin
+			select fv.factorVentaId , fv.factorVentaDesc  , fv.factorVentaDescuento 
+				from FactorVenta as fv
+			where fv.factorVentaId = codigo;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure Sp_SearchName(codigo varchar(150))
+		begin
+			select fv.factorVentaId , fv.factorVentaDesc  , fv.factorVentaDescuento 
+				from FactorVenta as fv
+			where fv.factorVentaDesc = codigo;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure Sp_SearchCamposEspeciales(codigo int)
+		begin 
+			select ce.campoId  , ce.campoNombre  , ce.campoPrecio 
+				from CamposEspeciales as ce
+                where ce.campoId = codigo;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure Sp_SearchNameCamposEspeciales(codigo varchar(150))
+		begin 
+			select ce.campoId  , ce.campoNombre  , ce.campoPrecio 
+				from CamposEspeciales as ce
+                where ce.campoNombre = codigo;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure Sp_SearchTipoCliente(codigo int)
+		begin 
+			select tc.tipoClienteId  , tc.tipoClienteDesc  , tc.tipoClienteDescuento 
+				from TipoCliente as tc
+                where tc.tipoClienteId = codigo;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure Sp_SearchTipoClienteName(codigo varchar(150))
+		begin 
+			select tc.tipoClienteId  , tc.tipoClienteDesc  , tc.tipoClienteDescuento 
+				from TipoCliente as tc
+                where tc.tipoClienteDesc = codigo;
+        end $$
+DELIMITER ;
+
+
+DELIMITER $$
+	create procedure Sp_SearchModoPago(codigo int)
+		begin
+			select mp.modoPagoId, mp.modoPagoDesc 
+				from ModoPago as mp
+                where mp.modoPagoid = codigo;
+        end $$
+DELIMITER ;
+
+DELIMITER $$
+	create procedure Sp_SearchModoPagoName(codigo varchar(150))
+		begin
+			select mp.modoPagoId, mp.modoPagoDesc 
+				from ModoPago as mp
+                where mp.modoPagoDesc = codigo;
+        end $$
+DELIMITER ;

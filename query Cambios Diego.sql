@@ -175,9 +175,10 @@ DELIMITER $$
         end $$
 DELIMITER ;
 
+
 #backuo cliente 
 DELIMITER $$
-	create procedure SpAgregarBackupFacturacionC(nit varchar(19), nombre varchar(50), direccion varchar(100))
+	create procedure SpAgregarBackupFacturacionC(nit varchar(19), nombre varchar(150), direccion varchar(100))
 		begin 
 			insert into BackupFacturacionC(nitCliente,nombreCliente,direccionCliente)
 				values(nit, nombre, direccion);
